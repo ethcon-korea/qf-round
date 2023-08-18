@@ -8,7 +8,7 @@
     "build": "hardhat compile",
     "clean": "shx rm -rf ./build ./cache ./coverage ./typechain ./coverage.json ./abi",
     "hardhat": "hardhat",
-    "node": "hardhat node --port 18545",
+    "node": "hardhat node --port 8545",
     "prepare:dev": "yarn clean && yarn build && yarn generate:abi && yarn prepare:small-circuits && yarn test:unit",
     "prepare:small-circuits": "mustache config/small.json zkeys.config.template.yaml > zkeys.config.yml",
     "prepare:medium-circuits": "mustache config/medium.json zkeys.config.template.yaml > zkeys.config.yml",

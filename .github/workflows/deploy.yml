@@ -1,9 +1,10 @@
-name: Frontend-Build
+name: Deploy web
 
 on:
   push: 
-  pull_request:
 
+env:
+  cwd: ${{github.workspace}}/packages/app
 
 concurrency: 
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
@@ -18,7 +19,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Use Node.js 16
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16
 
@@ -26,7 +27,10 @@ jobs:
         run: yarn install --frozen-lockfile
           
       - name: Build
-        run: |
-          CI=false yarn workspace @qfi/hooks build
-          CI=false yarn workspace @qfi/ui build
-          CI=false yarn workspace @qfi/app build
+        run: yarn build
+          
+      - name: Publish
+      uses: cloudflare/wrangler-action@2.0.0
+      with:
+        apiToken: ${{ secrets.CF_API_TOKEN }}
+        command: pages publish --project-name=example

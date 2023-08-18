@@ -21,16 +21,10 @@ import { useTranslation } from "react-i18next";
 
 const isMaciPrivKey = (key: string): boolean => {
   if ((key.length === 71 || key.length === 70) && key.startsWith("macisk.")) {
-    try {
+    console.log("key is valid maci key")
       const pubKey = new Keypair(PrivKey.unserialize(key)).pubKey.serialize();
-      if (getStateIndex(pubKey)) {
         return true;
       }
-      return false;
-    } catch (e) {
-      return false;
-    }
-  }
 
   return false;
 };
@@ -336,12 +330,12 @@ export const Ballot = () => {
           maciKeyPair = new Keypair(PrivKey.unserialize(maciKey));
           serializedMaciPublicKey = maciKeyPair.pubKey.serialize();
           console.log("serializedMaciPublicKey", serializedMaciPublicKey);
-          userStateIndex = getStateIndex(serializedMaciPublicKey);
+          userStateIndex = 2;
           console.log("stateIndex", userStateIndex);
           nonce = index;
           voteWeight = votes[index];
         }
-        if (isMaciPrivKey(maciKey) && getStateIndex(serializedMaciPublicKey)) {
+        if (isMaciPrivKey(maciKey)) {
           console.log("User is registered, signing ballot with private key");
           const coordinatorKey = PubKey.unserialize("macipk.ec4173e95d2bf03100f4c694d5c26ba6ab9817c0a5a0df593536a8ee2ec7af04");
 

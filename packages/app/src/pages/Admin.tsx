@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import { useWallet } from "@qfi/hooks";
-import { BigNumber } from "ethers";
+import { BigNumber, utils, Contract } from "ethers";
 
 import { PoseidonT3__factory } from "../typechain/factories/contracts/poseidon/PoseidonT3__factory";
 import { PoseidonT4__factory } from "../typechain/factories/contracts/poseidon/PoseidonT4__factory";
@@ -31,11 +31,12 @@ import {
   Jubjub__factory,
   JubjubLibraryAddresses,
 } from "../typechain/factories/contracts/Jubjub__factory";
-import { Jubjub } from "../typechain/contracts/Jubjub";
+import { Jubjub as JJ } from "../typechain/contracts/Jubjub";
 
 import { SimpleHackathon__factory } from "../typechain/factories/contracts/flavors/SimpleHackathon__factory";
 import { SimpleHackathon } from "../typechain/contracts/flavors/SimpleHackathon";
 
+import { Keypair as MaciKeyPair } from "../jubjublib/index"
 import { PubKey } from "../jubjublib/domainobjs/domainobjs";
 
 export const Admin = () => {
@@ -52,7 +53,19 @@ export const Admin = () => {
   const [poseidonT6, setT6] = useState<PoseidonT6>();
 
   const [jubjubFactory, setJubjubFactory] = useState<JubjubFactory>();
-  const [jubjub, setJubjub] = useState<Jubjub>();
+  const [jubjub, setJubjub] = useState<JJ>();
+
+  const getProvider = () => {
+    return provider;
+  }
+
+  const getSigner = () => {
+    if (!provider) {
+      return "no-signer"
+    }
+    return address;
+  }
+
   const handleT2Deploy = async () => {
     const deployer = provider.getSigner(address);
     let t3: PoseidonT3;
@@ -161,11 +174,12 @@ export const Admin = () => {
     };
     JubjubTemplateFactory = new Jubjub__factory(libs, deployer);
 
-    SimpleHackathonFactory = new SimpleHackathon__factory(deployer);
+  SimpleHackathonFactory = new SimpleHackathon__factory(deployer);
     simpleHackathon = await SimpleHackathonFactory.deploy(99, address);
     await simpleHackathon.deployed();
 
     //NOTE: Deploy Jubjub Instance
+    // We need a sign-up gatekeeper here
     const tx = await jubjubFactory.deployJubjub(
       "0xDEADBEEF00000000000000000000000000000000000000000000000000000000",
       simpleHackathon.address,
@@ -185,6 +199,9 @@ export const Admin = () => {
     console.log(jubjubInstance);
     console.log(await jubjubInstance.hash(0, 0));
   };
+
+
+
 
   const handleStartVotingRound = async () => {
     const deployer = provider.getSigner(address);
@@ -207,9 +224,11 @@ export const Admin = () => {
     console.log(jubjubInstance);
 
     const _coordinatorPubkey = PubKey.unserialize(
-      "macipk.ec4173e95d2bf03100f4c694d5c26ba6ab9817c0a5a0df593536a8ee2ec7af04"
+      "macipk.a39f603e634bd0e718e3549b0f06b50337f96ca7db1df75a6988f78ec448620b"
     ).asContractParam();
     console.log(_coordinatorPubkey);
+
+    // vote opens for 14 days
     const tx = await jubjubInstance.startVoting(
       BigNumber.from(3),
       BigNumber.from(60 * 60 * 24 * 14),
@@ -225,6 +244,9 @@ export const Admin = () => {
       ).toString()
     );
   };
+  
+  
+  
   const handleStartPresetVotingRound = async () => {
     try {
       const deployer = provider.getSigner(address);
@@ -276,6 +298,50 @@ export const Admin = () => {
     }
   };
 
+  const handleSignUp = async () => {
+    const wallet = new MaciKeyPair()
+
+    // Extract keys.
+    const privateKey = wallet.privKey.serialize()
+    const publicKey = wallet.pubKey.serialize()
+
+    console.log("gneerated keys");
+    console.log("privateKey: ", privateKey);
+    console.log("publicKey: ", publicKey);
+
+
+    const _maciPK = PubKey.unserialize(publicKey).asContractParam()
+    console.log("unserialize publicKey: ", _maciPK);
+    const _signUpGatekeeperData = utils.defaultAbiCoder.encode(["uint256"], [0])
+    const _initialVoiceCreditProxyData = utils.defaultAbiCoder.encode(["uint256"], [0])
+
+    const deployer = provider.getSigner(address);
+    let JubjubTemplateFactory: Jubjub__factory;
+    let libs: JubjubLibraryAddresses;
+    libs = {
+      ["contracts/poseidon/PoseidonT6.sol:PoseidonT6"]:
+        "0xb40577bBaB20F9083a20378d36fBcc05B8cFbE69",
+      ["contracts/poseidon/PoseidonT5.sol:PoseidonT5"]:
+        "0x73ec5c589bdFfCB3DcBbCA8De290a1fCe9092d4C",
+      ["contracts/poseidon/PoseidonT3.sol:PoseidonT3"]:
+        "0x99E8C06aC9cb81BdE90336919bdD525aB67d0Ef0",
+      ["contracts/poseidon/PoseidonT4.sol:PoseidonT4"]:
+        "0x158349daACE85AA6b5A1a9e39B6aFD45A7Cc2fc1",
+    };
+    JubjubTemplateFactory = new Jubjub__factory(libs, deployer);
+    const jubjubInstance = JubjubTemplateFactory.attach(
+      "0x5B57E0614D852163a70b8F411c75cCbE33E4F3A3"
+    );
+    
+    
+    const tx = await jubjubInstance.signUp(_maciPK, _signUpGatekeeperData, _initialVoiceCreditProxyData,{
+        gasLimit: utils.hexlify(10000000)
+      })
+    console.log("tx receipt: ", await tx.wait());
+
+    // const signer = provider.getSigner(address);
+  }
+
   // const [jubjubFactory, setjubjubFactory] = React.useState("");
   // const handleT4Deploy = () => {
   //   toast({
@@ -319,6 +385,7 @@ export const Admin = () => {
               Admin
             </Heading>
             <VStack>
+              <Text>"Signer address: {getSigner()}"</Text>
               <Button
                 onClick={async () => {
                   setStep(13);
@@ -367,24 +434,13 @@ export const Admin = () => {
                   await handleStartVotingRound();
                   setLoading(false);
                 }}
-                isDisabled={step !== 3}
+                // isDisabled={step !== 3}
                 variant="amsterdam"
                 w="100%"
               >
                 Start Voting
               </Button>
-              <Button
-                onClick={async () => {
-                  setLoading(true);
-                  await handleStartPresetVotingRound();
-                  setLoading(false);
-                }}
-                // isDisabled={step !== 99}
-                variant="amsterdam"
-                w="100%"
-              >
-                Start Voting for: 0xab787044caefa1b0A89Fc9e17cA22C63aD3C5C82
-              </Button>
+              
               <VStack>
                 {loading ? (
                   <Heading>Processing transactions...</Heading>
@@ -399,6 +455,15 @@ export const Admin = () => {
                 <Text>Current JubjubFactory: {jubjubFactory?.address}</Text>
                 <Text>Current Jubjub: {jubjub?.address}</Text>
               </VStack>
+              <Button
+                onClick={async () => {
+                  await handleSignUp();
+                }}
+                variant="amsterdam"
+                w="100%"
+              >
+                Signup one user
+              </Button>
             </VStack>
           </VStack>
         </Container>

@@ -27,7 +27,14 @@ export const SUPPORTED_NETWORKS: NetworkConfig = {
     name: "Gnosis Chain",
     symbol: "xDai",
     explorer: "https://blockscout.com/xdai/mainnet/",
-    rpc: "https://rpc.gnosischain.com/",
+    rpc: "http://localhost:8545",
+  },
+  "0x7a69": {
+    chainId: "0x7a69",
+    name: "Hardhat",
+    symbol: "eth",
+    explorer: "https://blockscout.com/xdai/mainnet/",
+    rpc: "http://localhost:8545",
   }
 };
 
@@ -38,6 +45,7 @@ export const providerOptions: IProviderOptions = {
       infuraId: "8043bb2cf99347b1bfadfb233c5325c0",
       rpc: {
         100: SUPPORTED_NETWORKS["0x64"].rpc,
+        31337: SUPPORTED_NETWORKS["0x7a69"].rpc,
       },
     },
   }
@@ -269,7 +277,7 @@ export const nameToChainId = (name: string): string | undefined => {
     case "Mainnet":
       return "0x1";
     case "Hardhat":
-      return "0x539";
+      return "0x7a69";
     case "Polygon":
       return "0x89";
     case "Mumbai Testnet":

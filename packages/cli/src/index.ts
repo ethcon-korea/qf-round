@@ -7,7 +7,7 @@ import {
   genkeys,
   doTheThing,
   recover,
-  tally
+  // tally
 } from "./commands/index.js"
 
 dotenv.config()
@@ -75,17 +75,17 @@ program
       firstVoteBlock: string,
       lastBlock: string
     ) => {
-      const optionalLastBlock = lastBlock === "latest" ? "latest" : lastBlock
-      tally(
-        network,
-        coordinatorPrivkey,
-        matchingPoolAmount,
-        qfiContractAddress,
-        startBlock,
-        grantRoundStartBlock,
-        firstVoteBlock,
-        optionalLastBlock
-      )
+      // const optionalLastBlock = lastBlock === "latest" ? "latest" : lastBlock
+      // tally(
+      //   network,
+      //   coordinatorPrivkey,
+      //   matchingPoolAmount,
+      //   qfiContractAddress,
+      //   startBlock,
+      //   grantRoundStartBlock,
+      //   firstVoteBlock,
+      //   optionalLastBlock
+      // )
     }
   )
 

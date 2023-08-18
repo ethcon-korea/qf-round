@@ -71,12 +71,14 @@ export interface JubjubInterface extends utils.Interface {
     "blankMessageLeafHash()": FunctionFragment;
     "blankStateLeafHash()": FunctionFragment;
     "calculateCurrentMessageBatchIndex()": FunctionFragment;
+    "closeSignUpPeriod()": FunctionFragment;
     "coordinatorPubKey()": FunctionFragment;
     "coordinatorPubKeyHash()": FunctionFragment;
     "currentBallotCommitment()": FunctionFragment;
     "currentMessageCommitment()": FunctionFragment;
     "currentSbCommitment()": FunctionFragment;
     "currentStateCommitment()": FunctionFragment;
+    "debugCounter()": FunctionFragment;
     "hash(uint256,uint256)": FunctionFragment;
     "hashMessageLeaf((uint256,uint256[10]),(uint256,uint256))": FunctionFragment;
     "hashStateLeaf(((uint256,uint256),uint256,uint256))": FunctionFragment;
@@ -126,12 +128,14 @@ export interface JubjubInterface extends utils.Interface {
       | "blankMessageLeafHash"
       | "blankStateLeafHash"
       | "calculateCurrentMessageBatchIndex"
+      | "closeSignUpPeriod"
       | "coordinatorPubKey"
       | "coordinatorPubKeyHash"
       | "currentBallotCommitment"
       | "currentMessageCommitment"
       | "currentSbCommitment"
       | "currentStateCommitment"
+      | "debugCounter"
       | "hash"
       | "hashMessageLeaf"
       | "hashStateLeaf"
@@ -189,6 +193,10 @@ export interface JubjubInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "closeSignUpPeriod",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "coordinatorPubKey",
     values?: undefined
   ): string;
@@ -210,6 +218,10 @@ export interface JubjubInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "currentStateCommitment",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "debugCounter",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -404,6 +416,10 @@ export interface JubjubInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "closeSignUpPeriod",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "coordinatorPubKey",
     data: BytesLike
   ): Result;
@@ -425,6 +441,10 @@ export interface JubjubInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "currentStateCommitment",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "debugCounter",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "hash", data: BytesLike): Result;
@@ -730,6 +750,10 @@ export interface Jubjub extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    closeSignUpPeriod(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     coordinatorPubKey(
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber] & { x: BigNumber; y: BigNumber }>;
@@ -743,6 +767,8 @@ export interface Jubjub extends BaseContract {
     currentSbCommitment(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     currentStateCommitment(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    debugCounter(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     hash(
       _left: PromiseOrValue<BigNumberish>,
@@ -917,6 +943,10 @@ export interface Jubjub extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  closeSignUpPeriod(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   coordinatorPubKey(
     overrides?: CallOverrides
   ): Promise<[BigNumber, BigNumber] & { x: BigNumber; y: BigNumber }>;
@@ -930,6 +960,8 @@ export interface Jubjub extends BaseContract {
   currentSbCommitment(overrides?: CallOverrides): Promise<BigNumber>;
 
   currentStateCommitment(overrides?: CallOverrides): Promise<BigNumber>;
+
+  debugCounter(overrides?: CallOverrides): Promise<BigNumber>;
 
   hash(
     _left: PromiseOrValue<BigNumberish>,
@@ -1104,6 +1136,8 @@ export interface Jubjub extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    closeSignUpPeriod(overrides?: CallOverrides): Promise<void>;
+
     coordinatorPubKey(
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber] & { x: BigNumber; y: BigNumber }>;
@@ -1117,6 +1151,8 @@ export interface Jubjub extends BaseContract {
     currentSbCommitment(overrides?: CallOverrides): Promise<BigNumber>;
 
     currentStateCommitment(overrides?: CallOverrides): Promise<BigNumber>;
+
+    debugCounter(overrides?: CallOverrides): Promise<BigNumber>;
 
     hash(
       _left: PromiseOrValue<BigNumberish>,
@@ -1359,6 +1395,10 @@ export interface Jubjub extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    closeSignUpPeriod(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     coordinatorPubKey(overrides?: CallOverrides): Promise<BigNumber>;
 
     coordinatorPubKeyHash(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1370,6 +1410,8 @@ export interface Jubjub extends BaseContract {
     currentSbCommitment(overrides?: CallOverrides): Promise<BigNumber>;
 
     currentStateCommitment(overrides?: CallOverrides): Promise<BigNumber>;
+
+    debugCounter(overrides?: CallOverrides): Promise<BigNumber>;
 
     hash(
       _left: PromiseOrValue<BigNumberish>,
@@ -1549,6 +1591,10 @@ export interface Jubjub extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    closeSignUpPeriod(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     coordinatorPubKey(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     coordinatorPubKeyHash(
@@ -1570,6 +1616,8 @@ export interface Jubjub extends BaseContract {
     currentStateCommitment(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    debugCounter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     hash(
       _left: PromiseOrValue<BigNumberish>,

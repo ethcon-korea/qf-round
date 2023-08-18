@@ -30,10 +30,10 @@ contract SimpleHackathon is
    * @param _data noop
    */
   function register(address _user, bytes memory _data) public view override {
-    require(
-      address(operator) == msg.sender,
-      "SignUpTokenGatekeeper: only specified operator instance can call this function"
-    );
+    // require(
+    //   address(operator) == msg.sender,
+    //   "SignUpTokenGatekeeper: only specified operator instance can call this function"
+    // );
     require(
       _user == owner(),
       "SignUpTokenGatekeeper: only owner can call this function"

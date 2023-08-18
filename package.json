@@ -23,7 +23,7 @@
       "packages/hooks",
       "packages/ui",
       "packages/app"
-      ],
+    ],
     "nohoist": [
       "**/gitbook-cli/**",
       "**/fs-extra/**"
@@ -55,5 +55,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "volta": {
+    "node": "16.20.2"
   }
 }

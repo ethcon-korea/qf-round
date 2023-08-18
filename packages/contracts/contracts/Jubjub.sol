@@ -79,6 +79,7 @@ contract Jubjub is OwnableUpgradeable, Multicallable {
   uint256 public voteDurationSeconds;
   bool public signUpsOpen;
 
+uint256 public debugCounter;
   struct PubKey {
     uint256 x;
     uint256 y;
@@ -139,6 +140,7 @@ contract Jubjub is OwnableUpgradeable, Multicallable {
   constructor() {
     require(BLANK_STATE_LEAF_HASH == blankStateLeafHash(), "MACI: BLANK_STATE_LEAF_HASH is incorrect");
     require(BLANK_MESSAGE_LEAF_HASH == blankMessageLeafHash(), "MACI: BLANK_MESSAGE_LEAF_HASH is incorrect");
+    debugCounter = 0;
   }
 
   function hash(uint256 _left, uint256 _right) public view returns (uint256) {
@@ -294,12 +296,13 @@ contract Jubjub is OwnableUpgradeable, Multicallable {
    * @param   _initialVoiceCreditProxyData Data to pass to the InitialVoiceCreditProxy, which allows it to determine how many voice credits this user should have.
    */
   function signUp(PubKey memory _pubKey, bytes memory _signUpGatekeeperData, bytes memory _initialVoiceCreditProxyData) public afterInit {
+    debugCounter++;
     // The circuits only support up to (5 ** 10 - 1) signups
     require(numSignUps < TREE_ARITY ** stateTreeDepth, "MACI: maximum number of signups reached");
-
+  debugCounter++;
     require(_pubKey.x < SNARK_SCALAR_FIELD && _pubKey.y < SNARK_SCALAR_FIELD, "MACI: _pubKey values should be less than the snark scalar field");
     require(signUpsOpen, "MACI: signups are closed");
-
+debugCounter++;
     unchecked {
       numSignUps++;
     }
@@ -307,14 +310,18 @@ contract Jubjub is OwnableUpgradeable, Multicallable {
     // Register the user via the sign-up gatekeeper. This function should
     // throw if the user has already registered or if ineligible to do so.
     signUpGatekeeper.register(msg.sender, _signUpGatekeeperData);
+debugCounter++;
     uint256 voiceCreditBalance = voiceCreditProxy.getVoiceCredits(msg.sender, _initialVoiceCreditProxyData);
-
+debugCounter++;
     uint256 timestamp = block.timestamp;
+    debugCounter++;
     // Create a state leaf and enqueue it.
     uint256 stateLeaf = hashStateLeaf(StateLeaf(_pubKey, voiceCreditBalance, timestamp));
+    debugCounter++;
     uint256 stateIndex = stateAq.enqueue(stateLeaf);
-
+debugCounter++;
     emit SignUp(stateIndex, _pubKey, voiceCreditBalance, timestamp);
+    debugCounter++;
   }
 
   /**
@@ -403,7 +410,6 @@ contract Jubjub is OwnableUpgradeable, Multicallable {
     require(!stateAq.subTreesMerged(), "ERROR_STATE_AQ_SUBTREES_MERGED");
     require(messageAq.numLeaves() == 1, "ERROR_MESSAGE_AQ_NOT_EMPTY");
 
-    signUpsOpen = false;
     resetBallotCommitment(_voteOptionTreeDepth);
 
     uint256[10] memory _data = [NOTHING_UP_MY_SLEEVE, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -525,5 +531,10 @@ contract Jubjub is OwnableUpgradeable, Multicallable {
   function openSignUpPeriod() public onlyOwner {
     require(!signUpsOpen, "ERROR_SIGNUPS_ALREADY_OPEN");
     signUpsOpen = true;
+  }
+
+  function closeSignUpPeriod() public onlyOwner {
+    require(signUpsOpen, "ERROR_SIGNUPS_ALREADY_CLOSED");
+    signUpsOpen = false;
   }
 }

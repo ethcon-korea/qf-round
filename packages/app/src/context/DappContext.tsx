@@ -22,7 +22,7 @@ const nameToChainId = (name: string): string | undefined => {
     case "Mainnet":
       return "0x1";
     case "Hardhat":
-      return "0x539";
+      return "0x7a69";
     case "Polygon":
       return "0x89";
     case "Mumbai Testnet":
@@ -66,7 +66,7 @@ export const DappProvider: React.FC<Props> = ({ children }) => {
       <WalletProvider
         web3modalOptions={web3modalOptions}
         networks={SUPPORTED_NETWORKS}
-        defaultChainId={nameToChainId("xdai")}
+        defaultChainId={nameToChainId("Hardhat")}
         handleAccountsChangedEvent={(accounts: string[]) => {
           console.log("Accounts changed");
         }}
@@ -74,6 +74,7 @@ export const DappProvider: React.FC<Props> = ({ children }) => {
           console.log("ChainId changed to: " + chainId);
         }}
         handleConnectEvent={(info: { chainId: number }) => {
+          console.log("Wallet Connected");
           console.log(info);
         }}
         handleDisconnectEvent={(error: { code: number; message: string }) => {
