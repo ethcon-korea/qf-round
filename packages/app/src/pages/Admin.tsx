@@ -301,6 +301,11 @@ export const Admin = () => {
   const handleSignUp = async () => {
     const wallet = new MaciKeyPair()
 
+
+    // ###################
+    // Prepare Signup
+    // ###################
+
     // Extract keys.
     const privateKey = wallet.privKey.serialize()
     const publicKey = wallet.pubKey.serialize()
@@ -329,11 +334,18 @@ export const Admin = () => {
         "0x158349daACE85AA6b5A1a9e39B6aFD45A7Cc2fc1",
     };
     JubjubTemplateFactory = new Jubjub__factory(libs, deployer);
+
+    // ###################
+    // Please update Jubjub address here
+    // ###################
     const jubjubInstance = JubjubTemplateFactory.attach(
-      "0x5B57E0614D852163a70b8F411c75cCbE33E4F3A3"
+      "<Jubjub address here>"
     );
     
-    
+
+    // ###################
+    // Do Signup
+    // ###################
     const tx = await jubjubInstance.signUp(_maciPK, _signUpGatekeeperData, _initialVoiceCreditProxyData,{
         gasLimit: utils.hexlify(10000000)
       })
