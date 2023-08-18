@@ -2,7 +2,6 @@ import { SafeAppWeb3Modal } from "@gnosis.pm/safe-apps-web3modal";
 import { providers } from "ethers";
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { ICoreOptions } from "web3modal";
-import { JsonRpcProvider, Resolver, getDefaultProvider } from "@ethersproject/providers";
 import { IProviderOptions } from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
