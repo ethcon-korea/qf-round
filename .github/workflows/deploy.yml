@@ -30,7 +30,7 @@ jobs:
         run: yarn build
           
       - name: Publish
-      uses: cloudflare/wrangler-action@2.0.0
-      with:
-        apiToken: ${{ secrets.CF_API_TOKEN }}
-        command: pages publish --project-name=example
+        uses: cloudflare/wrangler-action@v3
+        with:
+          command: pages deploy build
+          apiToken: ${{ secrets.CF_API_TOKEN }}
