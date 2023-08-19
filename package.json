@@ -8,11 +8,7 @@
   },
   "private": true,
   "devDependencies": {
-    "commitizen": "^4.2.4",
-    "cz-conventional-changelog": "^3.3.0",
-    "husky": "^7.0.0",
-    "lerna": "^4.0.0",
-    "lint-staged": "^12.3.7"
+    "lerna": "^4.0.0"
   },
   "workspaces": {
     "packages": [
@@ -30,7 +26,6 @@
     ]
   },
   "scripts": {
-    "cz": "cz",
     "release": "lerna version --conventional-commits",
     "canary": "lerna publish --canary --preid",
     "publish": "lerna publish",
@@ -40,8 +35,7 @@
     "build:hooks": "yarn workspace @qfi/hooks run build",
     "test": "lerna run test:unit --scope=@qfi/contracts --stream",
     "test:contracts": "yarn workspace @qfi/contracts run test",
-    "deploy:subgraph": "yarn workspace @qfi/subgraph run deploy",
-    "prepare": "husky install"
+    "deploy:subgraph": "yarn workspace @qfi/subgraph run deploy"
   },
   "keywords": [
     "RxC"
