@@ -32,5 +32,7 @@ jobs:
       - name: Publish
         uses: cloudflare/wrangler-action@v3
         with:
-          command: pages deploy build
+          command: pages deploy "packages/app/build" --project-name 'qf-round'
           apiToken: ${{ secrets.CF_API_TOKEN }}
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
