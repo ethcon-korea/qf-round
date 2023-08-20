@@ -25,16 +25,27 @@ import type {
 export interface FreeForAllGatekeeperInterface extends utils.Interface {
   functions: {
     "register(address,bytes)": FunctionFragment;
+    "setMaciInstance(address)": FunctionFragment;
   };
 
-  getFunction(nameOrSignatureOrTopic: "register"): FunctionFragment;
+  getFunction(
+    nameOrSignatureOrTopic: "register" | "setMaciInstance"
+  ): FunctionFragment;
 
   encodeFunctionData(
     functionFragment: "register",
     values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "setMaciInstance",
+    values: [PromiseOrValue<string>]
+  ): string;
 
   decodeFunctionResult(functionFragment: "register", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setMaciInstance",
+    data: BytesLike
+  ): Result;
 
   events: {};
 }
@@ -71,6 +82,11 @@ export interface FreeForAllGatekeeper extends BaseContract {
       arg1: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    setMaciInstance(
+      _maci: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
 
   register(
@@ -79,10 +95,20 @@ export interface FreeForAllGatekeeper extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  setMaciInstance(
+    _maci: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
     register(
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setMaciInstance(
+      _maci: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -95,12 +121,22 @@ export interface FreeForAllGatekeeper extends BaseContract {
       arg1: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    setMaciInstance(
+      _maci: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     register(
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setMaciInstance(
+      _maci: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

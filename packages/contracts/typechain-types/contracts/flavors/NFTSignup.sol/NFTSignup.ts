@@ -41,6 +41,7 @@ export interface NFTSignupInterface extends utils.Interface {
     "register(address,bytes)": FunctionFragment;
     "removeRecipient(bytes32)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "setMaciInstance(address)": FunctionFragment;
     "setMaxRecipients(uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
@@ -59,6 +60,7 @@ export interface NFTSignupInterface extends utils.Interface {
       | "register"
       | "removeRecipient"
       | "renounceOwnership"
+      | "setMaciInstance"
       | "setMaxRecipients"
       | "transferOwnership"
   ): FunctionFragment;
@@ -104,6 +106,10 @@ export interface NFTSignupInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "setMaciInstance",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setMaxRecipients",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
@@ -140,6 +146,10 @@ export interface NFTSignupInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setMaciInstance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -269,6 +279,11 @@ export interface NFTSignup extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    setMaciInstance(
+      _maci: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     setMaxRecipients(
       _maxRecipients: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -322,6 +337,11 @@ export interface NFTSignup extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  setMaciInstance(
+    _maci: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   setMaxRecipients(
     _maxRecipients: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -372,6 +392,11 @@ export interface NFTSignup extends BaseContract {
     ): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    setMaciInstance(
+      _maci: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     setMaxRecipients(
       _maxRecipients: PromiseOrValue<BigNumberish>,
@@ -462,6 +487,11 @@ export interface NFTSignup extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    setMaciInstance(
+      _maci: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     setMaxRecipients(
       _maxRecipients: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -513,6 +543,11 @@ export interface NFTSignup extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setMaciInstance(
+      _maci: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
