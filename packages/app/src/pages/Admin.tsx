@@ -35,8 +35,10 @@ import { Jubjub as JJ } from "../typechain/contracts/Jubjub";
 
 import { SimpleHackathon__factory } from "../typechain/factories/contracts/flavors/SimpleHackathon__factory";
 import { SimpleHackathon } from "../typechain/contracts/flavors/SimpleHackathon";
+import { SignUpNFTGatekeeper__factory } from "../typechain/factories/contracts/flavors/SignUpNFTGatekeeper__factory";
+import { SignUpNFTGatekeeper } from "../typechain/contracts/flavors/SignUpNFTGatekeeper";
 
-import { Keypair as MaciKeyPair } from "../jubjublib/index"
+import { Keypair as MaciKeyPair } from "../jubjublib/index";
 import { PubKey } from "../jubjublib/domainobjs/domainobjs";
 
 export const Admin = () => {
@@ -57,14 +59,14 @@ export const Admin = () => {
 
   const getProvider = () => {
     return provider;
-  }
+  };
 
   const getSigner = () => {
     if (!provider) {
-      return "no-signer"
+      return "no-signer";
     }
     return address;
-  }
+  };
 
   const handleT2Deploy = async () => {
     const deployer = provider.getSigner(address);
@@ -161,8 +163,9 @@ export const Admin = () => {
   };
   const handleCheckDeploy = async () => {
     const deployer = provider.getSigner(address);
-    let SimpleHackathonFactory: SimpleHackathon__factory;
-    let simpleHackathon: SimpleHackathon;
+    const NFThackerthonTicket = "0xC1d45AEa7107c2295ca694fcD1AD11823bC75dC6";
+    let SignUpNFTGatekeeperFactory: SignUpNFTGatekeeper__factory;
+    let SignUpNFTGatekeeper: SignUpNFTGatekeeper;
 
     let JubjubTemplateFactory: Jubjub__factory;
     let libs: JubjubLibraryAddresses;
@@ -174,16 +177,20 @@ export const Admin = () => {
     };
     JubjubTemplateFactory = new Jubjub__factory(libs, deployer);
 
-  SimpleHackathonFactory = new SimpleHackathon__factory(deployer);
-    simpleHackathon = await SimpleHackathonFactory.deploy(99, address);
-    await simpleHackathon.deployed();
+    SignUpNFTGatekeeperFactory = new SignUpNFTGatekeeper__factory(deployer);
+    SignUpNFTGatekeeper = await SignUpNFTGatekeeperFactory.deploy(
+      NFThackerthonTicket,
+      99
+    );
+    await SignUpNFTGatekeeper.deployed();
+    console.log("NFTGateKeeper", SignUpNFTGatekeeper);
 
     //NOTE: Deploy Jubjub Instance
     // We need a sign-up gatekeeper here
     const tx = await jubjubFactory.deployJubjub(
       "0xDEADBEEF00000000000000000000000000000000000000000000000000000000",
-      simpleHackathon.address,
-      simpleHackathon.address
+      SignUpNFTGatekeeper.address,
+      SignUpNFTGatekeeper.address
     );
     console.log(tx);
     await tx.wait();
@@ -196,12 +203,15 @@ export const Admin = () => {
     );
     setJubjub(jubjubInstance);
 
-    console.log(jubjubInstance);
+    console.log("jubjub", jubjubInstance);
     console.log(await jubjubInstance.hash(0, 0));
+    console.log("signUpsOpen:", await jubjubInstance.signUpsOpen());
+    const tx2 = await SignUpNFTGatekeeper.setMaciInstance(
+      jubjubInstance.address
+    );
+    console.log(tx2);
+    tx2.wait();
   };
-
-
-
 
   const handleStartVotingRound = async () => {
     const deployer = provider.getSigner(address);
@@ -244,9 +254,7 @@ export const Admin = () => {
       ).toString()
     );
   };
-  
-  
-  
+
   const handleStartPresetVotingRound = async () => {
     try {
       const deployer = provider.getSigner(address);
@@ -299,26 +307,30 @@ export const Admin = () => {
   };
 
   const handleSignUp = async () => {
-    const wallet = new MaciKeyPair()
-
+    const wallet = new MaciKeyPair();
 
     // ###################
     // Prepare Signup
     // ###################
 
     // Extract keys.
-    const privateKey = wallet.privKey.serialize()
-    const publicKey = wallet.pubKey.serialize()
+    const privateKey = wallet.privKey.serialize();
+    const publicKey = wallet.pubKey.serialize();
 
     console.log("gneerated keys");
     console.log("privateKey: ", privateKey);
     console.log("publicKey: ", publicKey);
 
-
-    const _maciPK = PubKey.unserialize(publicKey).asContractParam()
+    const _maciPK = PubKey.unserialize(publicKey).asContractParam();
     console.log("unserialize publicKey: ", _maciPK);
-    const _signUpGatekeeperData = utils.defaultAbiCoder.encode(["uint256"], [0])
-    const _initialVoiceCreditProxyData = utils.defaultAbiCoder.encode(["uint256"], [0])
+    const _signUpGatekeeperData = utils.defaultAbiCoder.encode(
+      ["uint256"],
+      [0]
+    );
+    const _initialVoiceCreditProxyData = utils.defaultAbiCoder.encode(
+      ["uint256"],
+      [0]
+    );
 
     const deployer = provider.getSigner(address);
     let JubjubTemplateFactory: Jubjub__factory;
@@ -341,18 +353,22 @@ export const Admin = () => {
     const jubjubInstance = JubjubTemplateFactory.attach(
       "<Jubjub address here>"
     );
-    
 
     // ###################
     // Do Signup
     // ###################
-    const tx = await jubjubInstance.signUp(_maciPK, _signUpGatekeeperData, _initialVoiceCreditProxyData,{
-        gasLimit: utils.hexlify(10000000)
-      })
+    const tx = await jubjubInstance.signUp(
+      _maciPK,
+      _signUpGatekeeperData,
+      _initialVoiceCreditProxyData,
+      {
+        gasLimit: utils.hexlify(10000000),
+      }
+    );
     console.log("tx receipt: ", await tx.wait());
 
     // const signer = provider.getSigner(address);
-  }
+  };
 
   // const [jubjubFactory, setjubjubFactory] = React.useState("");
   // const handleT4Deploy = () => {
@@ -452,7 +468,7 @@ export const Admin = () => {
               >
                 Start Voting
               </Button>
-              
+
               <VStack>
                 {loading ? (
                   <Heading>Processing transactions...</Heading>
