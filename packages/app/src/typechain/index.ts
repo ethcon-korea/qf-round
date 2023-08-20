@@ -3,6 +3,8 @@
 /* eslint-disable */
 export type { SimpleHackathon } from "./contracts/flavors/SimpleHackathon";
 export { SimpleHackathon__factory } from "./factories/contracts/flavors/SimpleHackathon__factory";
+export type { SignUpNFTGatekeeper } from "./contracts/flavors/SignUpNFTGatekeeper";
+export { SignUpNFTGatekeeper__factory } from "./factories/contracts/flavors/SignUpNFTGatekeeper__factory";
 export type { Jubjub } from "./contracts/Jubjub";
 export { Jubjub__factory } from "./factories/contracts/Jubjub__factory";
 export type { JubjubFactory } from "./contracts/JubjubFactory";

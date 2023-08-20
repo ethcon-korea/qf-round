@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { SimpleHackathon } from "./SimpleHackathon";
+export type { SignUpNFTGatekeeper } from "./SignUpNFTGatekeeper";

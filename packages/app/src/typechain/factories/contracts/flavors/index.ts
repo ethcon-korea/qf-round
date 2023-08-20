@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export { SimpleHackathon__factory } from "./SimpleHackathon__factory";
+export { SignUpNFTGatekeeper__factory } from "./SignUpNFTGatekeeper__factory";
