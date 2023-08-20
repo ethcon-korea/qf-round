@@ -4,6 +4,7 @@
 export * as constantInitialVoiceCreditProxySol from "./ConstantInitialVoiceCreditProxy.sol";
 export * as fSol from "./F.sol";
 export * as nftSignupSol from "./NFTSignup.sol";
+export * as signUpNftGateKeeperSol from "./SignUpNFTGateKeeper.sol";
 export { IInitialVoiceCreditProxy__factory } from "./IInitialVoiceCreditProxy__factory";
 export { ISignUpGatekeeper__factory } from "./ISignUpGatekeeper__factory";
 export { SimpleHackathon__factory } from "./SimpleHackathon__factory";
