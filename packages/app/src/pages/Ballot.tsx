@@ -36,7 +36,7 @@ import {
   Message,
 } from "../jubjublib/domainobjs/domainobjs";
 import { genRandomSalt } from "../jubjublib/crypto";
-import { useWallet } from "@qfi/hooks";
+import { useWallet, WalletProvider } from "@qfi/hooks";
 import { JubjubFactory__factory } from "../typechain/factories/contracts/JubjubFactory__factory";
 import {
   Jubjub__factory,
@@ -196,10 +196,10 @@ export const Ballot = () => {
   };
 
   useEffect(() => {
-    if (maciKey) {
-      setKey(maciKey);
+    if (!isConnected) {
+      setsignUp(false);
     }
-  }, [setKey, maciKey]);
+  });
 
   const voteOptions = useMemo(() => {
     return searchParams.getAll("option");
@@ -484,14 +484,34 @@ export const Ballot = () => {
   const handleSubmit = async () => {
     console.log(isMaciPrivKey(maciKey));
     const signer = provider.getSigner(address);
-    const grantRoundAddress = "0xab787044caefa1b0A89Fc9e17cA22C63aD3C5C82";
+    // const grantRoundAddress = "0xab787044caefa1b0A89Fc9e17cA22C63aD3C5C82";
 
-    const grantRound = new ethers.Contract(
-      grantRoundAddress,
-      Jubjub__factory.abi,
+    // const grantRound = new ethers.Contract(
+    //   grantRoundAddress,
+    //   Jubjub__factory.abi,
+    //   signer
+    // );
+    let JubjubTemplateFactory: Jubjub__factory;
+    let libs: JubjubLibraryAddresses;
+    libs = {
+      ["contracts/poseidon/PoseidonT6.sol:PoseidonT6"]:
+        "0xb40577bBaB20F9083a20378d36fBcc05B8cFbE69",
+      ["contracts/poseidon/PoseidonT5.sol:PoseidonT5"]:
+        "0x73ec5c589bdFfCB3DcBbCA8De290a1fCe9092d4C",
+      ["contracts/poseidon/PoseidonT3.sol:PoseidonT3"]:
+        "0x99E8C06aC9cb81BdE90336919bdD525aB67d0Ef0",
+      ["contracts/poseidon/PoseidonT4.sol:PoseidonT4"]:
+        "0x158349daACE85AA6b5A1a9e39B6aFD45A7Cc2fc1",
+    };
+    JubjubTemplateFactory = new Jubjub__factory(libs, signer);
+    const jubjubFactory = new ethers.Contract(
+      "0xC5c6aB3F9105A509Db8b024F354707B563231Dc1",
+      JubjubFactory__factory.abi,
       signer
     );
-
+    const jubjubInstance = JubjubTemplateFactory.attach(
+      await jubjubFactory.currentJubjub()
+    );
     setTxLoading(true);
     console.log("-----------------------------------------------------");
     const txData: [Message, PubKey][] = recipientRegistryIds.map(
@@ -518,8 +538,11 @@ export const Ballot = () => {
           }
           if (isMaciPrivKey(maciKey)) {
             console.log("User is registered, signing ballot with private key");
+            // const coordinatorKey = PubKey.unserialize(
+            //   "macipk.ec4173e95d2bf03100f4c694d5c26ba6ab9817c0a5a0df593536a8ee2ec7af04"
+            // );
             const coordinatorKey = PubKey.unserialize(
-              "macipk.ec4173e95d2bf03100f4c694d5c26ba6ab9817c0a5a0df593536a8ee2ec7af04"
+              "macipk.a39f603e634bd0e718e3549b0f06b50337f96ca7db1df75a6988f78ec448620b"
             );
 
             const [message, encPubKey] = createMessage(
@@ -542,10 +565,21 @@ export const Ballot = () => {
     );
     const messages: Message[] = [];
     const encPubKeys: PubKey[] = [];
+    const messagesJubJub: Jubjub.MessageStruct[] = [];
+    const encPubKeyJubJub: Jubjub.PubKeyStruct[] = [];
 
     for (const [message, encPubKey] of txData) {
-      messages.push(message);
-      encPubKeys.push(encPubKey);
+      var tempMsg: Jubjub.MessageStruct = {} as Jubjub.MessageStruct;
+      var tempEncPub: Jubjub.PubKeyStruct = {} as Jubjub.PubKeyStruct;
+      tempMsg.msgType = BigNumber.from(message.asContractParam().msgType);
+      tempMsg.data = [];
+      for (const _data of message.data) {
+        tempMsg.data.push(BigNumber.from(_data));
+      }
+      tempEncPub = encPubKey.asContractParam();
+
+      messagesJubJub.push(tempMsg);
+      encPubKeyJubJub.push(tempEncPub);
     }
 
     console.log(messages);
@@ -555,11 +589,12 @@ export const Ballot = () => {
       const gasLimit = ethers.utils.hexlify(10000000);
       const signer = provider.getSigner(address);
 
-      const tx = await grantRound.connect(signer).publishMessageBatch(
-        messages.reverse().map((msg) => msg.asContractParam()),
-        encPubKeys.reverse().map((key) => key.asContractParam()),
-        { gasPrice: gasPrice, gasLimit }
-      );
+      const tx = await jubjubInstance
+        .connect(signer)
+        .publishMessageBatch(messagesJubJub, encPubKeyJubJub, {
+          gasPrice: gasPrice,
+          gasLimit,
+        });
       await tx.wait();
       toast({
         title: t("Ballot Submitted"),
@@ -679,7 +714,11 @@ export const Ballot = () => {
         .from("whitelist")
         .select("maci_private")
         .eq("eoa_address", address);
-      setMaciKey(whitelist[0].maci_private);
+
+      var value = whitelist[whitelist.length - 1].maci_private;
+      if (isMaciPrivKey(value)) {
+        setMaciKey(value);
+      }
       setsignUp(true);
       toast({
         title: "Already SignUp",
@@ -868,29 +907,29 @@ export const Ballot = () => {
 
           {signUp ? (
             <>
-              <form style={{ width: "100%" }}>
-                <FormControl
+              {/* <FormControl
+                w="full"
+                display={{ base: "flex", md: "block" }}
+                flexDir={{ base: "column" }}
+                alignItems={{ base: "center" }}
+                isInvalid={isError}
+                variant="floating"
+                id="key"
+                isRequired
+                mt={{ base: 12 }}
+              >
+                <Button
+                  variant="amsterdam"
+                  fontSize={{ base: "lg", xl: "xl" }}
+                  type="submit"
                   w="full"
-                  display={{ base: "flex", md: "block" }}
-                  flexDir={{ base: "column" }}
-                  alignItems={{ base: "center" }}
-                  isInvalid={isError}
-                  variant="floating"
-                  id="key"
-                  isRequired
-                  mt={{ base: 12 }}
+                  mt={6}
+                  alignItems="center"
                 >
-                  <Button
-                    variant="amsterdam"
-                    fontSize={{ base: "lg", xl: "xl" }}
-                    type="submit"
-                    w="full"
-                    mt={6}
-                    alignItems="center"
-                  >
-                    {t("SAVE")}
-                  </Button>
-                </FormControl>
+                  {t("SAVE")}
+                </Button>
+              </FormControl> */}
+              <form style={{ width: "100%" }}>
                 <SubmitBallotButton
                   disableSubmitButton={disableSubmitButton}
                   isConnected={isConnected}
