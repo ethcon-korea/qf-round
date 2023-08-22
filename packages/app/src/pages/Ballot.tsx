@@ -49,6 +49,7 @@ import { useTranslation } from "react-i18next";
 import { createClient } from "@supabase/supabase-js";
 import { Alchemy, Network } from "alchemy-sdk";
 import { ALCHEMY_KEY, SUPABASE_SERVICE_KEY } from "./key";
+import { Libs, TicketAddress, JubjubFactoryAddress } from "./Address";
 
 const settings = {
   apiKey: ALCHEMY_KEY,
@@ -484,28 +485,11 @@ export const Ballot = () => {
   const handleSubmit = async () => {
     console.log(isMaciPrivKey(maciKey));
     const signer = provider.getSigner(address);
-    // const grantRoundAddress = "0xab787044caefa1b0A89Fc9e17cA22C63aD3C5C82";
 
-    // const grantRound = new ethers.Contract(
-    //   grantRoundAddress,
-    //   Jubjub__factory.abi,
-    //   signer
-    // );
     let JubjubTemplateFactory: Jubjub__factory;
-    let libs: JubjubLibraryAddresses;
-    libs = {
-      ["contracts/poseidon/PoseidonT6.sol:PoseidonT6"]:
-        "0xb40577bBaB20F9083a20378d36fBcc05B8cFbE69",
-      ["contracts/poseidon/PoseidonT5.sol:PoseidonT5"]:
-        "0x73ec5c589bdFfCB3DcBbCA8De290a1fCe9092d4C",
-      ["contracts/poseidon/PoseidonT3.sol:PoseidonT3"]:
-        "0x99E8C06aC9cb81BdE90336919bdD525aB67d0Ef0",
-      ["contracts/poseidon/PoseidonT4.sol:PoseidonT4"]:
-        "0x158349daACE85AA6b5A1a9e39B6aFD45A7Cc2fc1",
-    };
-    JubjubTemplateFactory = new Jubjub__factory(libs, signer);
+    JubjubTemplateFactory = new Jubjub__factory(Libs, signer);
     const jubjubFactory = new ethers.Contract(
-      "0xC5c6aB3F9105A509Db8b024F354707B563231Dc1",
+      JubjubFactoryAddress,
       JubjubFactory__factory.abi,
       signer
     );
@@ -623,12 +607,10 @@ export const Ballot = () => {
     console.log(whitelist.length);
     if (whitelist.length < 1) {
       const signer = provider.getSigner(address);
-      const ticketAddress = "0xC1d45AEa7107c2295ca694fcD1AD11823bC75dC6";
-      const wallet = new Keypair();
 
       const alchemy = new Alchemy(settings);
       const result = await alchemy.nft.getNftsForOwner(address, {
-        contractAddresses: [ticketAddress],
+        contractAddresses: [TicketAddress],
       });
       console.log(result);
       if (result.ownedNfts.length < 1) {
@@ -640,6 +622,15 @@ export const Ballot = () => {
         });
         setIsInvalid(true);
       } else {
+        var wallet;
+        while (true) {
+          try {
+            wallet = new Keypair();
+            break;
+          } catch (e) {
+            console.error("Error:", e);
+          }
+        }
         const tokenId = result.ownedNfts[0].tokenId;
         const privateKey = wallet.privKey.serialize();
         const publicKey = wallet.pubKey.serialize();
@@ -668,20 +659,9 @@ export const Ballot = () => {
         console.log(data);
 
         let JubjubTemplateFactory: Jubjub__factory;
-        let libs: JubjubLibraryAddresses;
-        libs = {
-          ["contracts/poseidon/PoseidonT6.sol:PoseidonT6"]:
-            "0xb40577bBaB20F9083a20378d36fBcc05B8cFbE69",
-          ["contracts/poseidon/PoseidonT5.sol:PoseidonT5"]:
-            "0x73ec5c589bdFfCB3DcBbCA8De290a1fCe9092d4C",
-          ["contracts/poseidon/PoseidonT3.sol:PoseidonT3"]:
-            "0x99E8C06aC9cb81BdE90336919bdD525aB67d0Ef0",
-          ["contracts/poseidon/PoseidonT4.sol:PoseidonT4"]:
-            "0x158349daACE85AA6b5A1a9e39B6aFD45A7Cc2fc1",
-        };
-        JubjubTemplateFactory = new Jubjub__factory(libs, signer);
+        JubjubTemplateFactory = new Jubjub__factory(Libs, signer);
         const jubjubFactory = new ethers.Contract(
-          "0xC5c6aB3F9105A509Db8b024F354707B563231Dc1",
+          JubjubFactoryAddress,
           JubjubFactory__factory.abi,
           signer
         );
