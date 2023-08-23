@@ -219,15 +219,19 @@ export const Admin = () => {
     let JubjubTemplateFactory: Jubjub__factory;
     let libs: JubjubLibraryAddresses;
     libs = {
-      ["contracts/poseidon/PoseidonT6.sol:PoseidonT6"]: poseidonT6.address,
-      ["contracts/poseidon/PoseidonT5.sol:PoseidonT5"]: poseidonT5.address,
-      ["contracts/poseidon/PoseidonT3.sol:PoseidonT3"]: poseidonT3.address,
-      ["contracts/poseidon/PoseidonT4.sol:PoseidonT4"]: poseidonT4.address,
+      ["contracts/poseidon/PoseidonT6.sol:PoseidonT6"]:
+        "0x19e066281Cf25eecb012F6894CE685d085Be480C",
+      ["contracts/poseidon/PoseidonT5.sol:PoseidonT5"]:
+        "0x759e6B5293bD8c6EBD5Ec114341ca23a38834E85",
+      ["contracts/poseidon/PoseidonT3.sol:PoseidonT3"]:
+        "0xB7098F48a2703c42ae77775d368EB0b32d6eB5d3",
+      ["contracts/poseidon/PoseidonT4.sol:PoseidonT4"]:
+        "0xA56cBDE847f7CBC6E17311761A7A2C8b65ed7940",
     };
     JubjubTemplateFactory = new Jubjub__factory(libs, deployer);
 
     const jubjubInstance = JubjubTemplateFactory.attach(
-      await jubjubFactory.currentJubjub()
+      "0x1c01cb2D678A5038A6209ed2F1B445d9f88c40e1"
     );
     setJubjub(jubjubInstance);
 
@@ -458,9 +462,9 @@ export const Admin = () => {
               </Button>
               <Button
                 onClick={async () => {
-                  setLoading(true);
+                  //setLoading(true);
                   await handleStartVotingRound();
-                  setLoading(false);
+                  //setLoading(false);
                 }}
                 // isDisabled={step !== 3}
                 variant="amsterdam"
