@@ -27,7 +27,6 @@ import { Hero } from "../components/Hero";
 import { BallotExplainer } from "../components/prague/BallotExplainer";
 import { Link, useSearchParams } from "react-router-dom";
 import { useDappState } from "../context/DappContext";
-import { utils, Contract } from "ethers";
 import {
   Keypair,
   PubKey,
@@ -46,18 +45,7 @@ import { Jubjub } from "../typechain/contracts/Jubjub";
 import { BigNumber, ethers } from "ethers";
 import { getStateIndex } from "../quickBallotConfig";
 import { useTranslation } from "react-i18next";
-import { createClient } from "@supabase/supabase-js";
-import { Alchemy, Network } from "alchemy-sdk";
-import { ALCHEMY_KEY, SUPABASE_SERVICE_KEY } from "./key";
 import { Libs, TicketAddress, JubjubFactoryAddress } from "./Address";
-
-const settings = {
-  apiKey: ALCHEMY_KEY,
-  network: Network.OPT_MAINNET,
-};
-const supabaseUrl = "https://lkrcjryaynygdvgtmumc.supabase.co";
-const supabaseKey = SUPABASE_SERVICE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 const isMaciPrivKey = (key: string): boolean => {
   if ((key.length === 71 || key.length === 70) && key.startsWith("macisk.")) {
@@ -130,8 +118,6 @@ export const Ballot = () => {
   const colorModeSwitch = useColorModeValue(true, false);
   const [isViewportMd] = useMediaQuery("(min-width: 768px)");
   const [key, setKey] = useState<string>();
-  const [isInvalid, setIsInvalid] = useState(false);
-  const [signUp, setsignUp] = useState(false);
   const { maciKey, setMaciKey } = useDappState();
   const [searchParams] = useSearchParams();
   const { i18n, t } = useTranslation();
@@ -140,10 +126,11 @@ export const Ballot = () => {
   const currLang = i18n.language;
 
   const isValidMaciKey = useMemo(() => {
+    console.log(maciKey);
     return isMaciPrivKey(maciKey);
   }, [maciKey]);
 
-  const { provider, address, isConnected } = useWallet();
+  const { provider, address, isConnected, isSignUp } = useWallet();
   const handleInputChange = (e) => {
     setKey(String(e.target.value).trim());
   };
@@ -195,12 +182,6 @@ export const Ballot = () => {
     event.preventDefault();
     handleComplete(key);
   };
-
-  useEffect(() => {
-    if (!isConnected) {
-      setsignUp(false);
-    }
-  });
 
   const voteOptions = useMemo(() => {
     return searchParams.getAll("option");
@@ -597,118 +578,6 @@ export const Ballot = () => {
     console.log("debug log", txData);
   };
 
-  const handleSingUp = async () => {
-    let { data: whitelist, error } = await supabase
-      .from("whitelist")
-      .select("maci_public")
-      .eq("eoa_address", address);
-
-    console.log(whitelist);
-    console.log(whitelist.length);
-    if (whitelist.length < 1) {
-      const signer = provider.getSigner(address);
-
-      const alchemy = new Alchemy(settings);
-      const result = await alchemy.nft.getNftsForOwner(address, {
-        contractAddresses: [TicketAddress],
-      });
-      console.log(result);
-      if (result.ownedNfts.length < 1) {
-        toast({
-          title: "Wallet doesn't have a ticket",
-          description: address,
-          status: "error",
-          isClosable: true,
-        });
-        setIsInvalid(true);
-      } else {
-        var wallet;
-        while (true) {
-          try {
-            wallet = new Keypair();
-            break;
-          } catch (e) {
-            console.error("Error:", e);
-          }
-        }
-        const tokenId = result.ownedNfts[0].tokenId;
-        const privateKey = wallet.privKey.serialize();
-        const publicKey = wallet.pubKey.serialize();
-        const _maciPK = PubKey.unserialize(publicKey).asContractParam();
-        console.log(privateKey, publicKey, _maciPK);
-
-        const _signUpGatekeeperData = utils.defaultAbiCoder.encode(
-          ["uint256"],
-          [tokenId]
-        );
-        const _initialVoiceCreditProxyData = utils.defaultAbiCoder.encode(
-          ["uint256"],
-          [0]
-        );
-        console.log(privateKey);
-        let { data } = await supabase
-          .from("whitelist")
-          .insert([
-            {
-              eoa_address: address,
-              maci_public: publicKey,
-              maci_private: privateKey,
-            },
-          ])
-          .select();
-        console.log(data);
-
-        let JubjubTemplateFactory: Jubjub__factory;
-        JubjubTemplateFactory = new Jubjub__factory(Libs, signer);
-        const jubjubFactory = new ethers.Contract(
-          JubjubFactoryAddress,
-          JubjubFactory__factory.abi,
-          signer
-        );
-        const jubjubInstance = JubjubTemplateFactory.attach(
-          await jubjubFactory.currentJubjub()
-        );
-        console.log(await jubjubFactory.currentJubjub());
-        console.log(await jubjubInstance.signUpsOpen());
-        const tx = await jubjubInstance.signUp(
-          _maciPK,
-          _signUpGatekeeperData,
-          _initialVoiceCreditProxyData,
-          {
-            gasLimit: utils.hexlify(10000000),
-          }
-        );
-        await tx.wait();
-        console.log(tx);
-        setsignUp(true);
-        setMaciKey(privateKey);
-        toast({
-          title: "Wallet SignUp Success",
-          description: address,
-          status: "success",
-          isClosable: true,
-        });
-      }
-    } else {
-      let { data: whitelist, error } = await supabase
-        .from("whitelist")
-        .select("maci_private")
-        .eq("eoa_address", address);
-
-      var value = whitelist[whitelist.length - 1].maci_private;
-      if (isMaciPrivKey(value)) {
-        setMaciKey(value);
-      }
-      setsignUp(true);
-      toast({
-        title: "Already SignUp",
-        description: address,
-        status: "info",
-        isClosable: true,
-      });
-    }
-  };
-
   return (
     <Flex
       as="main"
@@ -770,8 +639,38 @@ export const Ballot = () => {
                 <Hero />
               </AspectRatio>
             </Heading>
+            {isConnected ? (
+              isSignUp ? (
+                <div
+                  style={{
+                    width: "100%",
+                    fontSize: 20,
+                    backgroundColor: "#00a5cf",
+                  }}
+                >
+                  <Text textAlign={{ base: "center" }}>
+                    You are elligible to vote
+                  </Text>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    width: "100%",
+                    fontSize: 20,
+                    backgroundColor: "#e63946",
+                  }}
+                >
+                  <Text textAlign={{ base: "center" }}>
+                    Your wallet is not elligible to vote, please connect the
+                    wallet with Ethcon NFT ticket
+                  </Text>
+                </div>
+              )
+            ) : (
+              <></>
+            )}
 
-            <MagikButton borderRadius={"8px"} mt={6} />
+            <MagikButton style={{ marginTop: 0 }} borderRadius={"8px"} mt={6} />
           </Flex>
         )}
 
@@ -869,46 +768,8 @@ export const Ballot = () => {
               </GridItem>
            */}
           </Grid>
-          {!signUp ? (
-            <Button
-              variant="amsterdam"
-              fontSize={{ base: "lg", xl: "xl" }}
-              type="submit"
-              w="full"
-              mt={6}
-              onClick={handleSingUp}
-              alignItems="center"
-            >
-              {t("SignUp")}
-            </Button>
-          ) : (
-            <></>
-          )}
-
-          {signUp ? (
+          {isSignUp ? (
             <>
-              {/* <FormControl
-                w="full"
-                display={{ base: "flex", md: "block" }}
-                flexDir={{ base: "column" }}
-                alignItems={{ base: "center" }}
-                isInvalid={isError}
-                variant="floating"
-                id="key"
-                isRequired
-                mt={{ base: 12 }}
-              >
-                <Button
-                  variant="amsterdam"
-                  fontSize={{ base: "lg", xl: "xl" }}
-                  type="submit"
-                  w="full"
-                  mt={6}
-                  alignItems="center"
-                >
-                  {t("SAVE")}
-                </Button>
-              </FormControl> */}
               <form style={{ width: "100%" }}>
                 <SubmitBallotButton
                   disableSubmitButton={disableSubmitButton}
