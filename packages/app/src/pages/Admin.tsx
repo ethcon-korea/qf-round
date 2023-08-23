@@ -245,59 +245,6 @@ export const Admin = () => {
     );
   };
   
-  
-  
-  const handleStartPresetVotingRound = async () => {
-    try {
-      const deployer = provider.getSigner(address);
-
-      let JubjubTemplateFactory: Jubjub__factory;
-      let libs: JubjubLibraryAddresses;
-      libs = {
-        ["contracts/poseidon/PoseidonT6.sol:PoseidonT6"]:
-          "0xb40577bBaB20F9083a20378d36fBcc05B8cFbE69",
-        ["contracts/poseidon/PoseidonT5.sol:PoseidonT5"]:
-          "0x73ec5c589bdFfCB3DcBbCA8De290a1fCe9092d4C",
-        ["contracts/poseidon/PoseidonT3.sol:PoseidonT3"]:
-          "0x99E8C06aC9cb81BdE90336919bdD525aB67d0Ef0",
-        ["contracts/poseidon/PoseidonT4.sol:PoseidonT4"]:
-          "0x158349daACE85AA6b5A1a9e39B6aFD45A7Cc2fc1",
-      };
-      JubjubTemplateFactory = new Jubjub__factory(libs, deployer);
-
-      const jubjubInstance = JubjubTemplateFactory.attach(
-        "0xab787044caefa1b0A89Fc9e17cA22C63aD3C5C82"
-      );
-      setJubjub(jubjubInstance);
-
-      console.log("jubjubInstance", jubjubInstance);
-
-      const _coordinatorPubkey = PubKey.unserialize(
-        "macipk.ec4173e95d2bf03100f4c694d5c26ba6ab9817c0a5a0df593536a8ee2ec7af04"
-      ).asContractParam();
-      console.log(_coordinatorPubkey);
-      // console.log(_coordinatorPubkey);
-      const tx = await jubjubInstance.startVoting(
-        BigNumber.from(3),
-        BigNumber.from(60 * 60 * 24 * 14),
-        _coordinatorPubkey
-      );
-      console.log(tx);
-
-      await tx.wait();
-
-      console.log("hash:", (await jubjubInstance.hash(0, 0)).toString());
-      console.log(
-        "hashShouldEq:",
-        BigNumber.from(
-          "0x2098f5fb9e239eab3ceac3f27b81e481dc3124d55ffed523a839ee8446b64864"
-        ).toString()
-      );
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   const handleSignUp = async () => {
     const wallet = new MaciKeyPair()
 
