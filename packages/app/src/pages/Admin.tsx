@@ -230,9 +230,17 @@ export const Admin = () => {
     };
     JubjubTemplateFactory = new Jubjub__factory(libs, deployer);
 
+    // const jubjubInstance = JubjubTemplateFactory.attach(
+    //   await jubjubFactory.currentJubjub()
+    // // );
+
+    // ###################
+    // Please update Jubjub address here
+    // ###################
     const jubjubInstance = JubjubTemplateFactory.attach(
-      "0x1c01cb2D678A5038A6209ed2F1B445d9f88c40e1"
+      "<Jubjub address here>"
     );
+    
     setJubjub(jubjubInstance);
 
     console.log(jubjubInstance);

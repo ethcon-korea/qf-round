@@ -9,12 +9,19 @@ import { NetworkUserConfig } from "hardhat/types";
 
 import '@typechain/hardhat'
 import '@nomiclabs/hardhat-ethers'
-import '@nomiclabs/hardhat-waffle'
+// import '@nomiclabs/hardhat-waffle'
 
 import "solidity-coverage";
 import "hardhat-gas-reporter";
 import "hardhat-contract-sizer";
 import "hardhat-abi-exporter";
+
+import "@nomicfoundation/hardhat-chai-matchers"
+import "@nomicfoundation/hardhat-network-helpers"
+import "@nomiclabs/hardhat-etherscan"
+import "alchemy-sdk"
+import "hardhat-change-network"
+
 
 dotenv.config();
 
@@ -64,10 +71,14 @@ function createTestnetConfig(
 const config: HardhatUserConfig = {
   networks: {
     hardhat: {
-      gas: GAS_LIMIT,
-      blockGasLimit: GAS_LIMIT,
       accounts: { count: 30, mnemonic: WALLET_MNEMONIC },
+      // blockGasLimit: 30_000_000,
       chainId: CHAIN_IDS.hardhat,
+      forking: {
+        url: "https://opt-mainnet.g.alchemy.com/v2/" + process.env.ALCHEMY_API_KEY,
+        enabled: true,
+        blockNumber: 107805900,
+      },
     },
     localhost: {
       url: "http://127.0.0.1:8545",
