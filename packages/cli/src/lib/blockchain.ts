@@ -12,12 +12,12 @@ import { mnemonicFilePath, networks } from "./constants.js"
  * @returns <string>
  */
 export const getNetworkExplorerUrl = (networkName: string): string => {
-  if (networkName === networks.xdai.name) return networks.xdai.explorer
-  if (networkName === networks.arbitrumRinkeby.name) return networks.arbitrumRinkeby.explorer
-  if (networkName === networks.kovan.name) return networks.kovan.explorer
-  if (networkName === networks.matic.name) return networks.matic.explorer
-  if (networkName === networks.goerli.name) return networks.goerli.explorer
-  return networks.localhost.explorer
+  // if (networkName === networks.xdai.name) return networks.xdai.explorer
+  // if (networkName === networks.arbitrumRinkeby.name) return networks.arbitrumRinkeby.explorer
+  // if (networkName === networks.kovan.name) return networks.kovan.explorer
+  // if (networkName === networks.matic.name) return networks.matic.explorer
+  // if (networkName === networks.goerli.name) return networks.goerli.explorer
+  return networks.hardhat.explorer
 }
 
 /**
@@ -26,16 +26,17 @@ export const getNetworkExplorerUrl = (networkName: string): string => {
  * @return <JsonRpcProvider>
  */
 export const getProvider = (network: string): JsonRpcProvider => {
-  let selectedNetwork: Network
+  // let selectedNetwork: Network
 
   // Connect to selected network.
-  if (network === networks.xdai.name) selectedNetwork = networks.xdai
-  else if (network === networks.arbitrumRinkeby.name) selectedNetwork = networks.arbitrumRinkeby
-  else if (network === networks.kovan.name) selectedNetwork = networks.kovan
-  else if (network === networks.matic.name) selectedNetwork = networks.matic
-  else if (network === networks.goerli.name) selectedNetwork = networks.goerli
-  else selectedNetwork = networks.localhost
-  const provider = new JsonRpcProvider(selectedNetwork.rpcUrl, selectedNetwork.name)
+  // if (network === networks.xdai.name) selectedNetwork = networks.xdai
+  // else if (network === networks.arbitrumRinkeby.name) selectedNetwork = networks.arbitrumRinkeby
+  // else if (network === networks.kovan.name) selectedNetwork = networks.kovan
+  // else if (network === networks.matic.name) selectedNetwork = networks.matic
+  // else if (network === networks.goerli.name) selectedNetwork = networks.goerli
+  // else
+  // selectedNetwork = networks.hardhat
+  const provider = new JsonRpcProvider("http://127.0.0.1:8545")
 
   return provider
 }
@@ -54,9 +55,11 @@ export const getWalletFromMnemonic = (mnemonic: string): Wallet => Wallet.fromMn
  */
 export const connectWalletToProviderFromMnemonic = (provider: JsonRpcProvider): Wallet => {
   // Get wallet from stored mnemonic.
-  const mnemonic = readFileSync(mnemonicFilePath)
+  // console.log("mnemonicFilePath: ", mnemonicFilePath);
+  // const mnemonic = readFileSync(mnemonicFilePath);
 
-  let wallet = Wallet.fromMnemonic(mnemonic)
+  // console.log("mnemonic: ", mnemonic);
+  let wallet = Wallet.fromMnemonic("candy maple cake sugar pudding cream honey rich smooth crumble sweet treat");
 
   // Connect to the provider.
   wallet = wallet.connect(provider)
@@ -72,7 +75,7 @@ export const connectWalletToProviderFromMnemonic = (provider: JsonRpcProvider): 
 export const connectToBlockchain = async (network: string): Promise<UserConnectedToNetwork> => {
   // Get the provider.
   const provider = getProvider(network)
-  console.log(`${logSymbols.success} Connected to ${chalk.bold(provider.network.name)} network`)
+  // console.log(`${logSymbols.success} Connected to ${chalk.bold(provider.network.name)} network`)
 
   // Connect wallet to provider from mnemonic.
   const wallet = connectWalletToProviderFromMnemonic(provider)

@@ -97,11 +97,11 @@ export const header = figlet.textSync("ETHDam CLI", {
 
 /** Networks */
 export const networks = {
-  localhost: {
-    name: "localhost",
-    rpcUrl: "http://localhost:8545", // Hardhat
-    chainId: 1337,
-    explorer: "http://localhost:8545/"
+  hardhat: {
+    name: "hardhat",
+    rpcUrl: "http://127.0.0.1:8545", // Hardhat
+    chainId: 31337,
+    explorer: "http://127.0.0.1:8545/"
   },
   arbitrumRinkeby: {
     name: "arbitrum-rinkeby",

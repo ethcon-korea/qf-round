@@ -167,9 +167,10 @@ class Poll {
     const sharedKey = Keypair.genEcdhSharedKey(this.coordinatorKeypair.privKey, _encPubKey);
     try {
       let { command, signature } = PCommand.decrypt(_message, sharedKey);
+      console.log(`[MACISTATE] command: ${command}`);
       this.commands.push(command);
     } catch (e) {
-      //console.log(`error cannot decrypt: ${e.message}`)
+      console.log(`[MACISTATE]error cannot decrypt: ${e.message}`)
       let keyPair = new Keypair();
       let command = new PCommand(BigInt(0), keyPair.pubKey, BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0));
       this.commands.push(command);
