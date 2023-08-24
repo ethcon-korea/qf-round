@@ -639,35 +639,33 @@ export const Ballot = () => {
                 <Hero />
               </AspectRatio>
             </Heading>
-            {isConnected ? (
-              isSignUp ? (
-                <div
-                  style={{
-                    width: "100%",
-                    fontSize: 20,
-                    backgroundColor: "#00a5cf",
-                  }}
-                >
-                  <Text textAlign={{ base: "center" }}>
-                    You are elligible to vote
-                  </Text>
-                </div>
-              ) : (
-                <div
-                  style={{
-                    width: "100%",
-                    fontSize: 20,
-                    backgroundColor: "#e63946",
-                  }}
-                >
-                  <Text textAlign={{ base: "center" }}>
-                    Your wallet is not elligible to vote, please connect the
-                    wallet with Ethcon NFT ticket
-                  </Text>
-                </div>
-              )
-            ) : (
+            {!isConnected || isSignUp == null ? (
               <></>
+            ) : isSignUp == true ? (
+              <div
+                style={{
+                  width: "100%",
+                  fontSize: 20,
+                  backgroundColor: "#00a5cf",
+                }}
+              >
+                <Text textAlign={{ base: "center" }}>
+                  You are elligible to vote
+                </Text>
+              </div>
+            ) : (
+              <div
+                style={{
+                  width: "100%",
+                  fontSize: 20,
+                  backgroundColor: "#e63946",
+                }}
+              >
+                <Text textAlign={{ base: "center" }}>
+                  Your wallet is not elligible to vote, please connect the
+                  wallet with Ethcon NFT ticket
+                </Text>
+              </div>
             )}
 
             <MagikButton style={{ marginTop: 0 }} borderRadius={"8px"} mt={6} />
