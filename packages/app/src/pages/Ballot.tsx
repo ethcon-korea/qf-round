@@ -122,64 +122,13 @@ export const Ballot = () => {
   const backgroundColor = useColorModeValue("gray.100", "#000000");
   const colorModeSwitch = useColorModeValue(true, false);
   const [isViewportMd] = useMediaQuery("(min-width: 768px)");
-  const [key, setKey] = useState<string>();
-  const { maciKey, setMaciKey } = useDappState();
   const [searchParams] = useSearchParams();
   const { i18n, t } = useTranslation();
   const toast = useToast();
 
   const currLang = i18n.language;
 
-  const isValidMaciKey = useMemo(() => {
-    console.log(maciKey);
-    return isMaciPrivKey(maciKey);
-  }, [maciKey]);
-
   const { provider, address, isConnected, isSignUp } = useWallet();
-  const handleInputChange = (e) => {
-    setKey(String(e.target.value).trim());
-  };
-
-  const handleComplete = (value: string) => {
-    console.log("complete");
-    try {
-      if (isMaciPrivKey(value)) {
-        setMaciKey(value);
-
-        toast({
-          title: t("Verify Maci Key"),
-          description: t("You have MACI key"),
-          status: "success",
-          duration: 6000,
-          isClosable: true,
-        });
-        console.log("changed");
-        console.log(new Keypair(PrivKey.unserialize(value)).pubKey.serialize());
-      } else {
-        throw new Error("Invalid MACI key");
-      }
-    } catch (e) {
-      toast({
-        title: t("Invalid Maci Key"),
-        description: t(
-          "The MACI Key you have provided is either incorrect or not registered"
-        ),
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-      console.log(e.message);
-    }
-  };
-
-  const numChars = useMemo(() => {
-    if (key) {
-      return key.length;
-    }
-  }, [key]);
-  const isError = useMemo(() => {
-    return key && !isMaciPrivKey(key);
-  }, [key]);
 
   const voteOptions = useMemo(() => {
     return searchParams.getAll("option");
@@ -421,7 +370,7 @@ export const Ballot = () => {
 
   const [txLoading, setTxLoading] = useState<boolean>(false);
 
-  const disableSubmitButton = !isConnected || !isValidMaciKey || txLoading;
+  const disableSubmitButton = !isConnected || txLoading;
 
   function createMessage(
     userStateIndex: number,
@@ -471,7 +420,8 @@ export const Ballot = () => {
       .select("state_index")
       .eq("eoa_address", address);
 
-    if (isMaciPrivKey(maciPrivate[0].maci_private)) {
+    const maciKey = maciPrivate[0].maci_private;
+    if (isMaciPrivKey(maciKey)) {
       toast({
         title: t("Verify Maci Key"),
         description: t("You have MACI key"),
