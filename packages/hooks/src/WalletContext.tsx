@@ -69,6 +69,15 @@ export const providerOptions: IProviderOptions = {
   },
   // .. Other providers
 };
+const isMaciPrivKey = (key: string): boolean => {
+  if ((key.length === 71 || key.length === 70) && key.startsWith("macisk.")) {
+    console.log("key is valid maci key");
+    const pubKey = new Keypair(PrivKey.unserialize(key)).pubKey.serialize();
+    return true;
+  }
+
+  return false;
+};
 
 const WalletContext = createContext<WalletContextType>({
   provider: null,
@@ -281,6 +290,19 @@ export const WalletProvider: React.FC<{
         console.log(result);
         if (result.ownedNfts.length >= 1) {
           setSignUp(true);
+          let JubjubTemplateFactory: Jubjub__factory;
+          JubjubTemplateFactory = new Jubjub__factory(Libs, signer);
+          const jubjubFactory = new ethers.Contract(
+            JubjubFactoryAddress,
+            JubjubFactory__factory.abi,
+            signer
+          );
+          const jubjubInstance = JubjubTemplateFactory.attach(
+            await jubjubFactory.currentJubjub()
+          );
+          console.log(await jubjubFactory.currentJubjub());
+          console.log(await jubjubInstance.signUpsOpen());
+
           var wallet;
           while (true) {
             try {
@@ -290,6 +312,7 @@ export const WalletProvider: React.FC<{
               console.error("Error:", e);
             }
           }
+
           const tokenId = result.ownedNfts[0].tokenId;
           const privateKey = wallet.privKey.serialize();
           const publicKey = wallet.pubKey.serialize();
@@ -303,51 +326,43 @@ export const WalletProvider: React.FC<{
             ["uint256"],
             [0]
           );
-
-          let JubjubTemplateFactory: Jubjub__factory;
-          JubjubTemplateFactory = new Jubjub__factory(Libs, signer);
-          const jubjubFactory = new ethers.Contract(
-            JubjubFactoryAddress,
-            JubjubFactory__factory.abi,
-            signer
-          );
-          const jubjubInstance = JubjubTemplateFactory.attach(
-            await jubjubFactory.currentJubjub()
-          );
-          console.log(await jubjubFactory.currentJubjub());
-          console.log(await jubjubInstance.signUpsOpen());
-          const tx = await jubjubInstance.signUp(
-            _maciPK,
-            _signUpGatekeeperData,
-            _initialVoiceCreditProxyData,
-            {
-              gasLimit: utils.hexlify(10000000),
-            }
-          );
-          await tx.wait();
-          console.log(tx);
-          // let { data } = await supabase
-          //   .from("whitelist")
-          //   .insert([
-          //     {
-          //       eoa_address: address,
-          //       maci_public: publicKey,
-          //       maci_private: privateKey,
-          //     },
-          //   ])
-          //   .select();
-          let { data } = await supabase
-            .from("whitelist")
-            .update([
+          try {
+            isMaciPrivKey(privateKey);
+            const tx = await jubjubInstance.signUp(
+              _maciPK,
+              _signUpGatekeeperData,
+              _initialVoiceCreditProxyData,
               {
-                eoa_address: address,
-                maci_public: publicKey,
-                maci_private: privateKey,
-              },
-            ])
-            .eq("eoa_address", address)
-            .select();
-          console.log(data);
+                gasLimit: utils.hexlify(10000000),
+              }
+            );
+            await tx.wait();
+            console.log(tx);
+            let { data } = await supabase
+              .from("whitelist")
+              .insert([
+                {
+                  eoa_address: signerAddress,
+                  maci_public: publicKey,
+                  maci_private: privateKey,
+                },
+              ])
+              .select();
+            // let { data } = await supabase
+            //   .from("whitelist")
+            //   .update([
+            //     {
+            //       eoa_address: address,
+            //       maci_public: publicKey,
+            //       maci_private: privateKey,
+            //     },
+            //   ])
+            //   .eq("eoa_address", address)
+            //   .select();
+            // console.log(data);
+          } catch (e) {
+            console.log("Error: ", e);
+          }
         } else {
           setSignUp(false);
         }

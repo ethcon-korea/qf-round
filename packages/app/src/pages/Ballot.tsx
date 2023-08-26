@@ -46,6 +46,11 @@ import { BigNumber, ethers } from "ethers";
 import { getStateIndex } from "../quickBallotConfig";
 import { useTranslation } from "react-i18next";
 import { Libs, TicketAddress, JubjubFactoryAddress } from "./Address";
+import { createClient } from "@supabase/supabase-js";
+import { ALCHEMY_KEY, SUPABASE_SERVICE_KEY } from "./key";
+const supabaseUrl = "https://lkrcjryaynygdvgtmumc.supabase.co";
+const supabaseKey = SUPABASE_SERVICE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const isMaciPrivKey = (key: string): boolean => {
   if ((key.length === 71 || key.length === 70) && key.startsWith("macisk.")) {
@@ -142,10 +147,8 @@ export const Ballot = () => {
         setMaciKey(value);
 
         toast({
-          title: t("New Maci Key"),
-          description: t(
-            "You have updated your MACI key, and are registered to vote."
-          ),
+          title: t("Verify Maci Key"),
+          description: t("You have MACI key"),
           status: "success",
           duration: 6000,
           isClosable: true,
@@ -177,11 +180,6 @@ export const Ballot = () => {
   const isError = useMemo(() => {
     return key && !isMaciPrivKey(key);
   }, [key]);
-
-  const handleSubmitMaciChange = (event) => {
-    event.preventDefault();
-    handleComplete(key);
-  };
 
   const voteOptions = useMemo(() => {
     return searchParams.getAll("option");
@@ -464,118 +462,140 @@ export const Ballot = () => {
   }
 
   const handleSubmit = async () => {
-    console.log(isMaciPrivKey(maciKey));
-    const signer = provider.getSigner(address);
+    let { data: maciPrivate } = await supabase
+      .from("whitelist")
+      .select("maci_private")
+      .eq("eoa_address", address);
+    let { data: state } = await supabase
+      .from("whitelist")
+      .select("state_index")
+      .eq("eoa_address", address);
 
-    let JubjubTemplateFactory: Jubjub__factory;
-    JubjubTemplateFactory = new Jubjub__factory(Libs, signer);
-    const jubjubFactory = new ethers.Contract(
-      JubjubFactoryAddress,
-      JubjubFactory__factory.abi,
-      signer
-    );
-    const jubjubInstance = JubjubTemplateFactory.attach(
-      await jubjubFactory.currentJubjub()
-    );
-    setTxLoading(true);
-    console.log("-----------------------------------------------------");
-    const txData: [Message, PubKey][] = recipientRegistryIds.map(
-      (projectId, index) => {
-        try {
-          const recipientVoteOptionIndex = getRecipientIdbyId(
-            projectId.toString()
-          );
-          console.log("recipientVoteOptionIndex", recipientVoteOptionIndex);
-          let maciKeyPair: Keypair;
-          let serializedMaciPublicKey: string;
-          let userStateIndex: number;
-          let nonce: number;
-          let voteWeight: number;
-
-          if (isMaciPrivKey(maciKey)) {
-            maciKeyPair = new Keypair(PrivKey.unserialize(maciKey));
-            serializedMaciPublicKey = maciKeyPair.pubKey.serialize();
-            console.log("serializedMaciPublicKey", serializedMaciPublicKey);
-            userStateIndex = 2;
-            console.log("stateIndex", userStateIndex);
-            nonce = index;
-            voteWeight = votes[index];
-          }
-          if (isMaciPrivKey(maciKey)) {
-            console.log("User is registered, signing ballot with private key");
-            // const coordinatorKey = PubKey.unserialize(
-            //   "macipk.ec4173e95d2bf03100f4c694d5c26ba6ab9817c0a5a0df593536a8ee2ec7af04"
-            // );
-            const coordinatorKey = PubKey.unserialize(
-              "macipk.a39f603e634bd0e718e3549b0f06b50337f96ca7db1df75a6988f78ec448620b"
-            );
-
-            const [message, encPubKey] = createMessage(
-              userStateIndex,
-              maciKeyPair,
-              coordinatorKey,
-              recipientVoteOptionIndex,
-              voteWeight,
-              nonce
-            );
-            return [message, encPubKey];
-          } else {
-            console.log("user is not registered, throw message");
-            throw new Error("User is not registered");
-          }
-        } catch (e) {
-          return [null, null];
-        }
-      }
-    );
-    const messages: Message[] = [];
-    const encPubKeys: PubKey[] = [];
-    const messagesJubJub: Jubjub.MessageStruct[] = [];
-    const encPubKeyJubJub: Jubjub.PubKeyStruct[] = [];
-
-    for (const [message, encPubKey] of txData) {
-      var tempMsg: Jubjub.MessageStruct = {} as Jubjub.MessageStruct;
-      var tempEncPub: Jubjub.PubKeyStruct = {} as Jubjub.PubKeyStruct;
-      tempMsg.msgType = BigNumber.from(message.asContractParam().msgType);
-      tempMsg.data = [];
-      for (const _data of message.data) {
-        tempMsg.data.push(BigNumber.from(_data));
-      }
-      tempEncPub = encPubKey.asContractParam();
-
-      messagesJubJub.push(tempMsg);
-      encPubKeyJubJub.push(tempEncPub);
-    }
-
-    console.log(messages);
-    console.log(encPubKeys);
-    try {
-      const gasPrice = await provider.getGasPrice();
-      const gasLimit = ethers.utils.hexlify(10000000);
-      const signer = provider.getSigner(address);
-
-      const tx = await jubjubInstance
-        .connect(signer)
-        .publishMessageBatch(messagesJubJub, encPubKeyJubJub, {
-          gasPrice: gasPrice,
-          gasLimit,
-        });
-      await tx.wait();
+    if (isMaciPrivKey(maciPrivate[0].maci_private)) {
       toast({
-        title: t("Ballot Submitted"),
-        description: t(
-          "You have submitted your ballot! Feel free to resubmit if you change your mind."
-        ),
+        title: t("Verify Maci Key"),
+        description: t("You have MACI key"),
         status: "success",
-        duration: 10000,
+        duration: 6000,
         isClosable: true,
       });
-    } catch (e) {
+
+      const signer = provider.getSigner(address);
+
+      let JubjubTemplateFactory: Jubjub__factory;
+      JubjubTemplateFactory = new Jubjub__factory(Libs, signer);
+      const jubjubFactory = new ethers.Contract(
+        JubjubFactoryAddress,
+        JubjubFactory__factory.abi,
+        signer
+      );
+      const jubjubInstance = JubjubTemplateFactory.attach(
+        await jubjubFactory.currentJubjub()
+      );
+      setTxLoading(true);
+      console.log("-----------------------------------------------------");
+      const txData: [Message, PubKey][] = recipientRegistryIds.map(
+        (projectId, index) => {
+          try {
+            const recipientVoteOptionIndex = getRecipientIdbyId(
+              projectId.toString()
+            );
+            console.log("recipientVoteOptionIndex", recipientVoteOptionIndex);
+            let maciKeyPair: Keypair;
+            let serializedMaciPublicKey: string;
+            let userStateIndex: number;
+            let nonce: number;
+            let voteWeight: number;
+
+            if (isMaciPrivKey(maciKey)) {
+              maciKeyPair = new Keypair(PrivKey.unserialize(maciKey));
+              serializedMaciPublicKey = maciKeyPair.pubKey.serialize();
+              console.log("serializedMaciPublicKey", serializedMaciPublicKey);
+              userStateIndex = state[0].state_index;
+              console.log("stateIndex", userStateIndex);
+              nonce = index;
+              voteWeight = votes[index];
+            }
+            if (isMaciPrivKey(maciKey)) {
+              console.log(
+                "User is registered, signing ballot with private key"
+              );
+              // const coordinatorKey = PubKey.unserialize(
+              //   "macipk.ec4173e95d2bf03100f4c694d5c26ba6ab9817c0a5a0df593536a8ee2ec7af04"
+              // );
+              const coordinatorKey = PubKey.unserialize(
+                "macipk.a39f603e634bd0e718e3549b0f06b50337f96ca7db1df75a6988f78ec448620b"
+              );
+
+              const [message, encPubKey] = createMessage(
+                userStateIndex,
+                maciKeyPair,
+                coordinatorKey,
+                recipientVoteOptionIndex,
+                voteWeight,
+                nonce
+              );
+              return [message, encPubKey];
+            } else {
+              console.log("user is not registered, throw message");
+              throw new Error("User is not registered");
+            }
+          } catch (e) {
+            return [null, null];
+          }
+        }
+      );
+      const messages: Message[] = [];
+      const encPubKeys: PubKey[] = [];
+      const messagesJubJub: Jubjub.MessageStruct[] = [];
+      const encPubKeyJubJub: Jubjub.PubKeyStruct[] = [];
+
+      for (const [message, encPubKey] of txData) {
+        var tempMsg: Jubjub.MessageStruct = {} as Jubjub.MessageStruct;
+        var tempEncPub: Jubjub.PubKeyStruct = {} as Jubjub.PubKeyStruct;
+        tempMsg.msgType = BigNumber.from(message.asContractParam().msgType);
+        tempMsg.data = [];
+        for (const _data of message.data) {
+          tempMsg.data.push(BigNumber.from(_data));
+        }
+        tempEncPub = encPubKey.asContractParam();
+
+        messagesJubJub.push(tempMsg);
+        encPubKeyJubJub.push(tempEncPub);
+      }
+
+      console.log(messages);
+      console.log(encPubKeys);
+      try {
+        const gasPrice = await provider.getGasPrice();
+        const gasLimit = ethers.utils.hexlify(10000000);
+        const signer = provider.getSigner(address);
+
+        const tx = await jubjubInstance
+          .connect(signer)
+          .publishMessageBatch(messagesJubJub, encPubKeyJubJub, {
+            gasPrice: gasPrice,
+            gasLimit,
+          });
+        await tx.wait();
+        toast({
+          title: t("Ballot Submitted"),
+          description: t(
+            "You have submitted your ballot! Feel free to resubmit if you change your mind."
+          ),
+          status: "success",
+          duration: 10000,
+          isClosable: true,
+        });
+      } catch (e) {
+        setTxLoading(false);
+        console.log(e);
+      }
       setTxLoading(false);
-      console.log(e);
+      console.log("debug log", txData);
+    } else {
+      throw new Error("Invalid MACI key");
     }
-    setTxLoading(false);
-    console.log("debug log", txData);
   };
 
   return (
