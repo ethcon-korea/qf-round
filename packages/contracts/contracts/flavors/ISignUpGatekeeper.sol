@@ -8,5 +8,6 @@ pragma solidity ^0.8.1;
  * sign up if they own a specific NFT token or are part of a dao.
  */
 abstract contract ISignUpGatekeeper {
+    function setMaciInstance(address _maci) public virtual {}
     function register(address _user, bytes memory _data) public virtual {}
 }

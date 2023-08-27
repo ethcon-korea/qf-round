@@ -7,6 +7,8 @@ import type * as fSol from "./F.sol";
 export type { fSol };
 import type * as nftSignupSol from "./NFTSignup.sol";
 export type { nftSignupSol };
+import type * as signUpNftGateKeeperSol from "./SignUpNFTGateKeeper.sol";
+export type { signUpNftGateKeeperSol };
 export type { IInitialVoiceCreditProxy } from "./IInitialVoiceCreditProxy";
 export type { ISignUpGatekeeper } from "./ISignUpGatekeeper";
 export type { SimpleHackathon } from "./SimpleHackathon";

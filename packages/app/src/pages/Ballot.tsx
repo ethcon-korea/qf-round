@@ -1,5 +1,23 @@
 import React, { useCallback, useEffect, useState, useMemo } from "react";
-import { Container, Image, VStack, Grid, GridItem, Flex, Text, Heading, Button, useColorModeValue, useToast, FormControl, FormHelperText, Input, Tooltip, useMediaQuery, AspectRatio } from "@chakra-ui/react";
+import {
+  Container,
+  Image,
+  VStack,
+  Grid,
+  GridItem,
+  Flex,
+  Text,
+  Heading,
+  Button,
+  useColorModeValue,
+  useToast,
+  FormControl,
+  FormHelperText,
+  Input,
+  Tooltip,
+  useMediaQuery,
+  AspectRatio,
+} from "@chakra-ui/react";
 
 import { MagikButton } from "@qfi/ui";
 import { getProject, getRecipientIdbyId } from "../data";
@@ -9,22 +27,37 @@ import { Hero } from "../components/Hero";
 import { BallotExplainer } from "../components/prague/BallotExplainer";
 import { Link, useSearchParams } from "react-router-dom";
 import { useDappState } from "../context/DappContext";
-
-import { Keypair, PubKey, PrivKey, PCommand, Message } from "../jubjublib/domainobjs/domainobjs";
+import {
+  Keypair,
+  PubKey,
+  PrivKey,
+  PCommand,
+  Message,
+} from "../jubjublib/domainobjs/domainobjs";
 import { genRandomSalt } from "../jubjublib/crypto";
-import { useWallet } from "@qfi/hooks";
-import { Jubjub__factory } from "../typechain/factories/contracts/Jubjub__factory";
+import { useWallet, WalletProvider } from "@qfi/hooks";
+import { JubjubFactory__factory } from "../typechain/factories/contracts/JubjubFactory__factory";
+import {
+  Jubjub__factory,
+  JubjubLibraryAddresses,
+} from "../typechain/factories/contracts/Jubjub__factory";
 import { Jubjub } from "../typechain/contracts/Jubjub";
 import { BigNumber, ethers } from "ethers";
 import { getStateIndex } from "../quickBallotConfig";
 import { useTranslation } from "react-i18next";
+import { Libs, TicketAddress, JubjubFactoryAddress } from "./Address";
+import { createClient } from "@supabase/supabase-js";
+import { ALCHEMY_KEY, SUPABASE_SERVICE_KEY } from "./key";
+const supabaseUrl = "https://lkrcjryaynygdvgtmumc.supabase.co";
+const supabaseKey = SUPABASE_SERVICE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const isMaciPrivKey = (key: string): boolean => {
   if ((key.length === 71 || key.length === 70) && key.startsWith("macisk.")) {
-    console.log("key is valid maci key")
-      const pubKey = new Keypair(PrivKey.unserialize(key)).pubKey.serialize();
-        return true;
-      }
+    console.log("key is valid maci key");
+    const pubKey = new Keypair(PrivKey.unserialize(key)).pubKey.serialize();
+    return true;
+  }
 
   return false;
 };
@@ -37,16 +70,44 @@ interface SubmitBallotButtonProps {
   t: (arg: string) => any;
 }
 
-const SubmitBallotButton = ({ isConnected, disableSubmitButton, my = 0, onSubmit, t }: SubmitBallotButtonProps) =>
+const SubmitBallotButton = ({
+  isConnected,
+  disableSubmitButton,
+  my = 0,
+  onSubmit,
+  t,
+}: SubmitBallotButtonProps) =>
   isConnected ? (
-    <Tooltip isDisabled={!disableSubmitButton} label={t("Unregistered MACI Keypair: Enter a valid MACI key to continue.")} placement="top" shouldWrapChildren>
-      <Button m="auto" my={my} maxWidth={{ md: "150px" }} width="100%" h={20} display="block" disabled={disableSubmitButton} onClick={onSubmit} variant={"amsterdam"} fontSize={{ base: "md", xl: "lg" }}>
+    <Tooltip
+      isDisabled={!disableSubmitButton}
+      label={t(
+        "Unregistered MACI Keypair: Enter a valid MACI key to continue."
+      )}
+      placement="top"
+      shouldWrapChildren
+    >
+      <Button
+        m="auto"
+        my={my}
+        maxWidth={{ md: "150px" }}
+        width="100%"
+        h={20}
+        display="block"
+        disabled={disableSubmitButton}
+        onClick={onSubmit}
+        variant={"amsterdam"}
+        fontSize={{ base: "md", xl: "lg" }}
+      >
         <Text whiteSpace="break-spaces">{t("SUBMIT BALLOT")}</Text>
       </Button>
     </Tooltip>
   ) : (
     <VStack my={my} textAlign="center" w="full">
-      <Text display={isConnected ? "none" : "flex"} fontSize="xs" fontWeight="extrabold">
+      <Text
+        display={isConnected ? "none" : "flex"}
+        fontSize="xs"
+        fontWeight="extrabold"
+      >
         {t("Not Connected: Sign in to continue")}
       </Text>
     </VStack>
@@ -61,72 +122,13 @@ export const Ballot = () => {
   const backgroundColor = useColorModeValue("gray.100", "#000000");
   const colorModeSwitch = useColorModeValue(true, false);
   const [isViewportMd] = useMediaQuery("(min-width: 768px)");
-  const [key, setKey] = useState<string>();
-  const { maciKey, setMaciKey } = useDappState();
   const [searchParams] = useSearchParams();
   const { i18n, t } = useTranslation();
   const toast = useToast();
 
   const currLang = i18n.language;
 
-  const isValidMaciKey = useMemo(() => {
-    return isMaciPrivKey(maciKey);
-  }, [maciKey]);
-
-  const { provider, address, isConnected } = useWallet();
-  const handleInputChange = (e) => {
-    setKey(String(e.target.value).trim());
-  };
-
-  const handleComplete = (value: string) => {
-    console.log("complete");
-    try {
-      if (isMaciPrivKey(value)) {
-        setMaciKey(value);
-
-        toast({
-          title: t("New Maci Key"),
-          description: t("You have updated your MACI key, and are registered to vote."),
-          status: "success",
-          duration: 6000,
-          isClosable: true,
-        });
-        console.log("changed");
-        console.log(new Keypair(PrivKey.unserialize(value)).pubKey.serialize());
-      } else {
-        throw new Error("Invalid MACI key");
-      }
-    } catch (e) {
-      toast({
-        title: t("Invalid Maci Key"),
-        description: t("The MACI Key you have provided is either incorrect or not registered"),
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-      console.log(e.message);
-    }
-  };
-
-  const numChars = useMemo(() => {
-    if (key) {
-      return key.length;
-    }
-  }, [key]);
-  const isError = useMemo(() => {
-    return key && !isMaciPrivKey(key);
-  }, [key]);
-
-  const handleSubmitMaciChange = (event) => {
-    event.preventDefault();
-    handleComplete(key);
-  };
-
-  useEffect(() => {
-    if (maciKey) {
-      setKey(maciKey);
-    }
-  }, [setKey, maciKey]);
+  const { provider, address, isConnected, isSignUp } = useWallet();
 
   const voteOptions = useMemo(() => {
     return searchParams.getAll("option");
@@ -134,7 +136,9 @@ export const Ballot = () => {
 
   //TODO: IDs of all the projects on the users ballot according to recipient registry
   const recipientRegistryIds = useMemo(() => {
-    return voteOptions.filter((s) => !isNaN(parseInt(s))).map((s) => parseInt(s));
+    return voteOptions
+      .filter((s) => !isNaN(parseInt(s)))
+      .map((s) => parseInt(s));
   }, [voteOptions]);
 
   const displayOptions: boolean = useMemo(() => {
@@ -166,8 +170,26 @@ export const Ballot = () => {
   //TODO: number of votes per vote option, lines up with recipientRegistryIds
   //TODO: take this data along with recipientRegistryIds and use it to populate messages, then submit
   const votes = useMemo(
-    () => [ballotOption1Votes, ballotOption2Votes, ballotOption3Votes, ballotOption4Votes, ballotOption5Votes, ballotOption6Votes, ballotOption7Votes, ballotOption8Votes],
-    [ballotOption1Votes, ballotOption2Votes, ballotOption3Votes, ballotOption4Votes, ballotOption5Votes, ballotOption6Votes, ballotOption7Votes, ballotOption8Votes]
+    () => [
+      ballotOption1Votes,
+      ballotOption2Votes,
+      ballotOption3Votes,
+      ballotOption4Votes,
+      ballotOption5Votes,
+      ballotOption6Votes,
+      ballotOption7Votes,
+      ballotOption8Votes,
+    ],
+    [
+      ballotOption1Votes,
+      ballotOption2Votes,
+      ballotOption3Votes,
+      ballotOption4Votes,
+      ballotOption5Votes,
+      ballotOption6Votes,
+      ballotOption7Votes,
+      ballotOption8Votes,
+    ]
   );
 
   const resetAllVotes = useCallback(() => {
@@ -179,10 +201,24 @@ export const Ballot = () => {
     setBallotOption6Votes(0);
     setBallotOption7Votes(0);
     setBallotOption8Votes(0);
-  }, [setBallotOption1Votes, setBallotOption2Votes, setBallotOption3Votes, setBallotOption4Votes, setBallotOption5Votes, setBallotOption6Votes, setBallotOption7Votes, setBallotOption8Votes]);
+  }, [
+    setBallotOption1Votes,
+    setBallotOption2Votes,
+    setBallotOption3Votes,
+    setBallotOption4Votes,
+    setBallotOption5Votes,
+    setBallotOption6Votes,
+    setBallotOption7Votes,
+    setBallotOption8Votes,
+  ]);
 
   const addBallotOption1Votes = useCallback(() => {
-    if (voiceCreditBalance + ballotOption1Votes ** 2 - (ballotOption1Votes + 1) ** 2 < 0) {
+    if (
+      voiceCreditBalance +
+        ballotOption1Votes ** 2 -
+        (ballotOption1Votes + 1) ** 2 <
+      0
+    ) {
       return setBallotOption1Votes(0);
     }
     if (ballotOption1Votes < 9) {
@@ -191,7 +227,12 @@ export const Ballot = () => {
     return setBallotOption1Votes(0);
   }, [ballotOption1Votes, voiceCreditBalance]);
   const addBallotOption2Votes = useCallback(() => {
-    if (voiceCreditBalance + ballotOption2Votes ** 2 - (ballotOption2Votes + 1) ** 2 < 0) {
+    if (
+      voiceCreditBalance +
+        ballotOption2Votes ** 2 -
+        (ballotOption2Votes + 1) ** 2 <
+      0
+    ) {
       return setBallotOption2Votes(0);
     }
     if (ballotOption2Votes < 9) {
@@ -200,7 +241,12 @@ export const Ballot = () => {
     return setBallotOption2Votes(0);
   }, [ballotOption2Votes, voiceCreditBalance]);
   const addBallotOption3Votes = useCallback(() => {
-    if (voiceCreditBalance + ballotOption3Votes ** 2 - (ballotOption3Votes + 1) ** 2 < 0) {
+    if (
+      voiceCreditBalance +
+        ballotOption3Votes ** 2 -
+        (ballotOption3Votes + 1) ** 2 <
+      0
+    ) {
       return setBallotOption3Votes(0);
     }
     if (ballotOption3Votes < 9) {
@@ -209,7 +255,12 @@ export const Ballot = () => {
     return setBallotOption3Votes(0);
   }, [ballotOption3Votes, voiceCreditBalance]);
   const addBallotOption4Votes = useCallback(() => {
-    if (voiceCreditBalance + ballotOption4Votes ** 2 - (ballotOption4Votes + 1) ** 2 < 0) {
+    if (
+      voiceCreditBalance +
+        ballotOption4Votes ** 2 -
+        (ballotOption4Votes + 1) ** 2 <
+      0
+    ) {
       return setBallotOption4Votes(0);
     }
     if (ballotOption4Votes < 9) {
@@ -218,7 +269,12 @@ export const Ballot = () => {
     return setBallotOption4Votes(0);
   }, [ballotOption4Votes, voiceCreditBalance]);
   const addBallotOption5Votes = useCallback(() => {
-    if (voiceCreditBalance + ballotOption5Votes ** 2 - (ballotOption5Votes + 1) ** 2 < 0) {
+    if (
+      voiceCreditBalance +
+        ballotOption5Votes ** 2 -
+        (ballotOption5Votes + 1) ** 2 <
+      0
+    ) {
       return setBallotOption5Votes(0);
     }
     if (ballotOption5Votes < 9) {
@@ -227,7 +283,12 @@ export const Ballot = () => {
     return setBallotOption5Votes(0);
   }, [ballotOption5Votes, voiceCreditBalance]);
   const addBallotOption6Votes = useCallback(() => {
-    if (voiceCreditBalance + ballotOption6Votes ** 2 - (ballotOption6Votes + 1) ** 2 < 0) {
+    if (
+      voiceCreditBalance +
+        ballotOption6Votes ** 2 -
+        (ballotOption6Votes + 1) ** 2 <
+      0
+    ) {
       return setBallotOption6Votes(0);
     }
     if (ballotOption6Votes < 9) {
@@ -236,7 +297,12 @@ export const Ballot = () => {
     return setBallotOption6Votes(0);
   }, [ballotOption6Votes, voiceCreditBalance]);
   const addBallotOption7Votes = useCallback(() => {
-    if (voiceCreditBalance + ballotOption7Votes ** 2 - (ballotOption7Votes + 1) ** 2 < 0) {
+    if (
+      voiceCreditBalance +
+        ballotOption7Votes ** 2 -
+        (ballotOption7Votes + 1) ** 2 <
+      0
+    ) {
       return setBallotOption7Votes(0);
     }
     if (ballotOption7Votes < 9) {
@@ -245,7 +311,12 @@ export const Ballot = () => {
     return setBallotOption7Votes(0);
   }, [ballotOption7Votes, voiceCreditBalance]);
   const addBallotOption8Votes = useCallback(() => {
-    if (voiceCreditBalance + ballotOption8Votes ** 2 - (ballotOption8Votes + 1) ** 2 < 0) {
+    if (
+      voiceCreditBalance +
+        ballotOption8Votes ** 2 -
+        (ballotOption8Votes + 1) ** 2 <
+      0
+    ) {
       return setBallotOption8Votes(0);
     }
     if (ballotOption8Votes < 9) {
@@ -258,10 +329,21 @@ export const Ballot = () => {
   const totalVoiceCredits = useMemo(() => {
     return votes.reduce((acc, curr) => acc + curr ** 2, 0);
   }, [votes]);
-  const updateVotes = [addBallotOption1Votes, addBallotOption2Votes, addBallotOption3Votes, addBallotOption4Votes, addBallotOption5Votes, addBallotOption6Votes, addBallotOption7Votes, addBallotOption8Votes];
+  const updateVotes = [
+    addBallotOption1Votes,
+    addBallotOption2Votes,
+    addBallotOption3Votes,
+    addBallotOption4Votes,
+    addBallotOption5Votes,
+    addBallotOption6Votes,
+    addBallotOption7Votes,
+    addBallotOption8Votes,
+  ];
   useEffect(() => {
     const intialBallotOptions = [NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN];
-    const options = voteOptions.filter((s) => !isNaN(parseInt(s))).map((s) => parseInt(s));
+    const options = voteOptions
+      .filter((s) => !isNaN(parseInt(s)))
+      .map((s) => parseInt(s));
 
     const initialVoiceCreditBalance = 99;
     resetAllVotes();
@@ -278,16 +360,26 @@ export const Ballot = () => {
   }, [ballotOptions]);
 
   useEffect(() => {
-    const totalVoiceCreditsUsed = votes.reduce((acc, curr) => acc + curr ** 2, 0);
+    const totalVoiceCreditsUsed = votes.reduce(
+      (acc, curr) => acc + curr ** 2,
+      0
+    );
     const newVoiceCreditBalance = 99 - totalVoiceCreditsUsed;
     setVoiceCreditBBalance(newVoiceCreditBalance);
   }, [votes]);
 
   const [txLoading, setTxLoading] = useState<boolean>(false);
 
-  const disableSubmitButton = !isConnected || !isValidMaciKey || txLoading;
+  const disableSubmitButton = !isConnected || txLoading;
 
-  function createMessage(userStateIndex: number, userKeypair: Keypair, coordinatorPubKey: PubKey, voteOptionIndex: number | null, voteWeight: number | null, nonce: number): [Message, PubKey] {
+  function createMessage(
+    userStateIndex: number,
+    userKeypair: Keypair,
+    coordinatorPubKey: PubKey,
+    voteOptionIndex: number | null,
+    voteWeight: number | null,
+    nonce: number
+  ): [Message, PubKey] {
     const salt = genRandomSalt();
 
     const quadraticVoteWeight = voteWeight ?? 0;
@@ -300,89 +392,160 @@ export const Ballot = () => {
     // newVoteWeight: BigInt,
     // nonce: BigInt,
     // pollId: BigInt,
-    const command = new PCommand(BigInt(userStateIndex), pubkey, BigInt(voteOptionIndex || 0), BigInt(quadraticVoteWeight), BigInt(nonce), BigInt(0), salt);
+    const command = new PCommand(
+      BigInt(userStateIndex),
+      pubkey,
+      BigInt(voteOptionIndex || 0),
+      BigInt(quadraticVoteWeight),
+      BigInt(nonce),
+      BigInt(0),
+      salt
+    );
 
     const signature = command.sign(userKeypair.privKey);
-    const message = command.encrypt(signature, Keypair.genEcdhSharedKey(userKeypair.privKey, coordinatorPubKey));
+    const message = command.encrypt(
+      signature,
+      Keypair.genEcdhSharedKey(userKeypair.privKey, coordinatorPubKey)
+    );
     return [message, userKeypair.pubKey];
   }
 
   const handleSubmit = async () => {
-    console.log(isMaciPrivKey(maciKey));
-    const signer = provider.getSigner(address);
-    const grantRoundAddress = "0xab787044caefa1b0A89Fc9e17cA22C63aD3C5C82";
+    let { data: maciPrivate } = await supabase
+      .from("whitelist")
+      .select("maci_private")
+      .eq("eoa_address", address);
+    let { data: state } = await supabase
+      .from("whitelist")
+      .select("state_index")
+      .eq("eoa_address", address);
 
-    const grantRound = new ethers.Contract(grantRoundAddress, Jubjub__factory.abi, signer);
-
-    setTxLoading(true);
-    console.log("-----------------------------------------------------");
-    const txData: [Message, PubKey][] = recipientRegistryIds.map((projectId, index) => {
-      try {
-        const recipientVoteOptionIndex = getRecipientIdbyId(projectId.toString());
-        console.log("recipientVoteOptionIndex", recipientVoteOptionIndex);
-        let maciKeyPair: Keypair;
-        let serializedMaciPublicKey: string;
-        let userStateIndex: number;
-        let nonce: number;
-        let voteWeight: number;
-
-        if (isMaciPrivKey(maciKey)) {
-          maciKeyPair = new Keypair(PrivKey.unserialize(maciKey));
-          serializedMaciPublicKey = maciKeyPair.pubKey.serialize();
-          console.log("serializedMaciPublicKey", serializedMaciPublicKey);
-          userStateIndex = 2;
-          console.log("stateIndex", userStateIndex);
-          nonce = index;
-          voteWeight = votes[index];
-        }
-        if (isMaciPrivKey(maciKey)) {
-          console.log("User is registered, signing ballot with private key");
-          const coordinatorKey = PubKey.unserialize("macipk.ec4173e95d2bf03100f4c694d5c26ba6ab9817c0a5a0df593536a8ee2ec7af04");
-
-          const [message, encPubKey] = createMessage(userStateIndex, maciKeyPair, coordinatorKey, recipientVoteOptionIndex, voteWeight, nonce);
-          return [message, encPubKey];
-        } else {
-          console.log("user is not registered, throw message");
-          throw new Error("User is not registered");
-        }
-      } catch (e) {
-        return [null, null];
-      }
-    });
-    const messages: Message[] = [];
-    const encPubKeys: PubKey[] = [];
-
-    for (const [message, encPubKey] of txData) {
-      messages.push(message);
-      encPubKeys.push(encPubKey);
-    }
-
-    console.log(messages);
-    console.log(encPubKeys);
-    try {
-      const gasPrice = await provider.getGasPrice();
-      const gasLimit = ethers.utils.hexlify(10000000);
-      const signer = provider.getSigner(address);
-
-      const tx = await grantRound.connect(signer).publishMessageBatch(
-        messages.reverse().map((msg) => msg.asContractParam()),
-        encPubKeys.reverse().map((key) => key.asContractParam()),
-        { gasPrice: gasPrice, gasLimit }
-      );
-      await tx.wait();
+    const maciKey = maciPrivate[0].maci_private;
+    if (isMaciPrivKey(maciKey)) {
       toast({
-        title: t("Ballot Submitted"),
-        description: t("You have submitted your ballot! Feel free to resubmit if you change your mind."),
+        title: t("Verify Maci Key"),
+        description: t("You have MACI key"),
         status: "success",
-        duration: 10000,
+        duration: 6000,
         isClosable: true,
       });
-    } catch (e) {
+
+      const signer = provider.getSigner(address);
+
+      let JubjubTemplateFactory: Jubjub__factory;
+      JubjubTemplateFactory = new Jubjub__factory(Libs, signer);
+      const jubjubFactory = new ethers.Contract(
+        JubjubFactoryAddress,
+        JubjubFactory__factory.abi,
+        signer
+      );
+      const jubjubInstance = JubjubTemplateFactory.attach(
+        await jubjubFactory.currentJubjub()
+      );
+      setTxLoading(true);
+      console.log("-----------------------------------------------------");
+      const txData: [Message, PubKey][] = recipientRegistryIds.map(
+        (projectId, index) => {
+          try {
+            const recipientVoteOptionIndex = getRecipientIdbyId(
+              projectId.toString()
+            );
+            console.log("recipientVoteOptionIndex", recipientVoteOptionIndex);
+            let maciKeyPair: Keypair;
+            let serializedMaciPublicKey: string;
+            let userStateIndex: number;
+            let nonce: number;
+            let voteWeight: number;
+
+            if (isMaciPrivKey(maciKey)) {
+              maciKeyPair = new Keypair(PrivKey.unserialize(maciKey));
+              serializedMaciPublicKey = maciKeyPair.pubKey.serialize();
+              console.log("serializedMaciPublicKey", serializedMaciPublicKey);
+              userStateIndex = state[0].state_index;
+              console.log("stateIndex", userStateIndex);
+              nonce = index;
+              voteWeight = votes[index];
+            }
+            if (isMaciPrivKey(maciKey)) {
+              console.log(
+                "User is registered, signing ballot with private key"
+              );
+              // const coordinatorKey = PubKey.unserialize(
+              //   "macipk.ec4173e95d2bf03100f4c694d5c26ba6ab9817c0a5a0df593536a8ee2ec7af04"
+              // );
+              const coordinatorKey = PubKey.unserialize(
+                "macipk.a39f603e634bd0e718e3549b0f06b50337f96ca7db1df75a6988f78ec448620b"
+              );
+
+              const [message, encPubKey] = createMessage(
+                userStateIndex,
+                maciKeyPair,
+                coordinatorKey,
+                recipientVoteOptionIndex,
+                voteWeight,
+                nonce
+              );
+              return [message, encPubKey];
+            } else {
+              console.log("user is not registered, throw message");
+              throw new Error("User is not registered");
+            }
+          } catch (e) {
+            return [null, null];
+          }
+        }
+      );
+      const messages: Message[] = [];
+      const encPubKeys: PubKey[] = [];
+      const messagesJubJub: Jubjub.MessageStruct[] = [];
+      const encPubKeyJubJub: Jubjub.PubKeyStruct[] = [];
+
+      for (const [message, encPubKey] of txData) {
+        var tempMsg: Jubjub.MessageStruct = {} as Jubjub.MessageStruct;
+        var tempEncPub: Jubjub.PubKeyStruct = {} as Jubjub.PubKeyStruct;
+        tempMsg.msgType = BigNumber.from(message.asContractParam().msgType);
+        tempMsg.data = [];
+        for (const _data of message.data) {
+          tempMsg.data.push(BigNumber.from(_data));
+        }
+        tempEncPub = encPubKey.asContractParam();
+
+        messagesJubJub.push(tempMsg);
+        encPubKeyJubJub.push(tempEncPub);
+      }
+
+      console.log(messages);
+      console.log(encPubKeys);
+      try {
+        const gasPrice = await provider.getGasPrice();
+        const gasLimit = ethers.utils.hexlify(10000000);
+        const signer = provider.getSigner(address);
+
+        const tx = await jubjubInstance
+          .connect(signer)
+          .publishMessageBatch(messagesJubJub, encPubKeyJubJub, {
+            gasPrice: gasPrice,
+            gasLimit,
+          });
+        await tx.wait();
+        toast({
+          title: t("Ballot Submitted"),
+          description: t(
+            "You have submitted your ballot! Feel free to resubmit if you change your mind."
+          ),
+          status: "success",
+          duration: 10000,
+          isClosable: true,
+        });
+      } catch (e) {
+        setTxLoading(false);
+        console.log(e);
+      }
       setTxLoading(false);
-      console.log(e);
+      console.log("debug log", txData);
+    } else {
+      throw new Error("Invalid MACI key");
     }
-    setTxLoading(false);
-    console.log("debug log", txData);
   };
 
   return (
@@ -411,25 +574,71 @@ export const Ballot = () => {
           background: "transparent",
           borderRadius: "0px",
         },
-      }}>
+      }}
+    >
       <Container style={{ marginTop: 92, maxWidth: 1042 }}>
         {colorModeSwitch ? (
           <Flex w="full" alignItems="center" flexDirection="column">
             <Heading w="full">
-              <AspectRatio ratio={1} w="200px" h="200px" overflow="hidden" alignItems={"flex-start"} justifyContent={"flex-start"} flexDir={"row"}>
+              <AspectRatio
+                ratio={1}
+                w="200px"
+                h="200px"
+                overflow="hidden"
+                alignItems={"flex-start"}
+                justifyContent={"flex-start"}
+                flexDir={"row"}
+              >
                 <Hero />
               </AspectRatio>
             </Heading>
+
             <MagikButton borderRadius={"3px"} mt={6} />
           </Flex>
         ) : (
           <Flex w="full" alignItems="center" flexDirection="column">
             <Heading w="full">
-              <AspectRatio ratio={24 / 4} w="full" overflow="hidden" alignItems={"flex-start"} justifyContent={"flex-start"} flexDir={"row"}>
+              <AspectRatio
+                ratio={24 / 4}
+                w="full"
+                overflow="hidden"
+                alignItems={"flex-start"}
+                justifyContent={"flex-start"}
+                flexDir={"row"}
+              >
                 <Hero />
               </AspectRatio>
             </Heading>
-            <MagikButton borderRadius={"8px"} mt={6} />
+            {!isConnected || isSignUp == null ? (
+              <></>
+            ) : isSignUp == true ? (
+              <div
+                style={{
+                  width: "100%",
+                  fontSize: 20,
+                  backgroundColor: "#00a5cf",
+                }}
+              >
+                <Text textAlign={{ base: "center" }}>
+                  You are elligible to vote
+                </Text>
+              </div>
+            ) : (
+              <div
+                style={{
+                  width: "100%",
+                  fontSize: 20,
+                  backgroundColor: "#e63946",
+                }}
+              >
+                <Text textAlign={{ base: "center" }}>
+                  Your wallet is not elligible to vote, please connect the
+                  wallet with Ethcon NFT ticket
+                </Text>
+              </div>
+            )}
+
+            <MagikButton style={{ marginTop: 0 }} borderRadius={"8px"} mt={6} />
           </Flex>
         )}
 
@@ -442,25 +651,56 @@ export const Ballot = () => {
             {t("VOICE CREDIT BALANCE")}: {voiceCreditBalance}
           </Heading>
           <Text px={"1px"}>
-            {t("Voice Credits spent")}: {ballotOption1Votes ** 2} + {ballotOption2Votes ** 2} + {ballotOption3Votes ** 2} +{ballotOption4Votes ** 2} + {ballotOption5Votes ** 2} + {ballotOption6Votes ** 2} + {ballotOption7Votes ** 2} + {ballotOption8Votes ** 2} = {totalVoiceCredits}
+            {t("Voice Credits spent")}: {ballotOption1Votes ** 2} +{" "}
+            {ballotOption2Votes ** 2} + {ballotOption3Votes ** 2} +
+            {ballotOption4Votes ** 2} + {ballotOption5Votes ** 2} +{" "}
+            {ballotOption6Votes ** 2} + {ballotOption7Votes ** 2} +{" "}
+            {ballotOption8Votes ** 2} = {totalVoiceCredits}
           </Text>
         </VStack>
         {displayOptions ? (
-          <VStack spacing={0} alignItems="flex-start" style={{ marginTop: 48 }} w="full" display={isEmptyBallot ? "flex" : "none"}>
+          <VStack
+            spacing={0}
+            alignItems="flex-start"
+            style={{ marginTop: 48 }}
+            w="full"
+            display={isEmptyBallot ? "flex" : "none"}
+          >
             {ballotData.map((project, index) => (
-              <BallotOption key={index} lastOption={index === ballotOptions.length - 1 ? true : false} ballotOption={project} votes={votes[index]} onClick={updateVotes[index]} to={`/${project.id}`} />
+              <BallotOption
+                key={index}
+                lastOption={index === ballotOptions.length - 1 ? true : false}
+                ballotOption={project}
+                votes={votes[index]}
+                onClick={updateVotes[index]}
+                to={`/${project.id}`}
+              />
             ))}
           </VStack>
         ) : (
           <VStack style={{ marginTop: 48 }} alignItems="flex-start" w="full">
-            <Button as={Link} variant="amsterdam" fontSize={{ base: "lg", xl: "xl" }} w="full" to={`/?${searchParams.toString()}`}>
+            <Button
+              as={Link}
+              variant="amsterdam"
+              fontSize={{ base: "lg", xl: "xl" }}
+              w="full"
+              to={`/?${searchParams.toString()}`}
+            >
               {t("CHECK OUT THE PROJECTS")}
             </Button>
           </VStack>
         )}
-        <VStack spacing={3} py={8} alignItems={"flex-start"} justifyContent={"center"} w="full">
+        <VStack
+          spacing={3}
+          py={8}
+          alignItems={"flex-start"}
+          justifyContent={"center"}
+          w="full"
+        >
           <Flex w="full" alignItems="center" justifyContent="space-between">
-            <Heading textAlign={{ base: "center" }}>{t("BALLOT (MACI) PASSPHRASE")}</Heading>
+            <Heading textAlign={{ base: "center" }}>
+              {t("BALLOT (MACI) PASSPHRASE")}
+            </Heading>
           </Flex>
 
           <Grid
@@ -474,13 +714,20 @@ export const Ballot = () => {
             templateRows={{
               base: "repeat(1, minmax(0, 1fr))",
               md: "repeat(2, minmax(0, 1fr))",
-            }}>
+            }}
+          >
             <GridItem colSpan={12} rowSpan={2}>
               <Text textAlign="justify">
-                {t("The MACI (Minimum Anti-Collision Infrastructure) uses zero-knowledge proofs as a protection against censorship and collisions in blockchain voting (read more about MACI on this page).")}{" "}
-                {t("Each voter gets a pseudo-random MACI key, which is used to encrypt and validate your votes. This is the only way to vote in the round, and it can be used to change your vote at any time while the round is active, so keep it safe and don't share it.")}{" "}
+                {t(
+                  "The MACI (Minimum Anti-Collision Infrastructure) uses zero-knowledge proofs as a protection against censorship and collisions in blockchain voting (read more about MACI on this page)."
+                )}{" "}
+                {t(
+                  "Each voter gets a pseudo-random MACI key, which is used to encrypt and validate your votes. This is the only way to vote in the round, and it can be used to change your vote at any time while the round is active, so keep it safe and don't share it."
+                )}{" "}
                 {t("'Not your MACI, not your vote'.")}{" "}
-                {t("Keep it safe! Anyone who logs in with your MACI key will be able to vote on your behalf - and even invalidate your previous votes. Thanks to your vote, community projects can access funds to continue building.  Your vote matters, make it count.")}
+                {t(
+                  "Keep it safe! Anyone who logs in with your MACI key will be able to vote on your behalf - and even invalidate your previous votes. Thanks to your vote, community projects can access funds to continue building.  Your vote matters, make it count."
+                )}
               </Text>
             </GridItem>
 
@@ -489,20 +736,21 @@ export const Ballot = () => {
               </GridItem>
            */}
           </Grid>
-
-          <form style={{ width: "100%" }} onSubmit={handleSubmitMaciChange}>
-            <FormControl w="full" display={{ base: "flex", md: "block" }} flexDir={{ base: "column" }} alignItems={{ base: "center" }} isInvalid={isError} variant="floating" id="key" isRequired mt={{ base: 12 }}>
-              <Input color={numChars === 71 ? "#424242" : "red.500"} w="full" type="password" placeholder={t("MACI Key")} variant="amsterdam" value={key} onChange={handleInputChange} borderRadius={"3px"} />
-              {/* It is important that the Label comes after the Control due to css selectors */}
-              <FormHelperText fontFamily="Space Grotesk" color={numChars === 71 ? "#424242" : "red.500"}>
-                {numChars ?? "-"} / 71
-              </FormHelperText>
-              <Button variant="amsterdam" fontSize={{ base: "lg", xl: "xl" }} type="submit" w="full" mt={6} alignItems="center">
-                {t("SAVE")}
-              </Button>
-            </FormControl>
-            <SubmitBallotButton disableSubmitButton={disableSubmitButton} isConnected={isConnected} my={6} onSubmit={handleSubmit} t={t} />
-          </form>
+          {isSignUp ? (
+            <>
+              <form style={{ width: "100%" }}>
+                <SubmitBallotButton
+                  disableSubmitButton={disableSubmitButton}
+                  isConnected={isConnected}
+                  my={6}
+                  onSubmit={handleSubmit}
+                  t={t}
+                />
+              </form>
+            </>
+          ) : (
+            <></>
+          )}
         </VStack>
       </Container>
     </Flex>

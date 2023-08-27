@@ -28,6 +28,19 @@ const _abi = [
     stateMutability: "nonpayable",
     type: "function",
   },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_maci",
+        type: "address",
+      },
+    ],
+    name: "setMaciInstance",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
 ] as const;
 
 export class ISignUpGatekeeper__factory {

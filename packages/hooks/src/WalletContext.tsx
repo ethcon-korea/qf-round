@@ -1,11 +1,29 @@
 import { SafeAppWeb3Modal } from "@gnosis.pm/safe-apps-web3modal";
-import { providers } from "ethers";
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { utils, providers, ethers } from "ethers";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { ICoreOptions } from "web3modal";
 import { IProviderOptions } from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-
+import { Alchemy, Network } from "alchemy-sdk";
+import { ALCHEMY_KEY, SUPABASE_SERVICE_KEY } from "./key";
+import { Libs, TicketAddress, JubjubFactoryAddress } from "./Address";
 import { switchChainOnMetaMask } from "./metamask";
+import { createClient } from "@supabase/supabase-js";
+import {
+  Keypair,
+  PubKey,
+  PrivKey,
+  PCommand,
+  Message,
+} from "../../app/src/jubjublib/domainobjs/domainobjs";
+import { JubjubFactory__factory } from "../../app/src/typechain/factories/contracts/JubjubFactory__factory";
+import { Jubjub__factory } from "../../app/src/typechain/factories/contracts/Jubjub__factory";
 
 type WalletContextType = {
   provider: providers.Web3Provider | null | undefined;
@@ -16,6 +34,7 @@ type WalletContextType = {
   isConnecting: boolean;
   isConnected: boolean;
   isMetamask: boolean;
+  isSignUp: boolean;
   networks: NetworkConfig;
   switchNetwork: (chainId: string) => void;
 };
@@ -34,7 +53,7 @@ export const SUPPORTED_NETWORKS: NetworkConfig = {
     symbol: "eth",
     explorer: "https://blockscout.com/xdai/mainnet/",
     rpc: "http://localhost:8545",
-  }
+  },
 };
 
 export const providerOptions: IProviderOptions = {
@@ -47,8 +66,17 @@ export const providerOptions: IProviderOptions = {
         31337: SUPPORTED_NETWORKS["0x7a69"].rpc,
       },
     },
-  }
+  },
   // .. Other providers
+};
+const isMaciPrivKey = (key: string): boolean => {
+  if ((key.length === 71 || key.length === 70) && key.startsWith("macisk.")) {
+    console.log("key is valid maci key");
+    const pubKey = new Keypair(PrivKey.unserialize(key)).pubKey.serialize();
+    return true;
+  }
+
+  return false;
 };
 
 const WalletContext = createContext<WalletContextType>({
@@ -60,6 +88,7 @@ const WalletContext = createContext<WalletContextType>({
   isConnecting: true,
   isConnected: false,
   isMetamask: false,
+  isSignUp: null,
   networks: {},
   switchNetwork: () => undefined,
 });
@@ -80,8 +109,9 @@ export type NetworkConfig = {
   };
 };
 
-const isMetamaskProvider = (provider: providers.Web3Provider | null | undefined) =>
-  provider?.connection?.url === "metamask";
+const isMetamaskProvider = (
+  provider: providers.Web3Provider | null | undefined
+) => provider?.connection?.url === "metamask";
 
 /**
  * @category Providers
@@ -107,11 +137,16 @@ export const WalletProvider: React.FC<{
   handleDisconnectEvent,
   handleErrorEvent,
 }) => {
-  const [{ provider, chainId, address }, setWalletState] = useState<WalletStateType>({});
+  const [{ provider, chainId, address }, setWalletState] =
+    useState<WalletStateType>({});
 
-  const isConnected: boolean = useMemo(() => !!provider && !!address && !!chainId, [provider, address, chainId]);
+  const isConnected: boolean = useMemo(
+    () => !!provider && !!address && !!chainId,
+    [provider, address, chainId]
+  );
 
   const [isConnecting, setConnecting] = useState<boolean>(true);
+  const [isSignUp, setSignUp] = useState<boolean>(null);
   const isMetamask = useMemo(() => isMetamaskProvider(provider), [provider]);
 
   const getModal = () => {
@@ -130,7 +165,8 @@ export const WalletProvider: React.FC<{
   };
 
   const switchNetwork = async (_chainId: string | number) => {
-    const chainId: string = typeof _chainId === "number" ? numberToHex(_chainId) : _chainId;
+    const chainId: string =
+      typeof _chainId === "number" ? numberToHex(_chainId) : _chainId;
     if (!networks[chainId]) {
       throw new Error(`No network configuration for chainId: ${chainId}`);
     }
@@ -142,7 +178,10 @@ export const WalletProvider: React.FC<{
 
   const setWalletProvider = async (provider: any) => {
     const ethersProvider = new providers.Web3Provider(provider);
-    let chainId: string = typeof provider.chainId === "number" ? numberToHex(provider.chainId) : provider.chainId;
+    let chainId: string =
+      typeof provider.chainId === "number"
+        ? numberToHex(provider.chainId)
+        : provider.chainId;
 
     if (!networks[chainId]) {
       if (!defaultChainId) {
@@ -154,7 +193,9 @@ export const WalletProvider: React.FC<{
         return;
       }
 
-      const success = isMetamaskProvider(ethersProvider) && (await switchChainOnMetaMask(networks, defaultChainId));
+      const success =
+        isMetamaskProvider(ethersProvider) &&
+        (await switchChainOnMetaMask(networks, defaultChainId));
       if (!success) {
         const error = {
           code: "UNSUPPORTED_NETWORK",
@@ -174,7 +215,16 @@ export const WalletProvider: React.FC<{
     });
   };
 
+  const settings = {
+    apiKey: ALCHEMY_KEY,
+    network: Network.OPT_MAINNET,
+  };
+  const supabaseUrl = "https://lkrcjryaynygdvgtmumc.supabase.co";
+  const supabaseKey = SUPABASE_SERVICE_KEY;
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
   const connectWallet = async () => {
+    setSignUp(null);
     try {
       setConnecting(true);
       const modal = getModal();
@@ -201,9 +251,12 @@ export const WalletProvider: React.FC<{
           modalProvider.on("connect", (info: { chainId: number }) => {
             handleConnectEvent && handleConnectEvent(info);
           });
-          modalProvider.on("disconnect", (error: { code: number; message: string }) => {
-            handleDisconnectEvent && handleDisconnectEvent(error);
-          });
+          modalProvider.on(
+            "disconnect",
+            (error: { code: number; message: string }) => {
+              handleDisconnectEvent && handleDisconnectEvent(error);
+            }
+          );
           // update wallet provider once the chain is changed
           setWalletProvider(modalProvider);
         });
@@ -215,6 +268,108 @@ export const WalletProvider: React.FC<{
     } finally {
       setConnecting(false);
     }
+
+    if (!isConnected) {
+      const modal = getModal();
+      const modalProvider = await modal.requestProvider();
+      const ethersProvider = new providers.Web3Provider(modalProvider);
+      const signer = ethersProvider.getSigner();
+      const signerAddress = await signer.getAddress();
+      let { data: whitelist, error } = await supabase
+        .from("whitelist")
+        .select("maci_public")
+        .eq("eoa_address", signerAddress);
+
+      console.log(whitelist);
+      console.log(whitelist.length);
+      if (whitelist.length < 1) {
+        const alchemy = new Alchemy(settings);
+        const result = await alchemy.nft.getNftsForOwner(signerAddress, {
+          contractAddresses: [TicketAddress],
+        });
+        console.log(result);
+        if (result.ownedNfts.length >= 1) {
+          setSignUp(true);
+          let JubjubTemplateFactory: Jubjub__factory;
+          JubjubTemplateFactory = new Jubjub__factory(Libs, signer);
+          const jubjubFactory = new ethers.Contract(
+            JubjubFactoryAddress,
+            JubjubFactory__factory.abi,
+            signer
+          );
+          const jubjubInstance = JubjubTemplateFactory.attach(
+            await jubjubFactory.currentJubjub()
+          );
+          console.log(await jubjubFactory.currentJubjub());
+          console.log(await jubjubInstance.signUpsOpen());
+
+          var wallet;
+          while (true) {
+            try {
+              wallet = new Keypair();
+              break;
+            } catch (e) {
+              console.error("Error:", e);
+            }
+          }
+
+          const tokenId = result.ownedNfts[0].tokenId;
+          const privateKey = wallet.privKey.serialize();
+          const publicKey = wallet.pubKey.serialize();
+          const _maciPK = PubKey.unserialize(publicKey).asContractParam();
+          console.log(privateKey, publicKey, _maciPK);
+          const _signUpGatekeeperData = utils.defaultAbiCoder.encode(
+            ["uint256"],
+            [tokenId]
+          );
+          const _initialVoiceCreditProxyData = utils.defaultAbiCoder.encode(
+            ["uint256"],
+            [0]
+          );
+          try {
+            isMaciPrivKey(privateKey);
+            const tx = await jubjubInstance.signUp(
+              _maciPK,
+              _signUpGatekeeperData,
+              _initialVoiceCreditProxyData,
+              {
+                gasLimit: utils.hexlify(10000000),
+              }
+            );
+            await tx.wait();
+            console.log(tx);
+            let { data } = await supabase
+              .from("whitelist")
+              .insert([
+                {
+                  eoa_address: signerAddress,
+                  maci_public: publicKey,
+                  maci_private: privateKey,
+                },
+              ])
+              .select();
+            // let { data } = await supabase
+            //   .from("whitelist")
+            //   .update([
+            //     {
+            //       eoa_address: address,
+            //       maci_public: publicKey,
+            //       maci_private: privateKey,
+            //     },
+            //   ])
+            //   .eq("eoa_address", address)
+            //   .select();
+            // console.log(data);
+          } catch (e) {
+            console.log("Error: ", e);
+          }
+        } else {
+          setSignUp(false);
+        }
+      } else {
+        setSignUp(true);
+      }
+    }
   };
 
   useEffect(() => {
@@ -223,19 +378,23 @@ export const WalletProvider: React.FC<{
        * Only try to connect when metamask is unlocked.
        * This prevents unnecessary popup on page load.
        */
-      const isMetamaskUnlocked = (await window.ethereum?._metamask?.isUnlocked()) ?? false;
+      const isMetamaskUnlocked =
+        (await window.ethereum?._metamask?.isUnlocked()) ?? false;
       const modal = getModal();
       const _isGnosisSafe = await modal.isSafeApp();
 
-      if (isMetamaskUnlocked && (_isGnosisSafe || web3modalOptions.cacheProvider)) {
+      if (
+        isMetamaskUnlocked &&
+        (_isGnosisSafe || web3modalOptions.cacheProvider)
+      ) {
         await connectWallet();
       } else {
         setConnecting(false);
       }
     };
     load();
-    
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -249,17 +408,26 @@ export const WalletProvider: React.FC<{
         isConnecting,
         disconnect,
         isMetamask,
+        isSignUp,
         networks,
         switchNetwork,
-      }}>
+      }}
+    >
       {children}
     </WalletContext.Provider>
   );
 };
 
-export const formatAddress = (address: string | null | undefined, ensName?: string | null, chars = 5): string => {
+export const formatAddress = (
+  address: string | null | undefined,
+  ensName?: string | null,
+  chars = 5
+): string => {
   if (ensName) return ensName;
-  else if (address) return `${address.substring(0, chars)}...${address.substring(address.length - chars)}`;
+  else if (address)
+    return `${address.substring(0, chars)}...${address.substring(
+      address.length - chars
+    )}`;
   else return "";
 };
 

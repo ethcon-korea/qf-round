@@ -1,5 +1,12 @@
 import { useCallback, useMemo } from "react";
-import { Text, VStack, Button, Show, Image, useColorModeValue } from "@chakra-ui/react";
+import {
+  Text,
+  VStack,
+  Button,
+  Show,
+  Image,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import BeatLoader from "react-spinners/BeatLoader";
 import CircleLoader from "react-spinners/CircleLoader";
 import { formatAddress, useWallet } from "@qfi/hooks";
@@ -7,8 +14,12 @@ import { ButtonProps } from "@chakra-ui/react";
 
 type MagikButtonProps = ButtonProps & {};
 
-export const MagikButton: React.FC<MagikButtonProps> = ({ children, ...props }) => {
-  const { connectWallet, isConnecting, isConnected, disconnect, address } = useWallet();
+export const MagikButton: React.FC<MagikButtonProps> = ({
+  children,
+  ...props
+}) => {
+  const { connectWallet, isConnecting, isConnected, disconnect, address } =
+    useWallet();
   // const { avatar, loading } = useENS({ address: address ?? undefined });
   // const { avatar, loading } = useENS({ ens: "alisha.eth" ?? "" });
 
@@ -47,7 +58,8 @@ export const MagikButton: React.FC<MagikButtonProps> = ({ children, ...props }) 
       _hover={{
         bg: switchBgHoverColor,
         color: switchTextHoverColor,
-      }}>
+      }}
+    >
       {isConnected ? <Web3State /> : <ConnectState />}
     </Button>
   );
