@@ -296,13 +296,13 @@ uint256 public debugCounter;
    * @param   _initialVoiceCreditProxyData Data to pass to the InitialVoiceCreditProxy, which allows it to determine how many voice credits this user should have.
    */
   function signUp(PubKey memory _pubKey, bytes memory _signUpGatekeeperData, bytes memory _initialVoiceCreditProxyData) public afterInit {
-    debugCounter++;
+    
     // The circuits only support up to (5 ** 10 - 1) signups
     require(numSignUps < TREE_ARITY ** stateTreeDepth, "MACI: maximum number of signups reached");
-  debugCounter++;
+  
     require(_pubKey.x < SNARK_SCALAR_FIELD && _pubKey.y < SNARK_SCALAR_FIELD, "MACI: _pubKey values should be less than the snark scalar field");
     require(signUpsOpen, "MACI: signups are closed");
-debugCounter++;
+
     unchecked {
       numSignUps++;
     }
@@ -310,18 +310,18 @@ debugCounter++;
     // Register the user via the sign-up gatekeeper. This function should
     // throw if the user has already registered or if ineligible to do so.
     signUpGatekeeper.register(msg.sender, _signUpGatekeeperData);
-debugCounter++;
+
     uint256 voiceCreditBalance = voiceCreditProxy.getVoiceCredits(msg.sender, _initialVoiceCreditProxyData);
-debugCounter++;
+
     uint256 timestamp = block.timestamp;
-    debugCounter++;
+    
     // Create a state leaf and enqueue it.
     uint256 stateLeaf = hashStateLeaf(StateLeaf(_pubKey, voiceCreditBalance, timestamp));
-    debugCounter++;
+    
     uint256 stateIndex = stateAq.enqueue(stateLeaf);
-debugCounter++;
+
     emit SignUp(stateIndex, _pubKey, voiceCreditBalance, timestamp);
-    debugCounter++;
+
   }
 
   /**
@@ -385,17 +385,9 @@ debugCounter++;
     currentStateCommitment = stateAq.merge(stateTreeDepth);
 
     emit MergeMaciStateAq(currentStateCommitment);
-  }
 
-  /*
-   * Called to open a new poll or to reset the current poll in the case of an invalid state transition.
-   */
-  function resetBallotCommitment(uint256 _voteOptionTreeDepth) public onlyOwner {
-    // This functionshould be called once the stateAq is merged and signups are closed.
-    // require(!stateAq.subTreesMerged(), "ERROR_STATE_AQ_SUBTREES_NEED_MERGE");
-    require(!signUpsOpen, "SIGNUPS_NOT_CLOSED");
-    // Reset currentBallotRootCommitment
-    currentBallotCommitment = emptyBallotRoots[_voteOptionTreeDepth - 1];
+      // Reset currentBallotRootCommitment
+    currentBallotCommitment = emptyBallotRoots[voteOptionTreeDepth - 1];
     // Reset currentSbCommitment, hash
     currentSbCommitment = PoseidonT4.hash3([currentStateCommitment, currentBallotCommitment, uint256(0)]);
   }
@@ -409,8 +401,6 @@ debugCounter++;
     require(!stateAq.treeMerged(), "ERROR_STATE_AQ_ALREADY_MERGED");
     require(!stateAq.subTreesMerged(), "ERROR_STATE_AQ_SUBTREES_MERGED");
     require(messageAq.numLeaves() == 1, "ERROR_MESSAGE_AQ_NOT_EMPTY");
-
-    resetBallotCommitment(_voteOptionTreeDepth);
 
     uint256[10] memory _data = [NOTHING_UP_MY_SLEEVE, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     PubKey memory _padKey = PubKey(PAD_PUBKEY_X, PAD_PUBKEY_Y);
