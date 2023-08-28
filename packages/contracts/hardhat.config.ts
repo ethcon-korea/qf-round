@@ -16,7 +16,7 @@ import "hardhat-gas-reporter";
 import "hardhat-contract-sizer";
 import "hardhat-abi-exporter";
 
-import "@nomicfoundation/hardhat-chai-matchers"
+// import "@nomicfoundation/hardhat-chai-matchers"
 import "@nomicfoundation/hardhat-network-helpers"
 import "@nomiclabs/hardhat-etherscan"
 import "alchemy-sdk"
@@ -77,7 +77,7 @@ const config: HardhatUserConfig = {
       forking: {
         url: "https://opt-mainnet.g.alchemy.com/v2/" + process.env.ALCHEMY_API_KEY,
         enabled: true,
-        blockNumber: 107805900,
+        blockNumber: 108755965,
       },
     },
     localhost: {

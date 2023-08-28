@@ -26,7 +26,7 @@ import { askForConfirmation, customSpinner } from "../lib/prompts.js"
 
 import { Jubjub__factory } from "../typechain/factories/contracts/Jubjub__factory.js";
 import { JubjubLibraryAddresses } from "../typechain/factories/contracts/Jubjub__factory";
-import { MaxValues } from "src/jubjublib/src/core/MaciState.js"
+import { MaxValues } from "src/jubjublib/src/core/MaciState.js";
 
 
 interface SignUpAction {
@@ -75,8 +75,8 @@ async function tally(
   const network = 'hardhat'
   const coordinatorPrivKey = 'macisk.21bd6b0ee1e1a544ab72960219fb6cd422caaa159baebaedc979cd1836bcde43'
   const matchingPoolAmount = '100'
-  const jubjubContractAddress = '0x6985a87a49adb6a5d80f11885045838ab34b03d3'
-  const startBlock = '107805900'
+  const jubjubContractAddress = '0x034e33289F23068FbDBDbE7C0493BD48ff973603'
+  const startBlock = '108755964'
   const grantRoundStartBlock = '0'
   const firstVoteBlock = '0'
   const lastBlock = 'latest'
@@ -109,7 +109,7 @@ async function tally(
     // Please update Jubjub address here
     // ###################
     const jubjub = JubjubTemplateFactory.attach(
-      "<Jubjub address here>"
+      jubjubContractAddress
     );
 
     console.log("Jubjub address:", jubjub.address);

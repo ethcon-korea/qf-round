@@ -216,30 +216,40 @@ export const Admin = () => {
   const handleStartVotingRound = async () => {
     const deployer = provider.getSigner(address);
 
+    // let JubjubTemplateFactory: Jubjub__factory;
+    // let libs: JubjubLibraryAddresses;
+    // libs = {
+    //   ["contracts/poseidon/PoseidonT6.sol:PoseidonT6"]:
+    //     "0x19e066281Cf25eecb012F6894CE685d085Be480C",
+    //   ["contracts/poseidon/PoseidonT5.sol:PoseidonT5"]:
+    //     "0x759e6B5293bD8c6EBD5Ec114341ca23a38834E85",
+    //   ["contracts/poseidon/PoseidonT3.sol:PoseidonT3"]:
+    //     "0xB7098F48a2703c42ae77775d368EB0b32d6eB5d3",
+    //   ["contracts/poseidon/PoseidonT4.sol:PoseidonT4"]:
+    //     "0xA56cBDE847f7CBC6E17311761A7A2C8b65ed7940",
+    // };
+    // JubjubTemplateFactory = new Jubjub__factory(libs, deployer);
+
     let JubjubTemplateFactory: Jubjub__factory;
     let libs: JubjubLibraryAddresses;
     libs = {
-      ["contracts/poseidon/PoseidonT6.sol:PoseidonT6"]:
-        "0x19e066281Cf25eecb012F6894CE685d085Be480C",
-      ["contracts/poseidon/PoseidonT5.sol:PoseidonT5"]:
-        "0x759e6B5293bD8c6EBD5Ec114341ca23a38834E85",
-      ["contracts/poseidon/PoseidonT3.sol:PoseidonT3"]:
-        "0xB7098F48a2703c42ae77775d368EB0b32d6eB5d3",
-      ["contracts/poseidon/PoseidonT4.sol:PoseidonT4"]:
-        "0xA56cBDE847f7CBC6E17311761A7A2C8b65ed7940",
+      ["contracts/poseidon/PoseidonT6.sol:PoseidonT6"]: poseidonT6.address,
+      ["contracts/poseidon/PoseidonT5.sol:PoseidonT5"]: poseidonT5.address,
+      ["contracts/poseidon/PoseidonT3.sol:PoseidonT3"]: poseidonT3.address,
+      ["contracts/poseidon/PoseidonT4.sol:PoseidonT4"]: poseidonT4.address,
     };
     JubjubTemplateFactory = new Jubjub__factory(libs, deployer);
 
-    // const jubjubInstance = JubjubTemplateFactory.attach(
-    //   await jubjubFactory.currentJubjub()
-    // // );
+    const jubjubInstance = JubjubTemplateFactory.attach(
+      await jubjubFactory.currentJubjub()
+    );
 
     // ###################
     // Please update Jubjub address here
     // ###################
-    const jubjubInstance = JubjubTemplateFactory.attach(
-      "<Jubjub address here>"
-    );
+    // const jubjubInstance = JubjubTemplateFactory.attach(
+    //   "0x56703bD742CbB95432183D0f9a53607b332CE49b"
+    // );
     
     setJubjub(jubjubInstance);
 
