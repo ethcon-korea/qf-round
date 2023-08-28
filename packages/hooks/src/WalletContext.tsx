@@ -40,6 +40,13 @@ type WalletContextType = {
 };
 
 export const SUPPORTED_NETWORKS: NetworkConfig = {
+  "0xa": {
+    chainId: "0xa",
+    name: "Optimism",
+    symbol: "eth",
+    explorer: "https://explorer.optimism.io",
+    rpc: "https://opt-mainnet.g.alchemy.com/v2/meqnXZj3LOvK0IY4rt9SnAV7bDjh2OpV",
+  },
   "0x64": {
     chainId: "0x64",
     name: "Gnosis Chain",
@@ -62,6 +69,7 @@ export const providerOptions: IProviderOptions = {
     options: {
       infuraId: "8043bb2cf99347b1bfadfb233c5325c0",
       rpc: {
+        10: SUPPORTED_NETWORKS["0xa"].rpc,
         100: SUPPORTED_NETWORKS["0x64"].rpc,
         31337: SUPPORTED_NETWORKS["0x7a69"].rpc,
       },

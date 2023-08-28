@@ -16,7 +16,7 @@ import { DappProvider } from "./context/DappContext";
 import "./i18next";
 
 // xdai chain id is 0x64 (100)
-const DEFAULT_CHAIN_ID = nameToChainId("Hardhat"); // Used to switch to if the user is on an unsupported network
+const DEFAULT_CHAIN_ID = nameToChainId("Optimism"); // Used to switch to if the user is on an unsupported network
 console.log(DEFAULT_CHAIN_ID);
 
 

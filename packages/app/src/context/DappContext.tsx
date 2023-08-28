@@ -15,6 +15,8 @@ import { DappContextType, DappStateType, SetValue, Props } from "./types";
 
 const nameToChainId = (name: string): string | undefined => {
   switch (name) {
+    case "Optimism":
+      return "0xa";
     case "xdai":
       return "0x64";
     case "polygon":
@@ -66,7 +68,7 @@ export const DappProvider: React.FC<Props> = ({ children }) => {
       <WalletProvider
         web3modalOptions={web3modalOptions}
         networks={SUPPORTED_NETWORKS}
-        defaultChainId={nameToChainId("Hardhat")}
+        defaultChainId={nameToChainId("Optimism")}
         handleAccountsChangedEvent={(accounts: string[]) => {
           console.log("Accounts changed");
         }}
