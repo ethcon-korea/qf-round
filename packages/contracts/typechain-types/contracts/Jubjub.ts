@@ -104,7 +104,6 @@ export interface JubjubInterface extends utils.Interface {
     "publishMessage((uint256,uint256[10]),(uint256,uint256))": FunctionFragment;
     "publishMessageBatch((uint256,uint256[10])[],(uint256,uint256)[])": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "resetBallotCommitment(uint256)": FunctionFragment;
     "setVkRegistry(address)": FunctionFragment;
     "signUp((uint256,uint256),bytes,bytes)": FunctionFragment;
     "signUpGatekeeper()": FunctionFragment;
@@ -161,7 +160,6 @@ export interface JubjubInterface extends utils.Interface {
       | "publishMessage"
       | "publishMessageBatch"
       | "renounceOwnership"
-      | "resetBallotCommitment"
       | "setVkRegistry"
       | "signUp"
       | "signUpGatekeeper"
@@ -328,10 +326,6 @@ export interface JubjubInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "resetBallotCommitment",
-    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "setVkRegistry",
@@ -521,10 +515,6 @@ export interface JubjubInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "resetBallotCommitment",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -878,11 +868,6 @@ export interface Jubjub extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    resetBallotCommitment(
-      _voteOptionTreeDepth: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     setVkRegistry(
       _vkRegistry: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1071,11 +1056,6 @@ export interface Jubjub extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  resetBallotCommitment(
-    _voteOptionTreeDepth: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   setVkRegistry(
     _vkRegistry: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1253,11 +1233,6 @@ export interface Jubjub extends BaseContract {
     ): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
-
-    resetBallotCommitment(
-      _voteOptionTreeDepth: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     setVkRegistry(
       _vkRegistry: PromiseOrValue<string>,
@@ -1521,11 +1496,6 @@ export interface Jubjub extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    resetBallotCommitment(
-      _voteOptionTreeDepth: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     setVkRegistry(
       _vkRegistry: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1728,11 +1698,6 @@ export interface Jubjub extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    resetBallotCommitment(
-      _voteOptionTreeDepth: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
