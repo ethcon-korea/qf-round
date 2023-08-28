@@ -231,7 +231,7 @@ export const Admin = () => {
     JubjubTemplateFactory = new Jubjub__factory(libs, deployer);
 
     const jubjubInstance = JubjubTemplateFactory.attach(
-      "0x1c01cb2D678A5038A6209ed2F1B445d9f88c40e1"
+      "0x364e15ec68b811d6CF1350AE9633f326E71d9C36"
     );
     setJubjub(jubjubInstance);
 
