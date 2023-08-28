@@ -84,7 +84,7 @@ const Button = {
         height: "16px",
         position: "absolute",
        
-        backgroundColor: mode(`transparent`, `#000000`)(props),
+        backgroundColor: mode(`transparent`, `#DB008E`)(props),
         right: "-5px",
         bottom: "-9px",
         zIndex: "3",

@@ -72,11 +72,10 @@ export const Projects = ({ shuffledProjects }) => {
                     {t("ORGANIZER")}
                   </Heading>
                   <Heading fontWeight={"500"} fontSize={"2xl"}>
-                  Pick your favorite projects, then vote for them
+                  이드콘 3일 일정 중에 가장 기대되는 일정에 투표를 해주세요!!!
                   </Heading>
                   <Text fontSize={"sm"}>
-                    ETHDam is powered by CryptoCanal, an education and events platform growing in Amsterdam and spreading its roots to Rotterdam and Zürich. This grass root community is bound by the cypherpunk ideals of privacy, censorship resistance and ownership. Compete in the DeFi and Privacy
-                    track - 15K. The top 10 project selected by our Jury will be able to pitch on the mains stage.
+                    이드콘이 이번주 금요일에 열립니다!! 실감이 안 나는군요!
                   </Text>
                  
                 </VStack>
