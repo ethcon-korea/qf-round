@@ -153,7 +153,7 @@ export const theme = extendTheme({
               width: "200px",
               height: "30px",
               position: "absolute",
-              backgroundColor: mode(`transparent`, `#000000`)(props),
+              backgroundColor: mode(`transparent`, `#DB008E`)(props),
               right: "-20px",
               top: "-15px",
               zIndex: "-2",
@@ -227,7 +227,7 @@ export const theme = extendTheme({
         lineHeight: "tall",
       },
       body: {
-        bg: mode(`gray.100`, `#000000`)(props),
+        bg: mode(`gray.100`, `#DB008E`)(props),
         color: mode(`gray.800`, `whiteAlpha.900`)(props),
       },
       a: {

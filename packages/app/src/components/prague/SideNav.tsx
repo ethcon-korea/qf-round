@@ -10,7 +10,7 @@ import { Logo } from "../Hero";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 
 export const SideNav = ({ onGuideOpen }: SideNavProps) => {
-  const backgroundColor = useColorModeValue("gray.100", "#000000");
+  const backgroundColor = useColorModeValue("gray.100", "#3F0FFF");
   let [searchParams] = useSearchParams();
 
   return (
@@ -65,7 +65,7 @@ export const SideNav = ({ onGuideOpen }: SideNavProps) => {
 };
 
 export const Navbar = ({ onGuideOpen }: SideNavProps) => {
-  const backgroundColor = useColorModeValue("gray.100", "#000000");
+  const backgroundColor = useColorModeValue("gray.100", "#3F0FFF");
   const color = useColorModeValue("gray.800", "#FDFDFD");
 
   let [searchParams] = useSearchParams();
