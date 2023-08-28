@@ -21,9 +21,9 @@ import {
   PrivKey,
   PCommand,
   Message,
-} from "../../app/src/jubjublib/domainobjs/domainobjs";
-import { JubjubFactory__factory } from "../../app/src/typechain/factories/contracts/JubjubFactory__factory";
-import { Jubjub__factory } from "../../app/src/typechain/factories/contracts/Jubjub__factory";
+} from "./jubjublib/domainobjs/domainobjs";
+import { JubjubFactory__factory } from "./typechain/factories/contracts/JubjubFactory__factory";
+import { Jubjub__factory } from "./typechain/factories/contracts/Jubjub__factory";
 
 type WalletContextType = {
   provider: providers.Web3Provider | null | undefined;

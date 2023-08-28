@@ -1,0 +1,2 @@
+export const ALCHEMY_KEY = "<I-AM-PLACEHOLDER>";
+export const SUPABASE_SERVICE_KEY = "<I-AM-PLACEHOLDER>";
