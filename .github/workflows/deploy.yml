@@ -2,6 +2,7 @@ name: Deploy web
 
 on:
   push: 
+    branches: main
 
 env:
   cwd: ${{github.workspace}}/packages/app
