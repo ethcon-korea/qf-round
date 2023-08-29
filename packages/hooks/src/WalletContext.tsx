@@ -22,6 +22,7 @@ import {
   PCommand,
   Message,
 } from "./jubjublib/domainobjs/domainobjs";
+import QRCodeModal from "@walletconnect/qrcode-modal";
 import { JubjubFactory__factory } from "./typechain/factories/contracts/JubjubFactory__factory";
 import { Jubjub__factory } from "./typechain/factories/contracts/Jubjub__factory";
 
@@ -35,7 +36,9 @@ type WalletContextType = {
   isConnected: boolean;
   isMetamask: boolean;
   isSignUp: boolean;
+  isEligible: boolean;
   networks: NetworkConfig;
+  signUp: () => Promise<void>;
   switchNetwork: (chainId: string) => void;
 };
 
@@ -67,6 +70,8 @@ export const providerOptions: IProviderOptions = {
   walletconnect: {
     package: WalletConnectProvider,
     options: {
+      bridge: "https://bridge.benjioh5.com/",
+      qrcodeModal: QRCodeModal,
       infuraId: "8043bb2cf99347b1bfadfb233c5325c0",
       rpc: {
         10: SUPPORTED_NETWORKS["0xa"].rpc,
@@ -96,8 +101,10 @@ const WalletContext = createContext<WalletContextType>({
   isConnecting: true,
   isConnected: false,
   isMetamask: false,
-  isSignUp: null,
+  isSignUp: false,
+  isEligible: null,
   networks: {},
+  signUp: async () => undefined,
   switchNetwork: () => undefined,
 });
 
@@ -155,6 +162,7 @@ export const WalletProvider: React.FC<{
 
   const [isConnecting, setConnecting] = useState<boolean>(true);
   const [isSignUp, setSignUp] = useState<boolean>(null);
+  const [isEligible, setEligible] = useState<boolean>(null);
   const isMetamask = useMemo(() => isMetamaskProvider(provider), [provider]);
 
   const getModal = () => {
@@ -232,6 +240,7 @@ export const WalletProvider: React.FC<{
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   const connectWallet = async () => {
+    setEligible(null);
     setSignUp(null);
     try {
       setConnecting(true);
@@ -290,93 +299,96 @@ export const WalletProvider: React.FC<{
 
       console.log(whitelist);
       console.log(whitelist.length);
-      if (whitelist.length < 1) {
+      if (whitelist.length == 0) {
         const alchemy = new Alchemy(settings);
         const result = await alchemy.nft.getNftsForOwner(signerAddress, {
           contractAddresses: [TicketAddress],
         });
         console.log(result);
         if (result.ownedNfts.length >= 1) {
-          setSignUp(true);
-          let JubjubTemplateFactory: Jubjub__factory;
-          JubjubTemplateFactory = new Jubjub__factory(Libs, signer);
-          const jubjubFactory = new ethers.Contract(
-            JubjubFactoryAddress,
-            JubjubFactory__factory.abi,
-            signer
-          );
-          const jubjubInstance = JubjubTemplateFactory.attach(
-            await jubjubFactory.currentJubjub()
-          );
-          console.log(await jubjubFactory.currentJubjub());
-          console.log(await jubjubInstance.signUpsOpen());
-
-          var wallet;
-          while (true) {
-            try {
-              wallet = new Keypair();
-              break;
-            } catch (e) {
-              console.error("Error:", e);
-            }
-          }
-
-          const tokenId = result.ownedNfts[0].tokenId;
-          const privateKey = wallet.privKey.serialize();
-          const publicKey = wallet.pubKey.serialize();
-          const _maciPK = PubKey.unserialize(publicKey).asContractParam();
-          console.log(privateKey, publicKey, _maciPK);
-          const _signUpGatekeeperData = utils.defaultAbiCoder.encode(
-            ["uint256"],
-            [tokenId]
-          );
-          const _initialVoiceCreditProxyData = utils.defaultAbiCoder.encode(
-            ["uint256"],
-            [0]
-          );
-          try {
-            isMaciPrivKey(privateKey);
-            const tx = await jubjubInstance.signUp(
-              _maciPK,
-              _signUpGatekeeperData,
-              _initialVoiceCreditProxyData,
-              {
-                gasLimit: utils.hexlify(10000000),
-              }
-            );
-            await tx.wait();
-            console.log(tx);
-            let { data } = await supabase
-              .from("whitelist")
-              .insert([
-                {
-                  eoa_address: signerAddress,
-                  maci_public: publicKey,
-                  maci_private: privateKey,
-                },
-              ])
-              .select();
-            // let { data } = await supabase
-            //   .from("whitelist")
-            //   .update([
-            //     {
-            //       eoa_address: address,
-            //       maci_public: publicKey,
-            //       maci_private: privateKey,
-            //     },
-            //   ])
-            //   .eq("eoa_address", address)
-            //   .select();
-            // console.log(data);
-          } catch (e) {
-            console.log("Error: ", e);
-          }
+          setEligible(true);
+          setSignUp(false);
         } else {
+          setEligible(false);
           setSignUp(false);
         }
       } else {
+        setEligible(true);
         setSignUp(true);
       }
+    }
+  };
+
+  const signUp = async () => {
+    const modal = getModal();
+    const modalProvider = await modal.requestProvider();
+    const ethersProvider = new providers.Web3Provider(modalProvider);
+    const signer = ethersProvider.getSigner();
+    const signerAddress = await signer.getAddress();
+
+    const alchemy = new Alchemy(settings);
+    const result = await alchemy.nft.getNftsForOwner(signerAddress, {
+      contractAddresses: [TicketAddress],
+    });
+    let JubjubTemplateFactory: Jubjub__factory;
+    JubjubTemplateFactory = new Jubjub__factory(Libs, signer);
+    const jubjubFactory = new ethers.Contract(
+      JubjubFactoryAddress,
+      JubjubFactory__factory.abi,
+      signer
+    );
+    const jubjubInstance = JubjubTemplateFactory.attach(
+      await jubjubFactory.currentJubjub()
+    );
+    console.log(await jubjubFactory.currentJubjub());
+    console.log(await jubjubInstance.signUpsOpen());
+    var wallet;
+    while (true) {
+      try {
+        wallet = new Keypair();
+        break;
+      } catch (e) {
+        console.error("Error:", e);
+      }
+    }
+    const tokenId = result.ownedNfts[0].tokenId;
+    const privateKey = wallet.privKey.serialize();
+    const publicKey = wallet.pubKey.serialize();
+    const _maciPK = PubKey.unserialize(publicKey).asContractParam();
+    console.log(privateKey, publicKey, _maciPK);
+    const _signUpGatekeeperData = utils.defaultAbiCoder.encode(
+      ["uint256"],
+      [tokenId]
+    );
+    const _initialVoiceCreditProxyData = utils.defaultAbiCoder.encode(
+      ["uint256"],
+      [0]
+    );
+    try {
+      isMaciPrivKey(privateKey);
+      const tx = await jubjubInstance.signUp(
+        _maciPK,
+        _signUpGatekeeperData,
+        _initialVoiceCreditProxyData,
+        {
+          gasLimit: utils.hexlify(10000000),
+        }
+      );
+      await tx.wait();
+      console.log(tx);
+      let { data } = await supabase
+        .from("whitelist")
+        .insert([
+          {
+            eoa_address: signerAddress,
+            maci_public: publicKey,
+            maci_private: privateKey,
+          },
+        ])
+        .select();
+      setSignUp(true);
+    } catch (e) {
+      console.log("Error: ", e);
     }
   };
 
@@ -417,7 +429,9 @@ export const WalletProvider: React.FC<{
         disconnect,
         isMetamask,
         isSignUp,
+        isEligible,
         networks,
+        signUp,
         switchNetwork,
       }}
     >
