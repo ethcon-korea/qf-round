@@ -17,6 +17,16 @@ import {
   Tooltip,
   useMediaQuery,
   AspectRatio,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  RadioGroup,
+  Radio,
 } from "@chakra-ui/react";
 
 import { MagikButton } from "@qfi/ui";
@@ -124,11 +134,15 @@ export const Ballot = () => {
   const [isViewportMd] = useMediaQuery("(min-width: 768px)");
   const [searchParams] = useSearchParams();
   const { i18n, t } = useTranslation();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const btnRef = React.useRef(null);
   const toast = useToast();
 
   const currLang = i18n.language;
 
-  const { provider, address, isConnected, isSignUp } = useWallet();
+  const { provider, address, isConnected, isSignUp, isEligible, signUp } =
+    useWallet();
 
   const voteOptions = useMemo(() => {
     return searchParams.getAll("option");
@@ -368,10 +382,14 @@ export const Ballot = () => {
     setVoiceCreditBBalance(newVoiceCreditBalance);
   }, [votes]);
 
+  useEffect(() => {
+    console.log("=======eligible========", isEligible);
+    console.log("=======signUp========", isSignUp);
+    if (isEligible == true && isSignUp == false) onOpen();
+  }, [isEligible, isSignUp]);
+
   const [txLoading, setTxLoading] = useState<boolean>(false);
-
   const disableSubmitButton = !isConnected || txLoading;
-
   function createMessage(
     userStateIndex: number,
     userKeypair: Keypair,
@@ -592,26 +610,9 @@ export const Ballot = () => {
                 <Hero />
               </AspectRatio>
             </Heading>
-
-            <MagikButton borderRadius={"3px"} mt={6} />
-          </Flex>
-        ) : (
-          <Flex w="full" alignItems="center" flexDirection="column">
-            <Heading w="full">
-              <AspectRatio
-                ratio={24 / 4}
-                w="full"
-                overflow="hidden"
-                alignItems={"flex-start"}
-                justifyContent={"flex-start"}
-                flexDir={"row"}
-              >
-                <Hero />
-              </AspectRatio>
-            </Heading>
-            {!isConnected || isSignUp == null ? (
+            {!isConnected || isEligible == null ? (
               <></>
-            ) : isSignUp == true ? (
+            ) : isEligible == true ? (
               <div
                 style={{
                   width: "100%",
@@ -637,7 +638,122 @@ export const Ballot = () => {
                 </Text>
               </div>
             )}
-
+            <Modal
+              onClose={onClose}
+              finalFocusRef={btnRef}
+              isOpen={isOpen}
+              scrollBehavior={"inside"}
+              size={"sm"}
+              isCentered
+            >
+              <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
+              <ModalContent fontSize={"20"}>
+                <ModalHeader>📌 QF Notice 📌</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody textAlign={{ base: "center" }}>
+                  <Text textAlign="justify">
+                    {t(
+                      "The MACI (Minimum Anti-Collision Infrastructure) uses zero-knowledge proofs as a protection against censorship and collisions in blockchain voting (read more about MACI on this page)."
+                    )}{" "}
+                    {t(
+                      "Each voter gets a pseudo-random MACI key, which is used to encrypt and validate your votes. This is the only way to vote in the round, and it can be used to change your vote at any time while the round is active, so keep it safe and don't share it."
+                    )}{" "}
+                    {t("You should signup to MACI to participate in QF")}{" "}
+                    {t("You should signup to MACI to participate in QF")}{" "}
+                    {t("You should signup to MACI to participate in QF")}{" "}
+                    {t("You should signup to MACI to participate in QF")}{" "}
+                  </Text>
+                  <Button
+                    style={{ marginTop: 30, textAlign: "center" }}
+                    colorScheme="teal"
+                    onClick={signUp}
+                  >
+                    SignUp
+                  </Button>
+                </ModalBody>
+                <ModalFooter></ModalFooter>
+              </ModalContent>
+            </Modal>
+            <MagikButton borderRadius={"3px"} mt={6} />
+          </Flex>
+        ) : (
+          <Flex w="full" alignItems="center" flexDirection="column">
+            <Heading w="full">
+              <AspectRatio
+                ratio={24 / 4}
+                w="full"
+                overflow="hidden"
+                alignItems={"flex-start"}
+                justifyContent={"flex-start"}
+                flexDir={"row"}
+              >
+                <Hero />
+              </AspectRatio>
+            </Heading>
+            {!isConnected || isEligible == null ? (
+              <></>
+            ) : isEligible == true ? (
+              <div
+                style={{
+                  width: "100%",
+                  fontSize: 20,
+                  backgroundColor: "#00a5cf",
+                }}
+              >
+                <Text textAlign={{ base: "center" }}>
+                  You are elligible to vote
+                </Text>
+              </div>
+            ) : (
+              <div
+                style={{
+                  width: "100%",
+                  fontSize: 20,
+                  backgroundColor: "#e63946",
+                }}
+              >
+                <Text textAlign={{ base: "center" }}>
+                  Your wallet is not elligible to vote, please connect the
+                  wallet with Ethcon NFT ticket
+                </Text>
+              </div>
+            )}
+            <Modal
+              onClose={onClose}
+              finalFocusRef={btnRef}
+              isOpen={isOpen}
+              scrollBehavior={"inside"}
+              size={"sm"}
+              isCentered
+            >
+              <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
+              <ModalContent fontSize={"20"}>
+                <ModalHeader>📌 QF Notice 📌</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody textAlign={{ base: "center" }}>
+                  <Text textAlign="justify">
+                    {t(
+                      "The MACI (Minimum Anti-Collision Infrastructure) uses zero-knowledge proofs as a protection against censorship and collisions in blockchain voting (read more about MACI on this page)."
+                    )}{" "}
+                    {t(
+                      "Each voter gets a pseudo-random MACI key, which is used to encrypt and validate your votes. This is the only way to vote in the round, and it can be used to change your vote at any time while the round is active, so keep it safe and don't share it."
+                    )}{" "}
+                    {t("You should signup to MACI to participate in QF")}{" "}
+                    {t("You should signup to MACI to participate in QF")}{" "}
+                    {t("You should signup to MACI to participate in QF")}{" "}
+                    {t("You should signup to MACI to participate in QF")}{" "}
+                  </Text>
+                  <Button
+                    style={{ marginTop: 30, textAlign: "center" }}
+                    colorScheme="teal"
+                    onClick={signUp}
+                  >
+                    SignUp
+                  </Button>
+                </ModalBody>
+                <ModalFooter></ModalFooter>
+              </ModalContent>
+            </Modal>
             <MagikButton style={{ marginTop: 0 }} borderRadius={"8px"} mt={6} />
           </Flex>
         )}
@@ -736,7 +852,7 @@ export const Ballot = () => {
               </GridItem>
            */}
           </Grid>
-          {isSignUp ? (
+          {isSignUp == true ? (
             <>
               <form style={{ width: "100%" }}>
                 <SubmitBallotButton
