@@ -72,14 +72,14 @@ async function tally(
 ) {
   clear()
 
-  const network = 'hardhat'
+  const network = 'optimism'
   const coordinatorPrivKey = 'macisk.21bd6b0ee1e1a544ab72960219fb6cd422caaa159baebaedc979cd1836bcde43'
   const matchingPoolAmount = '100'
-  const jubjubContractAddress = '0x034e33289F23068FbDBDbE7C0493BD48ff973603'
+  const jubjubContractAddress = '0x364e15ec68b811d6CF1350AE9633f326E71d9C36'
   const startBlock = '108755964'
   const grantRoundStartBlock = '0'
   const firstVoteBlock = '0'
-  const lastBlock = 'latest'
+  const lastBlock = '108814149'
 
 
   //   /** NOTE: Set up Web3 Provider */
@@ -135,6 +135,7 @@ async function tally(
     const lastBlockSignups = currentBlock
     // const lastBlockSignups = (4 / 24) * BLOCKSPERDAY + firstBlock
     const lastBlockVotes = lastBlock == "latest" ? currentBlock : parseInt(lastBlock)
+
 
 
     console.log("coordinator pubkey: ", coordinatorKeyPair.pubKey.asContractParam());

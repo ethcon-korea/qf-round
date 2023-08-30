@@ -36,7 +36,7 @@ export const getProvider = (network: string): JsonRpcProvider => {
   // else if (network === networks.goerli.name) selectedNetwork = networks.goerli
   // else
   // selectedNetwork = networks.hardhat
-  const provider = new JsonRpcProvider("http://127.0.0.1:8545")
+  const provider = new JsonRpcProvider("https://opt-mainnet.g.alchemy.com/v2/meqnXZj3LOvK0IY4rt9SnAV7bDjh2OpV")
 
   return provider
 }
