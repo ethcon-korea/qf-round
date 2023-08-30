@@ -2,15 +2,15 @@ import { JubjubLibraryAddresses } from "../typechain/factories/contracts/Jubjub_
 
 export const Libs: JubjubLibraryAddresses = {
   ["contracts/poseidon/PoseidonT3.sol:PoseidonT3"]:
-  "0x61D7A9291e15afFcb60AFeAd7d2a9CB34fa6F7A5",
+    "0x55B28e9b048BFFb6BF8d05b00E071C78450A429b",
   ["contracts/poseidon/PoseidonT4.sol:PoseidonT4"]:
-  "0x05a5E3eEdFc5C9aA9268c75f7a052d2D86EdD8a9",
+    "0xf6c14e70D41f322B69Ada8C53daF9593aC165E08",
   ["contracts/poseidon/PoseidonT5.sol:PoseidonT5"]:
-  "0xEd47A7eF743A62D628A835AC06CCBA90C18f7832",
+    "0xE9334D82EF3a03A9677e1B7463B497B19aA2D5b0",
   ["contracts/poseidon/PoseidonT6.sol:PoseidonT6"]:
-    "0x8A665A254eE3FF5CDCB8d5B726e50dc039B13c76",
+    "0x6073Da004305af93A9deBa43F6490Df8ed6C43Ec",
 };
 
 export const JubjubFactoryAddress =
-  "0xC3e0C3d2EC91536a99E696B804c73C8BACcCa95a";
+  "0x53c63d77B27dDdA8B0bc001ceDBee245520D8fd1";
 export const TicketAddress = "0xC1d45AEa7107c2295ca694fcD1AD11823bC75dC6";
