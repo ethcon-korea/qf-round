@@ -76,7 +76,10 @@ interface SubmitBallotButtonProps {
   isConnected: boolean;
   disableSubmitButton: boolean;
   my?: number;
+  isSignUp: boolean;
+  isEligible: boolean;
   onSubmit: () => React.ReactNode;
+  onOpen: () => void;
   t: (arg: string) => any;
 }
 
@@ -84,7 +87,10 @@ const SubmitBallotButton = ({
   isConnected,
   disableSubmitButton,
   my = 0,
+  isSignUp,
+  isEligible,
   onSubmit,
+  onOpen,
   t,
 }: SubmitBallotButtonProps) =>
   isConnected ? (
@@ -104,7 +110,13 @@ const SubmitBallotButton = ({
         h={20}
         display="block"
         disabled={disableSubmitButton}
-        onClick={onSubmit}
+        onClick={async () => {
+          if (isEligible == true && isSignUp == false) {
+            return onOpen();
+          } else {
+            return onSubmit();
+          }
+        }}
         variant={"amsterdam"}
         fontSize={{ base: "md", xl: "lg" }}
       >
@@ -381,12 +393,6 @@ export const Ballot = () => {
     const newVoiceCreditBalance = 99 - totalVoiceCreditsUsed;
     setVoiceCreditBBalance(newVoiceCreditBalance);
   }, [votes]);
-
-  useEffect(() => {
-    console.log("=======eligible========", isEligible);
-    console.log("=======signUp========", isSignUp);
-    if (isEligible == true && isSignUp == false) onOpen();
-  }, [isEligible, isSignUp]);
 
   const [txLoading, setTxLoading] = useState<boolean>(false);
   const disableSubmitButton = !isConnected || txLoading;
@@ -852,14 +858,17 @@ export const Ballot = () => {
               </GridItem>
            */}
           </Grid>
-          {isSignUp == true ? (
+          {isEligible == true ? (
             <>
               <form style={{ width: "100%" }}>
                 <SubmitBallotButton
                   disableSubmitButton={disableSubmitButton}
                   isConnected={isConnected}
                   my={6}
+                  isSignUp={isSignUp}
+                  isEligible={isEligible}
                   onSubmit={handleSubmit}
+                  onOpen={onOpen}
                   t={t}
                 />
               </form>
