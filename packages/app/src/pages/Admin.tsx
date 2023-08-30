@@ -220,25 +220,25 @@ export const Admin = () => {
     let libs: JubjubLibraryAddresses;
     libs = {
       ["contracts/poseidon/PoseidonT6.sol:PoseidonT6"]:
-        "0x19e066281Cf25eecb012F6894CE685d085Be480C",
+        "0x6073Da004305af93A9deBa43F6490Df8ed6C43Ec",
       ["contracts/poseidon/PoseidonT5.sol:PoseidonT5"]:
-        "0x759e6B5293bD8c6EBD5Ec114341ca23a38834E85",
+        "0xE9334D82EF3a03A9677e1B7463B497B19aA2D5b0",
       ["contracts/poseidon/PoseidonT3.sol:PoseidonT3"]:
-        "0xB7098F48a2703c42ae77775d368EB0b32d6eB5d3",
+        "0x55B28e9b048BFFb6BF8d05b00E071C78450A429b",
       ["contracts/poseidon/PoseidonT4.sol:PoseidonT4"]:
-        "0xA56cBDE847f7CBC6E17311761A7A2C8b65ed7940",
+        "0xf6c14e70D41f322B69Ada8C53daF9593aC165E08",
     };
     JubjubTemplateFactory = new Jubjub__factory(libs, deployer);
 
     const jubjubInstance = JubjubTemplateFactory.attach(
-      "0x364e15ec68b811d6CF1350AE9633f326E71d9C36"
+      "0x53c63d77B27dDdA8B0bc001ceDBee245520D8fd1"
     );
     setJubjub(jubjubInstance);
 
     console.log(jubjubInstance);
 
     const _coordinatorPubkey = PubKey.unserialize(
-      "macipk.a39f603e634bd0e718e3549b0f06b50337f96ca7db1df75a6988f78ec448620b"
+      "macipk.9347da6e39ff8e40ff7087f56926c45c420cb016ac3c668bca6a979d7bbd268a"
     ).asContractParam();
     console.log(_coordinatorPubkey);
 
