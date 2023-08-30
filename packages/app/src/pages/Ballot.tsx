@@ -498,7 +498,7 @@ export const Ballot = () => {
               //   "macipk.ec4173e95d2bf03100f4c694d5c26ba6ab9817c0a5a0df593536a8ee2ec7af04"
               // );
               const coordinatorKey = PubKey.unserialize(
-                "macipk.a39f603e634bd0e718e3549b0f06b50337f96ca7db1df75a6988f78ec448620b"
+                "macipk.9347da6e39ff8e40ff7087f56926c45c420cb016ac3c668bca6a979d7bbd268a"
               );
 
               const [message, encPubKey] = createMessage(
