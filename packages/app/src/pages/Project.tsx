@@ -64,7 +64,7 @@ export function Project() {
             isClosable: true,
           });
 
-          navigate("/projects/" + projectId + "?" + newSearchParams.toString());
+          navigate("/?" + newSearchParams.toString());
           return;
         }
       };
@@ -95,7 +95,7 @@ export function Project() {
         duration: 3000,
         isClosable: true,
       });
-      navigate("/projects/" + projectId + "?" + searchParams.toString());
+      navigate("/?" + searchParams.toString());
       return;
     }
   }, [searchParams, isInBallot, projectId, navigate, toast]);
@@ -201,12 +201,12 @@ export function Project() {
                 position="relative"
                 // mt="-13%"
                 sx={{
-                   top: "50%", transform: "translateY(-50%)"
+                  top: "50%",
+                  transform: "translateY(-50%)",
                 }}
               >
                 <AspectRatio position="relative" ratio={3 / 1}>
                   <Image
-                    
                     h="full"
                     w="auto"
                     position="relative"
