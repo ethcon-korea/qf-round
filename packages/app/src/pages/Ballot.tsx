@@ -57,9 +57,9 @@ import { getStateIndex } from "../quickBallotConfig";
 import { useTranslation } from "react-i18next";
 import { Libs, TicketAddress, JubjubFactoryAddress } from "./Address";
 import { createClient } from "@supabase/supabase-js";
-import { ALCHEMY_KEY, SUPABASE_SERVICE_KEY } from "./key";
+import { SUPABASE_ANON_KEY } from "./key";
 const supabaseUrl = "https://lkrcjryaynygdvgtmumc.supabase.co";
-const supabaseKey = SUPABASE_SERVICE_KEY;
+const supabaseKey = SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const isMaciPrivKey = (key: string): boolean => {

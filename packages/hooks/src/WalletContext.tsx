@@ -11,7 +11,7 @@ import { ICoreOptions } from "web3modal";
 import { IProviderOptions } from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { Alchemy, Network } from "alchemy-sdk";
-import { ALCHEMY_KEY, SUPABASE_SERVICE_KEY } from "./key";
+import { ALCHEMY_KEY, SUPABASE_ANON_KEY } from "./key";
 import { Libs, TicketAddress, JubjubFactoryAddress } from "./Address";
 import { switchChainOnMetaMask } from "./metamask";
 import { createClient } from "@supabase/supabase-js";
@@ -236,7 +236,7 @@ export const WalletProvider: React.FC<{
     network: Network.OPT_MAINNET,
   };
   const supabaseUrl = "https://lkrcjryaynygdvgtmumc.supabase.co";
-  const supabaseKey = SUPABASE_SERVICE_KEY;
+  const supabaseKey = SUPABASE_ANON_KEY;
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   const connectWallet = async () => {
