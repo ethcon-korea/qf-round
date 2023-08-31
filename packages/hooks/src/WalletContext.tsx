@@ -25,6 +25,7 @@ import QRCodeModal from "@walletconnect/qrcode-modal";
 import { JubjubFactory__factory } from "./typechain/factories/contracts/JubjubFactory__factory";
 import { Jubjub__factory } from "./typechain/factories/contracts/Jubjub__factory";
 import axios from "axios";
+import { BooleanLiteral } from "typescript";
 
 type WalletContextType = {
   provider: providers.Web3Provider | null | undefined;
@@ -37,6 +38,7 @@ type WalletContextType = {
   isMetamask: boolean;
   isSignUp: boolean;
   isEligible: boolean;
+  serverError: boolean;
   networks: NetworkConfig;
   signUp: () => Promise<void>;
   switchNetwork: (chainId: string) => void;
@@ -103,6 +105,7 @@ const WalletContext = createContext<WalletContextType>({
   isMetamask: false,
   isSignUp: false,
   isEligible: null,
+  serverError: false,
   networks: {},
   signUp: async () => undefined,
   switchNetwork: () => undefined,
@@ -163,6 +166,7 @@ export const WalletProvider: React.FC<{
   const [isConnecting, setConnecting] = useState<boolean>(true);
   const [isSignUp, setSignUp] = useState<boolean>(null);
   const [isEligible, setEligible] = useState<boolean>(null);
+  const [serverError, setserverError] = useState<boolean>(false);
   const isMetamask = useMemo(() => isMetamaskProvider(provider), [provider]);
 
   const getModal = () => {
@@ -238,6 +242,7 @@ export const WalletProvider: React.FC<{
   const connectWallet = async () => {
     setEligible(null);
     setSignUp(null);
+    setserverError(false);
     try {
       setConnecting(true);
       const modal = getModal();
@@ -297,7 +302,7 @@ export const WalletProvider: React.FC<{
       console.log(whitelist.length);
       if (whitelist.length == 0) {
         axios
-          .get("http://ec2-3-230-144-62.compute-1.amazonaws.com/NFT", {
+          .get("http://ec2-3-230-144-62.compute-1.amazonaws.com/", {
             params: {
               address: signerAddress,
             },
@@ -314,6 +319,7 @@ export const WalletProvider: React.FC<{
           })
           .catch((error) => {
             console.log(error);
+            setserverError(true);
           });
       } else {
         setEligible(true);
@@ -328,7 +334,7 @@ export const WalletProvider: React.FC<{
     const ethersProvider = new providers.Web3Provider(modalProvider);
     const signer = ethersProvider.getSigner();
     const signerAddress = await signer.getAddress();
-
+    setserverError(false);
     axios
       .get("http://ec2-3-230-144-62.compute-1.amazonaws.com/token_id", {
         params: {
@@ -396,6 +402,7 @@ export const WalletProvider: React.FC<{
           setSignUp(true);
         } catch (e) {
           console.log("Error: ", e);
+          setserverError(true);
         }
       })
       .catch((error) => {
@@ -441,6 +448,7 @@ export const WalletProvider: React.FC<{
         isMetamask,
         isSignUp,
         isEligible,
+        serverError,
         networks,
         signUp,
         switchNetwork,

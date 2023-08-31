@@ -6,9 +6,18 @@ import {
   Show,
   Image,
   useColorModeValue,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 import BeatLoader from "react-spinners/BeatLoader";
 import CircleLoader from "react-spinners/CircleLoader";
+import { useTranslation } from "react-i18next";
 import { formatAddress, useWallet } from "@qfi/hooks";
 import { ButtonProps } from "@chakra-ui/react";
 
@@ -18,8 +27,14 @@ export const MagikButton: React.FC<MagikButtonProps> = ({
   children,
   ...props
 }) => {
-  const { connectWallet, isConnecting, isConnected, disconnect, address } =
-    useWallet();
+  const {
+    connectWallet,
+    isConnecting,
+    isConnected,
+    disconnect,
+    address,
+    serverError,
+  } = useWallet();
   // const { avatar, loading } = useENS({ address: address ?? undefined });
   // const { avatar, loading } = useENS({ ens: "alisha.eth" ?? "" });
 
@@ -38,30 +53,54 @@ export const MagikButton: React.FC<MagikButtonProps> = ({
   const BaseIcon = <></>;
   const SwitchAvatar = <Image src="/metamask.png" h={9} p={1.5} mx={0.5} />;
   const SwitchIcon = isConnected ? SwitchAvatar : BaseIcon;
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { i18n, t } = useTranslation();
   const switchAction = isConnected ? disconnect : connectWallet;
 
   return (
-    <Button
-      fontWeight="bold"
-      {...props}
-      w="full"
-      onClick={() => !isConnecting && switchAction()}
-      h={switchHeight}
-      pl={2}
-      pr={8}
-      leftIcon={SwitchIcon}
-      variant="magik"
-      disabled={isConnecting}
-      bg={switchBgColor}
-      color={switchIconColor}
-      _hover={{
-        bg: switchBgHoverColor,
-        color: switchTextHoverColor,
-      }}
-    >
-      {isConnected ? <Web3State /> : <ConnectState />}
-    </Button>
+    <>
+      <Button
+        fontWeight="bold"
+        {...props}
+        w="full"
+        onClick={() => !isConnecting && switchAction()}
+        h={switchHeight}
+        pl={2}
+        pr={8}
+        leftIcon={SwitchIcon}
+        variant="magik"
+        disabled={isConnecting}
+        bg={switchBgColor}
+        color={switchIconColor}
+        _hover={{
+          bg: switchBgHoverColor,
+          color: switchTextHoverColor,
+        }}
+      >
+        {isConnected ? <Web3State /> : <ConnectState />}
+      </Button>
+      {serverError ? onOpen() : <></>}
+      <Modal
+        onClose={onClose}
+        isOpen={isOpen}
+        scrollBehavior={"inside"}
+        size={"sm"}
+        isCentered
+      >
+        <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
+        <ModalContent fontSize={"20"}>
+          <ModalHeader>📌 QF Notice 📌</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody textAlign={{ base: "center" }}>
+            <Text textAlign="justify">
+              {t(
+                "The MACI (Minimum Anti-Collision Infrastructure) uses zero-knowledge proofs as a protection against censorship and collisions in blockchain voting (read more about MACI on this page)."
+              )}{" "}
+            </Text>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 function Web3State() {
@@ -108,6 +147,32 @@ function ConnectState() {
         CONNECT
       </Text>
     </VStack>
+  );
+}
+
+function errorModal() {
+  return (
+    <Modal
+      onClose={onClose}
+      finalFocusRef={btnRef}
+      isOpen={isOpen}
+      scrollBehavior={"inside"}
+      size={"sm"}
+      isCentered
+    >
+      <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
+      <ModalContent fontSize={"20"}>
+        <ModalHeader>📌 QF Notice 📌</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody textAlign={{ base: "center" }}>
+          <Text textAlign="justify">
+            {t(
+              "The MACI (Minimum Anti-Collision Infrastructure) uses zero-knowledge proofs as a protection against censorship and collisions in blockchain voting (read more about MACI on this page)."
+            )}{" "}
+          </Text>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   );
 }
 
