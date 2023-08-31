@@ -111,7 +111,8 @@ const SubmitBallotButton = ({
         display="block"
         disabled={disableSubmitButton}
         onClick={async () => {
-          if (isEligible == true && isSignUp == false) {
+          //&& isSignUp == false
+          if (isEligible == true) {
             return onOpen();
           } else {
             return onSubmit();
@@ -649,7 +650,7 @@ export const Ballot = () => {
               finalFocusRef={btnRef}
               isOpen={isOpen}
               scrollBehavior={"inside"}
-              size={"sm"}
+              size={"md"}
               isCentered
             >
               <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
@@ -659,15 +660,31 @@ export const Ballot = () => {
                 <ModalBody textAlign={{ base: "center" }}>
                   <Text textAlign="justify">
                     {t(
-                      "The MACI (Minimum Anti-Collision Infrastructure) uses zero-knowledge proofs as a protection against censorship and collisions in blockchain voting (read more about MACI on this page)."
+                      "You can vote for your desired projects. The total number of voice credit you can cast is 99, and when you vote for a project more than once, it requires the number of credits to be squared."
+                    )}{" "}
+                    <br />
+                    {t(
+                      "For example, if you want to vote for a project once, it will consume 1 credit. for the same project twice, it will consume 4 credits (2^2). If you want to vote for the same project three times, it will consume 9 credits (3^2), and so on."
+                    )}{" "}
+                    <br />
+                    {t(
+                      "Please keep this in mind while distributing your votes among the projects."
+                    )}{" "}
+                    <br />
+                    <br />
+                    {t(
+                      "You can also submit multiple votes, and if you submit votes multiple times, only the last vote you submit will be reflected in the final vote tally. This means that your most recent vote will override any previous votes you may have submitted for the same project. "
                     )}{" "}
                     {t(
-                      "Each voter gets a pseudo-random MACI key, which is used to encrypt and validate your votes. This is the only way to vote in the round, and it can be used to change your vote at any time while the round is active, so keep it safe and don't share it."
+                      "Please make sure to keep this in mind as you participate in the voting process."
                     )}{" "}
-                    {t("You should signup to MACI to participate in QF")}{" "}
-                    {t("You should signup to MACI to participate in QF")}{" "}
-                    {t("You should signup to MACI to participate in QF")}{" "}
-                    {t("You should signup to MACI to participate in QF")}{" "}
+                    <br />
+                    <br />
+                    ❗️
+                    {t(
+                      "To participate in anonymous voting, you need to sign up. This process involves sending a transaction."
+                    )}{" "}
+                    ❗️
                   </Text>
                   <Button
                     style={{ marginTop: 30, textAlign: "center" }}
@@ -680,7 +697,7 @@ export const Ballot = () => {
                 <ModalFooter></ModalFooter>
               </ModalContent>
             </Modal>
-            <MagikButton borderRadius={"3px"} mt={6} />
+            <MagikButton style={{ marginTop: 0 }} borderRadius={"3px"} mt={6} />
           </Flex>
         ) : (
           <Flex w="full" alignItems="center" flexDirection="column">
@@ -729,7 +746,7 @@ export const Ballot = () => {
               finalFocusRef={btnRef}
               isOpen={isOpen}
               scrollBehavior={"inside"}
-              size={"sm"}
+              size={"md"}
               isCentered
             >
               <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
@@ -739,15 +756,31 @@ export const Ballot = () => {
                 <ModalBody textAlign={{ base: "center" }}>
                   <Text textAlign="justify">
                     {t(
-                      "The MACI (Minimum Anti-Collision Infrastructure) uses zero-knowledge proofs as a protection against censorship and collisions in blockchain voting (read more about MACI on this page)."
+                      "You can vote for your desired projects. The total number of voice credit you can cast is 99, and when you vote for a project more than once, it requires the number of credits to be squared."
+                    )}{" "}
+                    <br />
+                    {t(
+                      "For example, if you want to vote for a project once, it will consume 1 credit. for the same project twice, it will consume 4 credits (2^2). If you want to vote for the same project three times, it will consume 9 credits (3^2), and so on."
+                    )}{" "}
+                    <br />
+                    {t(
+                      "Please keep this in mind while distributing your votes among the projects."
+                    )}{" "}
+                    <br />
+                    <br />
+                    {t(
+                      "You can also submit multiple votes, and if you submit votes multiple times, only the last vote you submit will be reflected in the final vote tally. This means that your most recent vote will override any previous votes you may have submitted for the same project. "
                     )}{" "}
                     {t(
-                      "Each voter gets a pseudo-random MACI key, which is used to encrypt and validate your votes. This is the only way to vote in the round, and it can be used to change your vote at any time while the round is active, so keep it safe and don't share it."
+                      "Please make sure to keep this in mind as you participate in the voting process."
                     )}{" "}
-                    {t("You should signup to MACI to participate in QF")}{" "}
-                    {t("You should signup to MACI to participate in QF")}{" "}
-                    {t("You should signup to MACI to participate in QF")}{" "}
-                    {t("You should signup to MACI to participate in QF")}{" "}
+                    <br />
+                    <br />
+                    ❗️
+                    {t(
+                      "To participate in anonymous voting, you need to sign up. This process involves sending a transaction."
+                    )}{" "}
+                    ❗️
                   </Text>
                   <Button
                     style={{ marginTop: 30, textAlign: "center" }}
