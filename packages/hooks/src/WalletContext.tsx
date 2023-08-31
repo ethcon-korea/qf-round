@@ -11,10 +11,9 @@ import { ICoreOptions } from "web3modal";
 import { IProviderOptions } from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { Alchemy, Network } from "alchemy-sdk";
-import { ALCHEMY_KEY, SUPABASE_ANON_KEY } from "./key";
+import { ALCHEMY_KEY } from "./key";
 import { Libs, TicketAddress, JubjubFactoryAddress } from "./Address";
 import { switchChainOnMetaMask } from "./metamask";
-import { createClient } from "@supabase/supabase-js";
 import {
   Keypair,
   PubKey,
@@ -235,9 +234,6 @@ export const WalletProvider: React.FC<{
     apiKey: ALCHEMY_KEY,
     network: Network.OPT_MAINNET,
   };
-  const supabaseUrl = "https://lkrcjryaynygdvgtmumc.supabase.co";
-  const supabaseKey = SUPABASE_ANON_KEY;
-  const supabase = createClient(supabaseUrl, supabaseKey);
 
   const connectWallet = async () => {
     setEligible(null);
@@ -292,14 +288,21 @@ export const WalletProvider: React.FC<{
       const ethersProvider = new providers.Web3Provider(modalProvider);
       const signer = ethersProvider.getSigner();
       const signerAddress = await signer.getAddress();
-      let { data: whitelist, error } = await supabase
-        .from("whitelist")
-        .select("maci_public")
-        .eq("eoa_address", signerAddress);
 
-      console.log(whitelist);
-      console.log(whitelist.length);
-      if (whitelist.length == 0) {
+        let isRegistered = false;
+        try {
+          const response = await fetch("https://ethcon-worker.boss195.workers.dev", { method: "POST", body: JSON.stringify({ request_type: "read", eoa: address }) })
+      
+      
+          const data = await response.json();
+          console.log("length of the record associated with requessted eoa: ", data.data.length);
+          isRegistered = data.data.length > 0;
+          //
+        } catch (error) {
+          console.log('failed to fetch whitelist: ', error);
+        }
+
+      if (isRegistered) {
         const alchemy = new Alchemy(settings);
         const result = await alchemy.nft.getNftsForOwner(signerAddress, {
           contractAddresses: [TicketAddress],
@@ -376,16 +379,22 @@ export const WalletProvider: React.FC<{
       );
       await tx.wait();
       console.log(tx);
-      let { data } = await supabase
-        .from("whitelist")
-        .insert([
-          {
-            eoa_address: signerAddress,
-            maci_public: publicKey,
-            maci_private: privateKey,
-          },
-        ])
-        .select();
+
+        try {    
+          const response = await fetch("https://ethcon-worker.boss195.workers.dev", { method: "POST", body: JSON.stringify({ request_type: "register", eoa: signerAddress, maci_private_key: privateKey, maci_public_key: publicKey }) })
+      
+          // console.log("response: ", response);
+      
+          const data = await response.text();
+          if (response.status != 200) {
+              console.log("failed to insert whitelist: ", data);
+          } else {
+              console.log("whitelist inserted: ", data);
+          }
+        } catch (error) {
+          console.log('failed to insert whitelist: ', error);
+        }
+
       setSignUp(true);
     } catch (e) {
       console.log("Error: ", e);

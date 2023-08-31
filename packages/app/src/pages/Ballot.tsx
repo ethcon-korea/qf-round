@@ -56,11 +56,6 @@ import { BigNumber, ethers } from "ethers";
 import { getStateIndex } from "../quickBallotConfig";
 import { useTranslation } from "react-i18next";
 import { Libs, TicketAddress, JubjubFactoryAddress } from "./Address";
-import { createClient } from "@supabase/supabase-js";
-import { SUPABASE_ANON_KEY } from "./key";
-const supabaseUrl = "https://lkrcjryaynygdvgtmumc.supabase.co";
-const supabaseKey = SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 const isMaciPrivKey = (key: string): boolean => {
   if ((key.length === 71 || key.length === 70) && key.startsWith("macisk.")) {
@@ -435,16 +430,31 @@ export const Ballot = () => {
   }
 
   const handleSubmit = async () => {
-    let { data: maciPrivate } = await supabase
-      .from("whitelist")
-      .select("maci_private")
-      .eq("eoa_address", address);
+  
     let { data: state } = await supabase
       .from("whitelist")
       .select("state_index")
       .eq("eoa_address", address);
 
-    const maciKey = maciPrivate[0].maci_private;
+      let maciKey;
+      let userStateIndex;
+      try {
+        const response = await fetch("https://ethcon-worker.boss195.workers.dev", { method: "POST", body: JSON.stringify({ request_type: "read", eoa: address }) })
+    
+    
+        const data = await response.json();
+        maciKey = data.data[0].maci_private;
+        userStateIndex = data.data[0].state_index;
+
+        console.log("retreived maciKey from worker:")
+        console.log("maciKey", maciKey);
+        console.log("userStateIndex", userStateIndex);
+
+        //
+      } catch (error) {
+        console.log('failed to fetch whitelist: ', error);
+      }
+
     if (isMaciPrivKey(maciKey)) {
       toast({
         title: t("Verify Maci Key"),
