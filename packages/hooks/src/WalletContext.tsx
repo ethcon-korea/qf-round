@@ -10,10 +10,8 @@ import React, {
 import { ICoreOptions } from "web3modal";
 import { IProviderOptions } from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { SUPABASE_ANON_KEY } from "./key";
-import { Libs, TicketAddress, JubjubFactoryAddress } from "./Address";
+import { Libs, JubjubFactoryAddress } from "./Address";
 import { switchChainOnMetaMask } from "./metamask";
-import { createClient } from "@supabase/supabase-js";
 import {
   Keypair,
   PubKey,
@@ -38,7 +36,6 @@ type WalletContextType = {
   isMetamask: boolean;
   isSignUp: boolean;
   isEligible: boolean;
-  serverError: boolean;
   networks: NetworkConfig;
   signUp: () => Promise<void>;
   switchNetwork: (chainId: string) => void;
@@ -105,7 +102,6 @@ const WalletContext = createContext<WalletContextType>({
   isMetamask: false,
   isSignUp: false,
   isEligible: null,
-  serverError: false,
   networks: {},
   signUp: async () => undefined,
   switchNetwork: () => undefined,
@@ -166,7 +162,6 @@ export const WalletProvider: React.FC<{
   const [isConnecting, setConnecting] = useState<boolean>(true);
   const [isSignUp, setSignUp] = useState<boolean>(null);
   const [isEligible, setEligible] = useState<boolean>(null);
-  const [serverError, setserverError] = useState<boolean>(false);
   const isMetamask = useMemo(() => isMetamaskProvider(provider), [provider]);
 
   const getModal = () => {
@@ -235,14 +230,9 @@ export const WalletProvider: React.FC<{
     });
   };
 
-  const supabaseUrl = "https://lkrcjryaynygdvgtmumc.supabase.co";
-  const supabaseKey = SUPABASE_ANON_KEY;
-  const supabase = createClient(supabaseUrl, supabaseKey);
-
   const connectWallet = async () => {
     setEligible(null);
     setSignUp(null);
-    setserverError(false);
     try {
       setConnecting(true);
       const modal = getModal();
@@ -293,16 +283,28 @@ export const WalletProvider: React.FC<{
       const ethersProvider = new providers.Web3Provider(modalProvider);
       const signer = ethersProvider.getSigner();
       const signerAddress = await signer.getAddress();
-      let { data: whitelist, error } = await supabase
-        .from("whitelist")
-        .select("maci_public")
-        .eq("eoa_address", signerAddress);
-
-      console.log(whitelist);
-      console.log(whitelist.length);
-      if (whitelist.length == 0) {
+      let isRegistered = false;
+      try {
+        const response = await fetch(
+          "https://ethcon-worker.boss195.workers.dev",
+          {
+            method: "POST",
+            body: JSON.stringify({ request_type: "read", eoa: address }),
+          }
+        );
+        const data = await response.json();
+        console.log(
+          "length of the record associated with requessted eoa: ",
+          data.data.length
+        );
+        isRegistered = data.data.length > 0;
+        //
+      } catch (error) {
+        console.log("failed to fetch whitelist: ", error);
+      }
+      if (isRegistered) {
         axios
-          .get("http://ec2-3-230-144-62.compute-1.amazonaws.com/", {
+          .get("http://ec2-3-230-144-62.compute-1.amazonaws.com/NFT", {
             params: {
               address: signerAddress,
             },
@@ -319,7 +321,6 @@ export const WalletProvider: React.FC<{
           })
           .catch((error) => {
             console.log(error);
-            setserverError(true);
           });
       } else {
         setEligible(true);
@@ -334,7 +335,6 @@ export const WalletProvider: React.FC<{
     const ethersProvider = new providers.Web3Provider(modalProvider);
     const signer = ethersProvider.getSigner();
     const signerAddress = await signer.getAddress();
-    setserverError(false);
     axios
       .get("http://ec2-3-230-144-62.compute-1.amazonaws.com/token_id", {
         params: {
@@ -389,20 +389,32 @@ export const WalletProvider: React.FC<{
           );
           await tx.wait();
           console.log(tx);
-          let { data } = await supabase
-            .from("whitelist")
-            .insert([
+          try {
+            const response = await fetch(
+              "https://ethcon-worker.boss195.workers.dev",
               {
-                eoa_address: signerAddress,
-                maci_public: publicKey,
-                maci_private: privateKey,
-              },
-            ])
-            .select();
+                method: "POST",
+                body: JSON.stringify({
+                  request_type: "register",
+                  eoa: signerAddress,
+                  maci_private_key: privateKey,
+                  maci_public_key: publicKey,
+                }),
+              }
+            );
+            // console.log("response: ", response);
+            const data = await response.text();
+            if (response.status != 200) {
+              console.log("failed to insert whitelist: ", data);
+            } else {
+              console.log("whitelist inserted: ", data);
+            }
+          } catch (error) {
+            console.log("failed to insert whitelist: ", error);
+          }
           setSignUp(true);
         } catch (e) {
           console.log("Error: ", e);
-          setserverError(true);
         }
       })
       .catch((error) => {
@@ -448,7 +460,6 @@ export const WalletProvider: React.FC<{
         isMetamask,
         isSignUp,
         isEligible,
-        serverError,
         networks,
         signUp,
         switchNetwork,
