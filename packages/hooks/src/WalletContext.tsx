@@ -10,11 +10,8 @@ import React, {
 import { ICoreOptions } from "web3modal";
 import { IProviderOptions } from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { Alchemy, Network } from "alchemy-sdk";
-import { ALCHEMY_KEY, SUPABASE_ANON_KEY } from "./key";
-import { Libs, TicketAddress, JubjubFactoryAddress } from "./Address";
+import { Libs, JubjubFactoryAddress } from "./Address";
 import { switchChainOnMetaMask } from "./metamask";
-import { createClient } from "@supabase/supabase-js";
 import {
   Keypair,
   PubKey,
@@ -25,6 +22,7 @@ import {
 import QRCodeModal from "@walletconnect/qrcode-modal";
 import { JubjubFactory__factory } from "./typechain/factories/contracts/JubjubFactory__factory";
 import { Jubjub__factory } from "./typechain/factories/contracts/Jubjub__factory";
+import axios from "axios";
 
 type WalletContextType = {
   provider: providers.Web3Provider | null | undefined;
@@ -48,7 +46,7 @@ export const SUPPORTED_NETWORKS: NetworkConfig = {
     name: "Optimism",
     symbol: "eth",
     explorer: "https://explorer.optimism.io",
-    rpc: "https://opt-mainnet.g.alchemy.com/v2/meqnXZj3LOvK0IY4rt9SnAV7bDjh2OpV",
+    rpc: "https://mainnet.optimism.io/",
   },
   "0x64": {
     chainId: "0x64",
@@ -231,14 +229,6 @@ export const WalletProvider: React.FC<{
     });
   };
 
-  const settings = {
-    apiKey: ALCHEMY_KEY,
-    network: Network.OPT_MAINNET,
-  };
-  const supabaseUrl = "https://lkrcjryaynygdvgtmumc.supabase.co";
-  const supabaseKey = SUPABASE_ANON_KEY;
-  const supabase = createClient(supabaseUrl, supabaseKey);
-
   const connectWallet = async () => {
     setEligible(null);
     setSignUp(null);
@@ -292,26 +282,47 @@ export const WalletProvider: React.FC<{
       const ethersProvider = new providers.Web3Provider(modalProvider);
       const signer = ethersProvider.getSigner();
       const signerAddress = await signer.getAddress();
-      let { data: whitelist, error } = await supabase
-        .from("whitelist")
-        .select("maci_public")
-        .eq("eoa_address", signerAddress);
+      let isRegistered = false;
+      try {
+        const response = await fetch(
+          "https://ethcon-worker.boss195.workers.dev",
+          {
+            method: "POST",
+            body: JSON.stringify({ request_type: "read", eoa: signerAddress }),
+          }
+        );
+        const data = await response.json();
+        console.log(data);
+        console.log(
+          "length of the record associated with requessted eoa: ",
+          data.data.length
+        );
+        isRegistered = data.data.length > 0;
+        //
+      } catch (error) {
+        console.log("failed to fetch whitelist: ", error);
+      }
 
-      console.log(whitelist);
-      console.log(whitelist.length);
-      if (whitelist.length == 0) {
-        const alchemy = new Alchemy(settings);
-        const result = await alchemy.nft.getNftsForOwner(signerAddress, {
-          contractAddresses: [TicketAddress],
-        });
-        console.log(result);
-        if (result.ownedNfts.length >= 1) {
-          setEligible(true);
-          setSignUp(false);
-        } else {
-          setEligible(false);
-          setSignUp(false);
-        }
+      if (!isRegistered) {
+        axios
+          .get("http://ec2-3-230-144-62.compute-1.amazonaws.com/NFT", {
+            params: {
+              address: signerAddress,
+            },
+          })
+          .then((res) => {
+            console.log("=======have NFT======", res.data);
+            if (res.data) {
+              setEligible(true);
+              setSignUp(false);
+            } else {
+              setEligible(false);
+              setSignUp(false);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       } else {
         setEligible(true);
         setSignUp(true);
@@ -325,71 +336,97 @@ export const WalletProvider: React.FC<{
     const ethersProvider = new providers.Web3Provider(modalProvider);
     const signer = ethersProvider.getSigner();
     const signerAddress = await signer.getAddress();
-
-    const alchemy = new Alchemy(settings);
-    const result = await alchemy.nft.getNftsForOwner(signerAddress, {
-      contractAddresses: [TicketAddress],
-    });
-    let JubjubTemplateFactory: Jubjub__factory;
-    JubjubTemplateFactory = new Jubjub__factory(Libs, signer);
-    const jubjubFactory = new ethers.Contract(
-      JubjubFactoryAddress,
-      JubjubFactory__factory.abi,
-      signer
-    );
-    const jubjubInstance = JubjubTemplateFactory.attach(
-      await jubjubFactory.currentJubjub()
-    );
-    console.log(await jubjubFactory.currentJubjub());
-    console.log(await jubjubInstance.signUpsOpen());
-    var wallet;
-    while (true) {
-      try {
-        wallet = new Keypair();
-        break;
-      } catch (e) {
-        console.error("Error:", e);
-      }
-    }
-    const tokenId = result.ownedNfts[0].tokenId;
-    const privateKey = wallet.privKey.serialize();
-    const publicKey = wallet.pubKey.serialize();
-    const _maciPK = PubKey.unserialize(publicKey).asContractParam();
-    console.log(privateKey, publicKey, _maciPK);
-    const _signUpGatekeeperData = utils.defaultAbiCoder.encode(
-      ["uint256"],
-      [tokenId]
-    );
-    const _initialVoiceCreditProxyData = utils.defaultAbiCoder.encode(
-      ["uint256"],
-      [0]
-    );
-    try {
-      isMaciPrivKey(privateKey);
-      const tx = await jubjubInstance.signUp(
-        _maciPK,
-        _signUpGatekeeperData,
-        _initialVoiceCreditProxyData,
-        {
-          gasLimit: utils.hexlify(10000000),
+    axios
+      .get("http://ec2-3-230-144-62.compute-1.amazonaws.com/token_id", {
+        params: {
+          address: signerAddress,
+        },
+      })
+      .then(async (res) => {
+        console.log("=======NFT Id======", res.data);
+        let JubjubTemplateFactory: Jubjub__factory;
+        JubjubTemplateFactory = new Jubjub__factory(Libs, signer);
+        const jubjubFactory = new ethers.Contract(
+          JubjubFactoryAddress,
+          JubjubFactory__factory.abi,
+          signer
+        );
+        const jubjubInstance = JubjubTemplateFactory.attach(
+          await jubjubFactory.currentJubjub()
+        );
+        console.log(await jubjubFactory.currentJubjub());
+        console.log(await jubjubInstance.signUpsOpen());
+        var wallet;
+        while (true) {
+          try {
+            wallet = new Keypair();
+            break;
+          } catch (e) {
+            console.error("Error:", e);
+          }
         }
-      );
-      await tx.wait();
-      console.log(tx);
-      let { data } = await supabase
-        .from("whitelist")
-        .insert([
-          {
-            eoa_address: signerAddress,
-            maci_public: publicKey,
-            maci_private: privateKey,
-          },
-        ])
-        .select();
-      setSignUp(true);
-    } catch (e) {
-      console.log("Error: ", e);
-    }
+        const tokenId = res.data;
+        const privateKey = wallet.privKey.serialize();
+        const publicKey = wallet.pubKey.serialize();
+        const _maciPK = PubKey.unserialize(publicKey).asContractParam();
+        console.log(privateKey, publicKey, _maciPK);
+        const _signUpGatekeeperData = utils.defaultAbiCoder.encode(
+          ["uint256"],
+          [tokenId]
+        );
+        const _initialVoiceCreditProxyData = utils.defaultAbiCoder.encode(
+          ["uint256"],
+          [0]
+        );
+        try {
+          isMaciPrivKey(privateKey);
+          const tx = await jubjubInstance.signUp(
+            _maciPK,
+            _signUpGatekeeperData,
+            _initialVoiceCreditProxyData,
+            {
+              gasLimit: utils.hexlify(10000000),
+            }
+          );
+          await tx.wait();
+          console.log(tx);
+          console.log(
+            "=========db========",
+            signerAddress,
+            privateKey,
+            publicKey
+          );
+          try {
+            const response = await fetch(
+              "https://ethcon-worker.boss195.workers.dev",
+              {
+                method: "POST",
+                body: JSON.stringify({
+                  request_type: "register",
+                  eoa: signerAddress,
+                  maci_private_key: privateKey,
+                  maci_public_key: publicKey,
+                }),
+              }
+            );
+            // console.log("response: ", response);
+            const data = await response.text();
+            if (response.status != 200) {
+              console.log("failed to insert whitelist: ", data);
+            } else {
+              console.log("whitelist inserted: ", data);
+            }
+          } catch (error) {
+            console.log("failed to insert whitelist: ", error);
+          }
+          setSignUp(true);
+        } catch (e) {
+          console.log("Error: ", e);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   useEffect(() => {
