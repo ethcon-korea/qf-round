@@ -23,7 +23,6 @@ import QRCodeModal from "@walletconnect/qrcode-modal";
 import { JubjubFactory__factory } from "./typechain/factories/contracts/JubjubFactory__factory";
 import { Jubjub__factory } from "./typechain/factories/contracts/Jubjub__factory";
 import axios from "axios";
-import { BooleanLiteral } from "typescript";
 
 type WalletContextType = {
   provider: providers.Web3Provider | null | undefined;
@@ -289,10 +288,11 @@ export const WalletProvider: React.FC<{
           "https://ethcon-worker.boss195.workers.dev",
           {
             method: "POST",
-            body: JSON.stringify({ request_type: "read", eoa: address }),
+            body: JSON.stringify({ request_type: "read", eoa: signerAddress }),
           }
         );
         const data = await response.json();
+        console.log(data);
         console.log(
           "length of the record associated with requessted eoa: ",
           data.data.length
@@ -302,7 +302,8 @@ export const WalletProvider: React.FC<{
       } catch (error) {
         console.log("failed to fetch whitelist: ", error);
       }
-      if (isRegistered) {
+
+      if (!isRegistered) {
         axios
           .get("http://ec2-3-230-144-62.compute-1.amazonaws.com/NFT", {
             params: {
@@ -389,6 +390,12 @@ export const WalletProvider: React.FC<{
           );
           await tx.wait();
           console.log(tx);
+          console.log(
+            "=========db========",
+            signerAddress,
+            privateKey,
+            publicKey
+          );
           try {
             const response = await fetch(
               "https://ethcon-worker.boss195.workers.dev",
