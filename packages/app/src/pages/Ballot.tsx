@@ -430,30 +430,29 @@ export const Ballot = () => {
   }
 
   const handleSubmit = async () => {
-  
-    let { data: state } = await supabase
-      .from("whitelist")
-      .select("state_index")
-      .eq("eoa_address", address);
+    let maciKey;
+    let userStateIndex: number;
+    try {
+      const response = await fetch(
+        "https://ethcon-worker.boss195.workers.dev",
+        {
+          method: "POST",
+          body: JSON.stringify({ request_type: "read", eoa: address }),
+        }
+      );
 
-      let maciKey;
-      let userStateIndex;
-      try {
-        const response = await fetch("https://ethcon-worker.boss195.workers.dev", { method: "POST", body: JSON.stringify({ request_type: "read", eoa: address }) })
-    
-    
-        const data = await response.json();
-        maciKey = data.data[0].maci_private;
-        userStateIndex = data.data[0].state_index;
+      const data = await response.json();
+      maciKey = data.data[0].maci_private;
+      userStateIndex = data.data[0].state_index;
 
-        console.log("retreived maciKey from worker:")
-        console.log("maciKey", maciKey);
-        console.log("userStateIndex", userStateIndex);
+      console.log("retreived maciKey from worker:");
+      console.log("maciKey", maciKey);
+      console.log("userStateIndex", userStateIndex);
 
-        //
-      } catch (error) {
-        console.log('failed to fetch whitelist: ', error);
-      }
+      //
+    } catch (error) {
+      console.log("failed to fetch whitelist: ", error);
+    }
 
     if (isMaciPrivKey(maciKey)) {
       toast({
@@ -487,7 +486,6 @@ export const Ballot = () => {
             console.log("recipientVoteOptionIndex", recipientVoteOptionIndex);
             let maciKeyPair: Keypair;
             let serializedMaciPublicKey: string;
-            let userStateIndex: number;
             let nonce: number;
             let voteWeight: number;
 
@@ -495,7 +493,6 @@ export const Ballot = () => {
               maciKeyPair = new Keypair(PrivKey.unserialize(maciKey));
               serializedMaciPublicKey = maciKeyPair.pubKey.serialize();
               console.log("serializedMaciPublicKey", serializedMaciPublicKey);
-              userStateIndex = state[0].state_index;
               console.log("stateIndex", userStateIndex);
               nonce = index;
               voteWeight = votes[index];

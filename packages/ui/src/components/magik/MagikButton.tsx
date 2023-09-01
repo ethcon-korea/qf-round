@@ -6,9 +6,18 @@ import {
   Show,
   Image,
   useColorModeValue,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 import BeatLoader from "react-spinners/BeatLoader";
 import CircleLoader from "react-spinners/CircleLoader";
+import { useTranslation } from "react-i18next";
 import { formatAddress, useWallet } from "@qfi/hooks";
 import { ButtonProps } from "@chakra-ui/react";
 
@@ -38,7 +47,6 @@ export const MagikButton: React.FC<MagikButtonProps> = ({
   const BaseIcon = <></>;
   const SwitchAvatar = <Image src="/metamask.png" h={9} p={1.5} mx={0.5} />;
   const SwitchIcon = isConnected ? SwitchAvatar : BaseIcon;
-
   const switchAction = isConnected ? disconnect : connectWallet;
 
   return (
