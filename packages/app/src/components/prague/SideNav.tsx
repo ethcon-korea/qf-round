@@ -32,6 +32,8 @@ export const SideNav = ({ onGuideOpen }: SideNavProps) => {
       alignItems="center"
       w="full"
       bg={backgroundColor}
+      border={"2px"}
+      borderColor="black"
     >
       <VStack>
         <IconButton
@@ -113,6 +115,8 @@ export const Navbar = ({ onGuideOpen }: SideNavProps) => {
 
   return (
     <HStack
+      border={"2px"}
+      borderColor="black"
       zIndex={1}
       position={"fixed"}
       top={0}
@@ -152,7 +156,7 @@ export const Navbar = ({ onGuideOpen }: SideNavProps) => {
           <IconButton
             href={`https://scribehow.com/shared/Fleek_Workflow__kd1qhZpFS1eYpO6pICWl8g`}
             as={Clink}
-            rel="noreferrer"
+            rel="nore\ferrer"
             target="_blank"
             // onClick={onGuideOpen}
             color="white.500"

@@ -56,6 +56,7 @@ import { BigNumber, ethers } from "ethers";
 import { getStateIndex } from "../quickBallotConfig";
 import { useTranslation } from "react-i18next";
 import { Libs, TicketAddress, JubjubFactoryAddress } from "./Address";
+import { MdBorderColor } from "react-icons/md";
 
 const isMaciPrivKey = (key: string): boolean => {
   if ((key.length === 71 || key.length === 70) && key.startsWith("macisk.")) {

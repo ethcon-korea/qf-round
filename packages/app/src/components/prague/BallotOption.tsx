@@ -69,7 +69,7 @@ export const BallotOption = ({
       justifyContent={{ sm: "initial", md: "center" }}
       direction="row"
       w="full"
-      h={{ sm: 150, md: 90 }}
+      h={{ sm: 150, md: 100 }}
       fontFamily={"Noto Sans KR"}
     >
       <VStack
@@ -124,7 +124,7 @@ export const BallotOption = ({
           </Text> */}
         </HStack>
         <Text
-          fontSize="xs"
+          fontSize="md"
           lineHeight="short"
           fontWeight="normal"
           overflow="hidden"
@@ -157,7 +157,7 @@ export const BallotOption = ({
             size="sm"
             fontSize="lg"
             variant="ghost"
-            color="gray.600"
+            color="black"
             marginLeft="2"
             onClick={handleRemoveFromBallot(ballotOption?.id ?? "")}
             icon={<FaWindowClose />}
