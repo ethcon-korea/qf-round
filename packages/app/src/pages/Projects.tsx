@@ -143,7 +143,7 @@ export const Projects = ({ shuffledProjects }) => {
                       <AspectRatio
                         borderColor={"grey.800"}
                         borderWidth={1}
-                        zIndex="1"
+                        // zIndex="1"
                         w={{ base: "50px", md: "50px" }}
                         rounded="full"
                         ratio={1}

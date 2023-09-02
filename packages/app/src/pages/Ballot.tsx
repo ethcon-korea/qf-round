@@ -669,8 +669,10 @@ export const Ballot = () => {
                 </Text>
                 <Button
                   style={{ marginTop: 30, textAlign: "center" }}
-                  colorScheme="teal"
+                  backgroundColor={"white"}
                   onClick={signUp}
+                  color="black"
+                  _hover={{ transform: "scale(1.05)" }}
                 >
                   SignUp
                 </Button>
