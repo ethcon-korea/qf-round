@@ -1,5 +1,16 @@
 import React, { useState } from "react";
-import { HStack, IconButton, Icon, Select, Tooltip, useColorModeValue, VStack, Text, Button , Link as Clink} from "@chakra-ui/react";
+import {
+  HStack,
+  IconButton,
+  Icon,
+  Select,
+  Tooltip,
+  useColorModeValue,
+  VStack,
+  Text,
+  Button,
+  Link as Clink,
+} from "@chakra-ui/react";
 
 import { MdDashboard, MdSettings } from "react-icons/md";
 import { HiCollection, HiQuestionMarkCircle } from "react-icons/hi";
@@ -14,19 +25,39 @@ export const SideNav = ({ onGuideOpen }: SideNavProps) => {
   let [searchParams] = useSearchParams();
 
   return (
-    <VStack zIndex={1} p={4} justifyContent="space-between" alignItems="center" w="full" bg={backgroundColor}>
+    <VStack
+      zIndex={1}
+      p={4}
+      justifyContent="space-between"
+      alignItems="center"
+      w="full"
+      bg={backgroundColor}
+    >
       <VStack>
-        <IconButton bg={backgroundColor} to={`/?${searchParams.toString()}`} as={Link} mb={6} icon={<Logo />} aria-label="Home" />
-{/* 
+        <IconButton
+          bg={backgroundColor}
+          to={`/?${searchParams.toString()}`}
+          as={Link}
+          mb={6}
+          icon={<Logo />}
+          aria-label="Home"
+        />
+        {/* 
         <Tooltip label="Ballot" placement="right">
           <IconButton to={`/ballot?${searchParams.toString()}`} as={Link} color="gray.500" icon={<Icon as={MdDashboard} boxSize={4} />} aria-label="Ballot" />
         </Tooltip> */}
         {/* <Tooltip label="Projects" placement="right">
           <IconButton to={`/projects?${searchParams.toString()}`} as={Link} color="gray.500" icon={<Icon as={HiCollection} boxSize={4} />} aria-label="Projects" />
         </Tooltip> */}
-       
+
         <Tooltip label="About" placement="right">
-          <IconButton to={`/about?${searchParams.toString()}`} as={Link} color="gray.500" icon={<Icon as={MdDashboard } boxSize={6} />} aria-label="About" />
+          <IconButton
+            to={`/about?${searchParams.toString()}`}
+            as={Link}
+            color="gray.500"
+            icon={<Icon as={MdDashboard} boxSize={6} />}
+            aria-label="About"
+          />
         </Tooltip>
         {/* <Tooltip label="Guide" placement="right">
           <IconButton
@@ -37,8 +68,12 @@ export const SideNav = ({ onGuideOpen }: SideNavProps) => {
           />
         </Tooltip> */}
 
-
-        <ColorModeSwitcher color="gray.500" aria-label="dark mode" h="50px" borderRadius={useColorModeValue("3px", "8px")} />
+        {/* <ColorModeSwitcher
+          color="gray.500"
+          aria-label="dark mode"
+          h="50px"
+          borderRadius={useColorModeValue("3px", "8px")}
+        /> */}
         {/* <Tooltip label="How it Works" placement="right">
               <IconButton
                 to="/howitworks"
@@ -59,7 +94,6 @@ export const SideNav = ({ onGuideOpen }: SideNavProps) => {
             </Tooltip> */}
       </VStack>
       <VStack></VStack>
-
     </VStack>
   );
 };
@@ -78,7 +112,18 @@ export const Navbar = ({ onGuideOpen }: SideNavProps) => {
   };
 
   return (
-    <HStack zIndex={1} position={"fixed"} top={0} left={0} bg={backgroundColor} p={4} justifyContent="space-between" alignItems="center" w="full" minH={"32px"}>
+    <HStack
+      zIndex={1}
+      position={"fixed"}
+      top={0}
+      left={0}
+      bg={backgroundColor}
+      p={4}
+      justifyContent="space-between"
+      alignItems="center"
+      w="full"
+      minH={"32px"}
+    >
       <HStack>
         {/* <IconButton
           w={"40px"}
@@ -105,27 +150,54 @@ export const Navbar = ({ onGuideOpen }: SideNavProps) => {
         {/* <Tooltip label="..." placement="right"> */}
         <Tooltip label="Guide" placement="right">
           <IconButton
-          href={`https://scribehow.com/shared/Fleek_Workflow__kd1qhZpFS1eYpO6pICWl8g`} as={Clink} rel="noreferrer" target="_blank"
+            href={`https://scribehow.com/shared/Fleek_Workflow__kd1qhZpFS1eYpO6pICWl8g`}
+            as={Clink}
+            rel="noreferrer"
+            target="_blank"
             // onClick={onGuideOpen}
             color="gray.500"
             icon={<Icon as={HiQuestionMarkCircle} boxSize={5} />}
             aria-label="Guide"
           />
         </Tooltip>
-        <Button to={`/ballot?${searchParams.toString()}`} as={Link} height="50px" boxSizing="border-box" variant={"amsterdam"} fontSize={{ base: "lg", xl: "xl" }}>
-            Vote
-          </Button>
-         
+        <Button
+          to={`/ballot?${searchParams.toString()}`}
+          as={Link}
+          height="50px"
+          boxSizing="border-box"
+          backgroundColor={"#FFFFFF"}
+          fontSize={{ base: "lg", xl: "xl" }}
+          color="black"
+          fontFamily={"Noto Sans KR"}
+          borderRadius="40"
+          paddingLeft={"8"}
+          paddingRight={"8"}
+          _hover={{
+            transform: "scale(1.03)",
+          }}
+        >
+          Vote
+        </Button>
 
-  
         {/* </Tooltip> */}
-        <Select bg={backgroundColor} color={color} borderColor={color} borderRadius={useColorModeValue("3px", "8px")} value={selectedLang} onChange={({ target: { value } }) => handleLangChange(value)} w={20} h="50px" _focus={{ border: "none" }}>
+        <Select
+          bg={backgroundColor}
+          color={color}
+          borderColor={color}
+          borderRadius={useColorModeValue("3px", "8px")}
+          value={selectedLang}
+          onChange={({ target: { value } }) => handleLangChange(value)}
+          w={20}
+          h="50px"
+          _focus={{ border: "none" }}
+        >
           <option
             value="en"
             style={{
               background: backgroundColor,
               fontWeight: "bold",
-            }}>
+            }}
+          >
             EN
           </option>
           <option
@@ -133,7 +205,8 @@ export const Navbar = ({ onGuideOpen }: SideNavProps) => {
             style={{
               background: backgroundColor,
               fontWeight: "bold",
-            }}>
+            }}
+          >
             PT
           </option>
         </Select>
