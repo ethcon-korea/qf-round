@@ -52,7 +52,7 @@ export const SideNav = ({ onGuideOpen }: SideNavProps) => {
           <IconButton to={`/projects?${searchParams.toString()}`} as={Link} color="gray.500" icon={<Icon as={HiCollection} boxSize={4} />} aria-label="Projects" />
         </Tooltip> */}
 
-        <Tooltip label="About" placement="right">
+        {/* <Tooltip label="About" placement="right">
           <IconButton
             to={`/about?${searchParams.toString()}`}
             as={Link}
@@ -60,7 +60,7 @@ export const SideNav = ({ onGuideOpen }: SideNavProps) => {
             icon={<Icon as={MdDashboard} boxSize={6} />}
             aria-label="About"
           />
-        </Tooltip>
+        </Tooltip> */}
         {/* <Tooltip label="Guide" placement="right">
           <IconButton
             onClick={onGuideOpen}
