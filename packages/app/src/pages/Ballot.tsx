@@ -107,8 +107,8 @@ const SubmitBallotButton = ({
         display="block"
         disabled={disableSubmitButton}
         onClick={async () => {
-          //&& isSignUp == false
-          if (isEligible == true) {
+          //
+          if (isEligible == true && isSignUp == false) {
             return onOpen();
           } else {
             return onSubmit();
