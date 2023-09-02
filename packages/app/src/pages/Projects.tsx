@@ -117,12 +117,13 @@ export const Projects = ({ shuffledProjects }) => {
                   <Heading
                     fontFamily={"Noto Sans KR"}
                     fontWeight={"500"}
-                    fontSize={"2xl"}
+                    fontSize={"xl"}
                   >
-                    이드콘 3일 일정 중에 가장 기대되는 일정에 투표를 해주세요!!!
+                    이드콘 티켓을 민팅한 지갑을 사용하여 투표하세요!
+                    QF 라운드 상금액 3 Ether가 어디에 갈 지는 투표한 여러분에게 달려있습니다.
                   </Heading>
                   <Text fontFamily={"Noto Sans KR"} fontSize={"sm"}>
-                    이드콘이 이번주 금요일에 열립니다!! 실감이 안 나는군요!
+                  Vote using the wallet you registered for the Ethcon tickets! Where the 3 Ether prize pool for the QF round goes is up to you, the voters.
                   </Text>
                 </VStack>
               </VStack>
