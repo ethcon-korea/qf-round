@@ -11,9 +11,6 @@ import {
   Button,
   useColorModeValue,
   useToast,
-  FormControl,
-  FormHelperText,
-  Input,
   Tooltip,
   useMediaQuery,
   AspectRatio,
@@ -25,8 +22,6 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  RadioGroup,
-  Radio,
 } from "@chakra-ui/react";
 
 import { MagikButton } from "@qfi/ui";
