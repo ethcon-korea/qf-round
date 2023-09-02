@@ -212,7 +212,9 @@ export function Project() {
                     h="full"
                     w="auto"
                     position="relative"
-                    src={project.bannerImageLink}
+                    src={`https://drive.google.com/uc?export=view&id=${new URL(
+                      project.bannerImageLink
+                    ).searchParams.get("id")}`}
                     alt={project.projectName}
                   />
                 </AspectRatio>
@@ -239,7 +241,9 @@ export function Project() {
               >
                 <Image
                   borderRadius="full"
-                  src={project.thumbnailImageLink}
+                  src={`https://drive.google.com/uc?export=view&id=${new URL(
+                    project.thumbnailImageLink
+                  ).searchParams.get("id")}`}
                   alt={project.projectName}
                 />
               </AspectRatio>
