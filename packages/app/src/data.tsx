@@ -1,4 +1,3 @@
-import "@fontsource/archivo";
 let projects = [
   {
     recipientId: 1,

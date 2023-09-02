@@ -54,7 +54,7 @@ export const SideNav = ({ onGuideOpen }: SideNavProps) => {
           <IconButton
             to={`/about?${searchParams.toString()}`}
             as={Link}
-            color="gray.500"
+            color="white"
             icon={<Icon as={MdDashboard} boxSize={6} />}
             aria-label="About"
           />
@@ -155,7 +155,7 @@ export const Navbar = ({ onGuideOpen }: SideNavProps) => {
             rel="noreferrer"
             target="_blank"
             // onClick={onGuideOpen}
-            color="gray.500"
+            color="white.500"
             icon={<Icon as={HiQuestionMarkCircle} boxSize={5} />}
             aria-label="Guide"
           />
@@ -175,6 +175,7 @@ export const Navbar = ({ onGuideOpen }: SideNavProps) => {
           _hover={{
             transform: "scale(1.03)",
           }}
+          fontWeight="bold"
         >
           Vote
         </Button>

@@ -594,6 +594,7 @@ export const Ballot = () => {
       borderRightWidth={1}
       backgroundColor="#DB008E"
       overflowY="scroll"
+      fontFamily={"Noto Sans KR"}
       sx={{
         scrollbarColor: "green",
         "::-webkit-scrollbar": {
@@ -651,7 +652,11 @@ export const Ballot = () => {
             isCentered
           >
             <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
-            <ModalContent fontSize={"20"}>
+            <ModalContent
+              backgroundColor={"white"}
+              color="black"
+              fontSize={"20"}
+            >
               <ModalHeader>📌 QF Notice 📌</ModalHeader>
               <ModalCloseButton />
               <ModalBody textAlign={{ base: "center" }}>
@@ -669,10 +674,11 @@ export const Ballot = () => {
                 </Text>
                 <Button
                   style={{ marginTop: 30, textAlign: "center" }}
-                  backgroundColor={"white"}
+                  backgroundColor={"#3F0FFF"}
                   onClick={signUp}
-                  color="black"
+                  color="white"
                   _hover={{ transform: "scale(1.05)" }}
+                  fontFamily={"Noto Sans KR"}
                 >
                   SignUp
                 </Button>
@@ -684,11 +690,19 @@ export const Ballot = () => {
         </Flex>
 
         <VStack spacing={2} alignItems="flex-start" w="full">
-          <Heading style={{ marginTop: 56 }} textAlign={{ base: "center" }}>
+          <Heading
+            fontFamily={"Noto Sans KR"}
+            style={{ marginTop: 56 }}
+            textAlign={{ base: "center" }}
+          >
             Voting Ballot
           </Heading>
           <BallotExplainer />
-          <Heading style={{ marginTop: 56 }} textAlign={{ base: "center" }}>
+          <Heading
+            fontFamily={"Noto Sans KR"}
+            style={{ marginTop: 56 }}
+            textAlign={{ base: "center" }}
+          >
             {t("VOICE CREDIT BALANCE")}: {voiceCreditBalance}
           </Heading>
           <Text px={"1px"}>
@@ -743,7 +757,7 @@ export const Ballot = () => {
           w="full"
         >
           <Flex w="full" alignItems="center" justifyContent="space-between">
-            <Heading textAlign={{ base: "center" }}>
+            <Heading fontFamily={"Noto Sans KR"} textAlign={{ base: "center" }}>
               {t("BALLOT (MACI) PASSPHRASE")}
             </Heading>
           </Flex>

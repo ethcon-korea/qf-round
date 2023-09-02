@@ -101,11 +101,9 @@ export function Project() {
   }, [searchParams, isInBallot, projectId, navigate, toast]);
   return (
     <Flex
-      // bg={backgroundColor}
       as="main"
       h="full"
       flex={1}
-      // borderRightColor={backgroundColor}
       borderRightWidth={1}
       overflowY={"scroll"}
       sx={{
@@ -175,11 +173,15 @@ export function Project() {
                 spacing={0}
                 overflow="hidden"
               >
-                <Heading my={0.5} px={2} fontSize="lg" lineHeight="24px">
+                <Heading
+                  fontFamily={"Noto Sans KR"}
+                  fontSize="lg"
+                  lineHeight="24px"
+                >
                   {project.projectName}
                 </Heading>
                 <Text
-                  px={2}
+                  fontFamily={"Noto Sans KR"}
                   color="gray.600"
                   fontSize="xs"
                   lineHeight="16px"
@@ -193,19 +195,19 @@ export function Project() {
               display="block"
               w="full"
               minH={{ base: "100px", md: "200px" }}
-              overflow="hidden"
+              // overflow="hidden"
             >
               <Box
                 h="full"
                 w="full"
                 position="relative"
-                // mt="-13%"
+                // mt="-13%
                 sx={{
                   top: "50%",
                   transform: "translateY(-50%)",
                 }}
               >
-                <AspectRatio position="relative" ratio={3 / 1}>
+                <AspectRatio position="relative" ratio={4 / 1}>
                   <Image
                     h="full"
                     w="auto"
@@ -227,7 +229,7 @@ export function Project() {
                 borderColor={backgroundColor}
                 borderWidth={3}
                 w={{ base: "25%", md: "25%" }}
-                mt={{ sm: "-15%", md: "-15%" }}
+                mt={{ sm: "-5%", md: "-5%" }}
                 mb="12px"
                 display="block"
                 overflow="visible"
@@ -255,7 +257,7 @@ export function Project() {
                   base: "-12% !important",
                   sm: "-5% !important",
                   md: "-6% !important",
-                  lg: "-2% !important",
+                  lg: "10% !important",
                 }}
               >
                 <HStack px={4}>
@@ -298,31 +300,48 @@ export function Project() {
                   fontSize={"xl"}
                   lineHeight={"24px"}
                   fontWeight="700"
+                  fontFamily={"Noto Sans KR"}
                 >
                   {project.projectName}
                 </Heading>
                 <Text
-                  color="gray.600"
+                  color="white"
                   fontSize="xs"
                   lineHeight="14px"
                   fontWeight="400"
+                  fontFamily={"Noto Sans KR"}
                 >
                   {shortenEthAddress(project.ethereumAddress)}
                 </Text>
               </VStack>
 
               <VStack alignItems="flex-start" w="full" spacing={1}>
-                <Text fontSize="sm" lineHeight="16px" fontWeight="400">
+                <Text
+                  fontFamily={"Noto Sans KR"}
+                  fontSize="lg"
+                  fontWeight="400"
+                >
                   <b>Description:</b> {project.description}
                 </Text>
-                <Text fontSize="sm" lineHeight="16px" fontWeight="400">
+                <Text
+                  fontFamily={"Noto Sans KR"}
+                  fontSize="sm"
+                  lineHeight="16px"
+                  fontWeight="400"
+                >
+                  <br />
                   <b>Website: </b>{" "}
                   <a href={project.website} rel="noreferrer" target="_blank">
                     {project.website}
                   </a>
                 </Text>
               </VStack>
-              <Text fontSize="sm" lineHeight="16px" fontWeight="400">
+              <Text
+                fontFamily={"Noto Sans KR"}
+                fontSize="sm"
+                lineHeight="16px"
+                fontWeight="400"
+              >
                 <b>{t("Project Ballot ID")}:</b> {project.id}
               </Text>
             </VStack>

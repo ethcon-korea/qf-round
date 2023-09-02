@@ -121,11 +121,12 @@ export const Projects = ({ shuffledProjects }) => {
               <VStack spacing={0} alignItems="flex-start" w="full">
                 {shuffledProjects.map((project: Option) => (
                   <Box
+                    fontFamily={"Noto Sans KR"}
                     _hover={{
                       boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.5)",
-                      opacity: 0.7,
+                      backgroundColor: "rgba( 255, 255, 255, 0.9 )",
                       borderRadius: 50,
-                      color: "white",
+                      color: "balck",
                       transform: "scale(1.07)",
                     }}
                     alignItems={"stretch"}
@@ -143,7 +144,6 @@ export const Projects = ({ shuffledProjects }) => {
                       <AspectRatio
                         borderColor={"grey.800"}
                         borderWidth={1}
-                        // zIndex="1"
                         w={{ base: "50px", md: "50px" }}
                         rounded="full"
                         ratio={1}
@@ -167,6 +167,7 @@ export const Projects = ({ shuffledProjects }) => {
                             fontSize="lg"
                             lineHeight="24px"
                             fontWeight="700"
+                            fontFamily={"Noto Sans KR"}
                           >
                             {project.projectName}
                           </Heading>
