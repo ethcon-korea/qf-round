@@ -310,9 +310,9 @@ let projects = [
       "This project is no application. Instead, it is a cryptographic way of giving a guarantee a decentralized network shuffles a list of items, using keys from the users, and it can be validated afterwards using a special type of signature. This can be used for example to ban sandwich attacks by forcing the validator to use a real random order for processing the transactions or for example for games where true randomness is needed. Example, if a game of poker requires a real shuffled deck of cards, which happens at a central point, this protocol forces the agent to truly shuffle randomly. ",
     ethereumAddress: "0xC12660fDA68fD325DCd79226403752abC3d60fC4",
     website: "https://github.com/adsiko/TrueShuffle",
-    thumbnailImageLink: "No thumbnail",
-    logoCdnUrl: "No logo",
-    bannerImageLink: "No header.",
+    thumbnailImageLink: "https://pasteboard.co/23t3uyf4bp8m.png",
+    logoCdnUrl: "https://pasteboard.co/23t3uyf4bp8m.png",
+    bannerImageLink: "https://pasteboard.co/23t3uyf4bp8m.png",
     id: "21",
   },
   {
