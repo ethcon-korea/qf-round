@@ -1,49 +1,46 @@
 name: Deploy web
 
 on:
-  push: 
+  push:
     branches: main
 
 env:
   cwd: ${{github.workspace}}/packages/app
 
-concurrency: 
+concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 jobs:
-
   build:
     runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v3
 
-      # - name: Use Node.js 16
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 16
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
 
-      # - name: Install dependencies
-      #   run: yarn install --frozen-lockfile
-          
-      # - name: Build
-      #   run: CI=false yarn build
-          
-      # - name: Publish
-      #   uses: cloudflare/wrangler-action@v3
-      #   with:
-      #     command: pages deploy "packages/app/build" --project-name 'ethconqf'
-      #     apiToken: ${{ secrets.CF_API_TOKEN }}
-      #   env:
-      #     CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
 
+      - name: Build
+        run: CI=false yarn build
 
-                
       - name: Publish
         uses: cloudflare/wrangler-action@v3
         with:
-          command: pages deploy "packages/app/landing-temporal" --project-name 'ethconqf'
+          command: pages deploy "packages/app/build" --project-name 'ethconqf'
           apiToken: ${{ secrets.CF_API_TOKEN }}
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      # - name: Publish
+      #   uses: cloudflare/wrangler-action@v3
+      #   with:
+      #     command: pages deploy "packages/app/landing-temporal" --project-name 'ethconqf'
+      #     apiToken: ${{ secrets.CF_API_TOKEN }}
+      #   env:
+      #     CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

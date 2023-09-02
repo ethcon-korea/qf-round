@@ -62,10 +62,12 @@ export const MagikButton: React.FC<MagikButtonProps> = ({
       variant="magik"
       disabled={isConnecting}
       _hover={{
-        opacity: 0.7,
+        opacity: 1,
       }}
       boxShadow={"0px 0px 10px rgba(0, 0, 0, 0.5)"}
       color="white"
+      backgroundColor={"#EEA5C5"}
+      opacity={0.7}
     >
       {isConnected ? <Web3State /> : <ConnectState />}
     </Button>
@@ -112,7 +114,7 @@ function ConnectState() {
   return (
     <VStack spacing={0.5} alignItems={"flex-start"} pl={3}>
       <Text fontSize="lg" fontWeight={"extrabold"}>
-        CONNECT
+        CONNECT WALLET
       </Text>
     </VStack>
   );
