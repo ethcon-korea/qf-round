@@ -107,7 +107,8 @@ const SubmitBallotButton = ({
         display="block"
         disabled={disableSubmitButton}
         onClick={async () => {
-          if (isEligible == true && isSignUp == false) {
+          //&& isSignUp == false
+          if (isEligible == true) {
             return onOpen();
           } else {
             return onSubmit();
@@ -625,7 +626,7 @@ export const Ballot = () => {
                 backgroundColor: "#00a5cf",
               }}
             >
-              <Text textAlign={{ base: "center" }}>
+              <Text fontFamily={"Noto Sans KR"} textAlign={{ base: "center" }}>
                 You are elligible to vote
               </Text>
             </div>
@@ -637,7 +638,7 @@ export const Ballot = () => {
                 backgroundColor: "#e63946",
               }}
             >
-              <Text textAlign={{ base: "center" }}>
+              <Text fontFamily={"Noto Sans KR"} textAlign={{ base: "center" }}>
                 Your wallet is not elligible to vote, please connect the wallet
                 with Ethcon NFT ticket
               </Text>
@@ -658,9 +659,14 @@ export const Ballot = () => {
               color="black"
               fontSize={"20"}
             >
-              <ModalHeader>📌 QF Notice 📌</ModalHeader>
+              <ModalHeader fontFamily={"Noto Sans KR"}>
+                📌 QF Notice 📌
+              </ModalHeader>
               <ModalCloseButton />
-              <ModalBody textAlign={{ base: "center" }}>
+              <ModalBody
+                fontFamily={"Noto Sans KR"}
+                textAlign={{ base: "center" }}
+              >
                 <Text textAlign="justify">
                   {t(
                     "The MACI (Minimum Anti-Collision Infrastructure) uses zero-knowledge proofs as a protection against censorship and collisions in blockchain voting (read more about MACI on this page)."
