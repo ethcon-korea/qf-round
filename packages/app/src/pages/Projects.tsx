@@ -159,7 +159,9 @@ export const Projects = ({ shuffledProjects }) => {
                       >
                         <Image
                           borderRadius="full"
-                          src={project.logoCdnUrl}
+                          src={`https://drive.google.com/uc?export=view&id=${new URL(
+                            project.logoCdnUrl
+                          ).searchParams.get("id")}`}
                           alt={project.projectName}
                         />
                       </AspectRatio>
