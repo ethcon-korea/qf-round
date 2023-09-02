@@ -245,7 +245,7 @@ export function Project() {
               <Button
                 fontSize="15px"
                 backgroundColor={"white"}
-                _hover={{ opacity: 0.7 }}
+                _hover={{ transform: "scale(1.04)" }}
                 onClick={
                   isInBallot
                     ? handleRemoveFromBallot(projectId?.toString() ?? "noop")
@@ -267,9 +267,6 @@ export function Project() {
                     z-index={20}
                     boxSize="15px"
                     fontWeight="black"
-                    _hover={{
-                      transform: "scale(1.1)",
-                    }}
                   >
                     <path
                       fill="black"
