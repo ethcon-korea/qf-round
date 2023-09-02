@@ -302,27 +302,32 @@ export const WalletProvider: React.FC<{
       } catch (error) {
         console.log("failed to fetch whitelist: ", error);
       }
-
       if (!isRegistered) {
-        axios
-          .get("http://ec2-3-230-144-62.compute-1.amazonaws.com/NFT", {
-            params: {
-              address: signerAddress,
-            },
-          })
-          .then((res) => {
-            console.log("=======have NFT======", res.data);
-            if (res.data) {
-              setEligible(true);
-              setSignUp(false);
-            } else {
-              setEligible(false);
-              setSignUp(false);
+        try {
+          const response = await fetch(
+            "https://ethcon-worker.boss195.workers.dev",
+            {
+              method: "POST",
+              body: JSON.stringify({
+                request_type: "alchemy_hasNFT",
+                eoa: signerAddress,
+              }),
             }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+          );
+          const data = await response.text();
+          console.log(data);
+          if (response.status == 200) {
+            setEligible(true);
+            setSignUp(false);
+          } else {
+            setEligible(false);
+            setSignUp(false);
+          }
+        } catch (error) {
+          console.log("failed to fetch alchemy: ", error);
+          setEligible(false);
+          setSignUp(false);
+        }
       } else {
         setEligible(true);
         setSignUp(true);
@@ -336,14 +341,21 @@ export const WalletProvider: React.FC<{
     const ethersProvider = new providers.Web3Provider(modalProvider);
     const signer = ethersProvider.getSigner();
     const signerAddress = await signer.getAddress();
-    axios
-      .get("http://ec2-3-230-144-62.compute-1.amazonaws.com/token_id", {
-        params: {
-          address: signerAddress,
-        },
-      })
-      .then(async (res) => {
-        console.log("=======NFT Id======", res.data);
+
+    try {
+      const response = await fetch(
+        "https://ethcon-worker.boss195.workers.dev",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            request_type: "alchemy_queryTokenId",
+            eoa: signerAddress,
+          }),
+        }
+      );
+      const data = await response.text();
+      console.log("=======NFT Id======", data);
+      if (response.status == 200) {
         let JubjubTemplateFactory: Jubjub__factory;
         JubjubTemplateFactory = new Jubjub__factory(Libs, signer);
         const jubjubFactory = new ethers.Contract(
@@ -365,7 +377,7 @@ export const WalletProvider: React.FC<{
             console.error("Error:", e);
           }
         }
-        const tokenId = res.data;
+        const tokenId = data;
         const privateKey = wallet.privKey.serialize();
         const publicKey = wallet.pubKey.serialize();
         const _maciPK = PubKey.unserialize(publicKey).asContractParam();
@@ -413,20 +425,26 @@ export const WalletProvider: React.FC<{
             const data = await response.text();
             if (response.status != 200) {
               console.log("failed to insert whitelist: ", data);
+              setSignUp(false);
             } else {
               console.log("whitelist inserted: ", data);
+              setSignUp(true);
             }
           } catch (error) {
             console.log("failed to insert whitelist: ", error);
+            setSignUp(false);
           }
-          setSignUp(true);
         } catch (e) {
           console.log("Error: ", e);
+          setSignUp(false);
         }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      } else {
+        setSignUp(false);
+      }
+    } catch (error) {
+      console.log("failed to fetch alchemy token Id: ", error);
+      setSignUp(false);
+    }
   };
 
   useEffect(() => {
