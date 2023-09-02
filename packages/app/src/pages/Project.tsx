@@ -317,19 +317,21 @@ export function Project() {
 
               <VStack alignItems="flex-start" w="full" spacing={1}>
                 <Text
+                  overflow="scroll"
                   fontFamily={"Noto Sans KR"}
                   fontSize="lg"
                   fontWeight="400"
                 >
-                  <b>Description:</b> {project.description}
+                  <b>Description:</b> <br />
+                  {project.description}
                 </Text>
+                <br />
                 <Text
                   fontFamily={"Noto Sans KR"}
                   fontSize="sm"
                   lineHeight="16px"
                   fontWeight="400"
                 >
-                  <br />
                   <b>Website: </b>{" "}
                   <a href={project.website} rel="noreferrer" target="_blank">
                     {project.website}
@@ -344,6 +346,7 @@ export function Project() {
               >
                 <b>{t("Project Ballot ID")}:</b> {project.id}
               </Text>
+              <br />
             </VStack>
           </VStack>
         </Container>
