@@ -61,12 +61,11 @@ export const MagikButton: React.FC<MagikButtonProps> = ({
       leftIcon={SwitchIcon}
       variant="magik"
       disabled={isConnecting}
-      bg={switchBgColor}
-      color={switchIconColor}
       _hover={{
-        bg: switchBgHoverColor,
-        color: switchTextHoverColor,
+        opacity: 0.7,
       }}
+      boxShadow={"0px 0px 10px rgba(0, 0, 0, 0.5)"}
+      color="white"
     >
       {isConnected ? <Web3State /> : <ConnectState />}
     </Button>

@@ -27,7 +27,7 @@ export const BallotOption = ({
   to,
   votes,
   lastOption,
-  onClick
+  onClick,
 }: BallotOptionProps) => {
   const { t } = useTranslation();
   const [isViewportMd] = useMediaQuery("(min-width: 768px)");
@@ -59,7 +59,6 @@ export const BallotOption = ({
   return (
     <Stack
       boxSizing="content-box"
-      fontFamily="Space Grotesk"
       borderColor="#FAF7F5"
       borderTopWidth={2}
       borderLeftWidth={2}
@@ -70,10 +69,10 @@ export const BallotOption = ({
       justifyContent={{ sm: "initial", md: "center" }}
       direction="row"
       w="full"
-      h={{ sm: 150, md: 90 }}
+      h={{ sm: 150, md: 100 }}
+      fontFamily={"Noto Sans KR"}
     >
       <VStack
-
         borderRightColor="#FAF7F5"
         borderRightWidth={2}
         spacing={0}
@@ -82,10 +81,15 @@ export const BallotOption = ({
         textAlign="center"
         w={isViewportMd ? 140 : "35%"}
       >
-        <Text fontSize={20} fontWeight="bold" mx={2}>
+        <Text
+          fontFamily={"Noto Sans KR"}
+          fontSize={20}
+          fontWeight="bold"
+          mx={2}
+        >
           {votes ?? 0}
         </Text>
-        <Text fontSize={20} fontFamily="Space Grotesk" mx={2}>
+        <Text fontSize={20} fontFamily={"Noto Sans KR"} mx={2}>
           {t("CREDITS")}
         </Text>
       </VStack>
@@ -99,7 +103,11 @@ export const BallotOption = ({
         px={2}
       >
         <HStack alignItems="flex-start">
-          <Heading fontSize={{ base: "md", md: "xl" }} fontWeight={"black"}>
+          <Heading
+            fontFamily={"Noto Sans KR"}
+            fontSize={{ base: "md", md: "xl" }}
+            fontWeight={"black"}
+          >
             {ballotOption?.projectName}
           </Heading>
 
@@ -116,7 +124,7 @@ export const BallotOption = ({
           </Text> */}
         </HStack>
         <Text
-          fontSize="xs"
+          fontSize="md"
           lineHeight="short"
           fontWeight="normal"
           overflow="hidden"
@@ -138,7 +146,8 @@ export const BallotOption = ({
         justifyContent="flex-start"
         alignItems="stretch"
         spacing={0}
-        maxW={{ base: "fit-content", md: "70px" }}>
+        maxW={{ base: "fit-content", md: "70px" }}
+      >
         <Tooltip
           label={`remove ${ballotOption?.projectName} from ballot`}
           placement="left"
@@ -148,7 +157,7 @@ export const BallotOption = ({
             size="sm"
             fontSize="lg"
             variant="ghost"
-            color="gray.600"
+            color="black"
             marginLeft="2"
             onClick={handleRemoveFromBallot(ballotOption?.id ?? "")}
             icon={<FaWindowClose />}
@@ -157,8 +166,11 @@ export const BallotOption = ({
         </Tooltip>
         <Center boxSize={"60px"}>
           <Tooltip
-            label={`Add one more vote for ${((votes ?? 0) + 1) ** 2 - (votes ?? 0) ** 2} more voice credits`}
-            placement="right">
+            label={`Add one more vote for ${
+              ((votes ?? 0) + 1) ** 2 - (votes ?? 0) ** 2
+            } more voice credits`}
+            placement="right"
+          >
             <Button
               onClick={onClick}
               sx={{
@@ -180,33 +192,35 @@ export const BallotOption = ({
                   rounded: "full",
                 },
               }}
-              bg="gray.600"
+              bg="white"
               overflow="hidden"
               // bgImg={hero2}
               // backgroundPosition="center"
               rounded={"full"}
-              borderColor="#E573E5"
+              borderColor="#ffffff"
               _hover={{
                 borderColor: "#80FF9F",
                 transform: "scale(1.1)",
               }}
               borderWidth={1}
-              boxSize="50px">
+              boxSize="50px"
+            >
               <Center>
                 <Icon
-                  color="#E573E5"
+                  color="#000000"
                   position="relative"
                   zIndex={0}
                   boxSize={"8"}
                   letterSpacing="-0.5px"
-
                   _hover={{
                     color: "#80FF9F",
                     transform: "scale(1.1)",
-                  }}>
+                  }}
+                >
                   <path
                     fill="currentColor"
-                    d="M18 13h-.68l-2 2h1.91L19 17H5l1.78-2h2.05l-2-2H6l-3 3v4c0 1.1.89 2 1.99 2H19a2 2 0 002-2v-4l-3-3zm-1-5.05l-4.95 4.95-3.54-3.54 4.95-4.95L17 7.95zm-4.24-5.66L6.39 8.66a.996.996 0 000 1.41l4.95 4.95c.39.39 1.02.39 1.41 0l6.36-6.36a.996.996 0 000-1.41L14.16 2.3a.975.975 0 00-1.4-.01z"></path>
+                    d="M18 13h-.68l-2 2h1.91L19 17H5l1.78-2h2.05l-2-2H6l-3 3v4c0 1.1.89 2 1.99 2H19a2 2 0 002-2v-4l-3-3zm-1-5.05l-4.95 4.95-3.54-3.54 4.95-4.95L17 7.95zm-4.24-5.66L6.39 8.66a.996.996 0 000 1.41l4.95 4.95c.39.39 1.02.39 1.41 0l6.36-6.36a.996.996 0 000-1.41L14.16 2.3a.975.975 0 00-1.4-.01z"
+                  ></path>
                 </Icon>
               </Center>
             </Button>

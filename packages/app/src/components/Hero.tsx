@@ -8,10 +8,10 @@ import {
   AspectRatio,
 } from "@chakra-ui/react";
 
-import logo from "./assets/logoLight.png";
-import hero from "./assets/logoDark.png";
+//import logo from "./assets/logoLight.png";
+import logo from "./assets/QF_logo.png";
+import hero from "./assets/QF_Banner.png";
 import hero4 from "./assets/hero4.gif";
-
 const spin = keyframes`
   from { transform: rotate(360deg); }
   to { transform: rotate(0deg); }
@@ -20,10 +20,10 @@ const spin = keyframes`
 export const Logo = forwardRef<ImageProps, "img">((props, ref) => {
   const prefersReducedMotion = usePrefersReducedMotion();
 
-  const SwitchIcon = useColorModeValue(logo, hero);
+  const SwitchIcon = useColorModeValue(logo, logo);
   // const animation = prefersReducedMotion ? undefined : `${spin} infinite 60s linear`;
 
-  return <chakra.img  src={SwitchIcon} ref={ref} {...props} rounded="full" />;
+  return <chakra.img src={SwitchIcon} ref={ref} {...props} rounded="full" />;
 });
 
 export const Hero = forwardRef<ImageProps, "img">((props, ref) => {
@@ -63,8 +63,5 @@ export const Hero = forwardRef<ImageProps, "img">((props, ref) => {
 
   // const animation = prefersReducedMotion ? undefined : `${spin} infinite 200000000s linear`;
 
-
-  return (
-      <chakra.img  src={SwitchIcon} ref={ref} {...props} />
-  );
+  return <chakra.img src={SwitchIcon} ref={ref} {...props} />;
 });

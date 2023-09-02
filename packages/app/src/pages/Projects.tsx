@@ -1,12 +1,27 @@
 import React from "react";
-import { VStack, Container, HStack, Flex, Image, AspectRatio, Text, Heading, Box, Stack, Button, useColorModeValue } from "@chakra-ui/react";
+import {
+  VStack,
+  Container,
+  HStack,
+  Flex,
+  Image,
+  AspectRatio,
+  Text,
+  Heading,
+  Box,
+  Stack,
+  Button,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { Link, Outlet, useSearchParams } from "react-router-dom";
 import { Option } from "../propTypes";
 import { Hero } from "../components/Hero";
 
 import { useTranslation } from "react-i18next";
 const shortenEthAddress = (address: string) => {
-  return address.substring(0, 6) + "..." + address.substring(address.length - 4);
+  return (
+    address.substring(0, 6) + "..." + address.substring(address.length - 4)
+  );
 };
 
 export const Projects = ({ shuffledProjects }) => {
@@ -18,12 +33,28 @@ export const Projects = ({ shuffledProjects }) => {
   const backgroundColor = useColorModeValue("#FAFAFA", "#000000");
 
   const heroLightmode = (
-    <AspectRatio ratio={1} w="50%" h={"auto"} overflow="hidden" alignItems={"flex-start"} justifyContent={"flex-start"} flexDir={"row"}>
+    <AspectRatio
+      ratio={1}
+      w="50%"
+      h={"auto"}
+      overflow="hidden"
+      alignItems={"flex-start"}
+      justifyContent={"flex-start"}
+      flexDir={"row"}
+    >
       <Hero></Hero>
     </AspectRatio>
   );
   const heroDarkmode = (
-    <AspectRatio ratio={16 / 9} w="full" h={"auto"} overflow="hidden" alignItems={"flex-start"} justifyContent={"flex-start"} flexDir={"row"}>
+    <AspectRatio
+      ratio={16 / 9}
+      w="full"
+      h={"auto"}
+      overflow="hidden"
+      alignItems={"flex-start"}
+      justifyContent={"flex-start"}
+      flexDir={"row"}
+    >
       <Hero h={"auto !important"}></Hero>
     </AspectRatio>
   );
@@ -52,7 +83,8 @@ export const Projects = ({ shuffledProjects }) => {
             background: "transparent",
             borderRadius: "0px",
           },
-        }}>
+        }}
+      >
         <VStack spacing={0} w="full">
           <Container
             h="full"
@@ -63,29 +95,47 @@ export const Projects = ({ shuffledProjects }) => {
               lg: "container.md",
             }}
             px={0}
-            pt={20}>
-            <VStack mt={10} spacing={4} h="full" alignItems="flex-start">
+            pt={20}
+          >
+            <VStack
+              mt={10}
+              spacing={4}
+              h="full"
+              alignItems="flex-start"
+              fontFamily={"Noto Sans KR"}
+            >
               <VStack pl={4} spacing={0} alignItems="flex-start" w="full">
                 <VStack spacing={6} w="full" alignItems="flex-start">
                   {useColorModeValue(heroLightmode, heroDarkmode)}
-                  <Heading fontWeight={"black"} fontSize={"4xl"}>
+                  <Heading
+                    fontFamily={"Noto Sans KR"}
+                    fontWeight={"black"}
+                    fontSize={"4xl"}
+                  >
                     {t("ORGANIZER")}
                   </Heading>
-                  <Heading fontWeight={"500"} fontSize={"2xl"}>
-                  이드콘 3일 일정 중에 가장 기대되는 일정에 투표를 해주세요!!!
+                  <Heading
+                    fontFamily={"Noto Sans KR"}
+                    fontWeight={"500"}
+                    fontSize={"2xl"}
+                  >
+                    이드콘 3일 일정 중에 가장 기대되는 일정에 투표를 해주세요!!!
                   </Heading>
-                  <Text fontSize={"sm"}>
+                  <Text fontFamily={"Noto Sans KR"} fontSize={"sm"}>
                     이드콘이 이번주 금요일에 열립니다!! 실감이 안 나는군요!
                   </Text>
-                 
                 </VStack>
               </VStack>
               <VStack spacing={0} alignItems="flex-start" w="full">
                 {shuffledProjects.map((project: Option) => (
                   <Box
+                    fontFamily={"Noto Sans KR"}
                     _hover={{
                       boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.5)",
-                      backgroundColor: "gray.100",
+                      backgroundColor: "rgba( 255, 255, 255, 0.9 )",
+                      borderRadius: 50,
+                      color: "balck",
+                      transform: "scale(1.07)",
                     }}
                     alignItems={"stretch"}
                     as={Link}
@@ -96,14 +146,37 @@ export const Projects = ({ shuffledProjects }) => {
                     pb={3}
                     pl={4}
                     minH={"100px"}
-                    w={"full"}>
+                    w={"full"}
+                  >
                     <HStack spacing={0} alignItems="flex-start" w="full">
-                      <AspectRatio borderColor={"grey.800"} borderWidth={1} zIndex="1" w={{ base: "50px", md: "50px" }} rounded="full" ratio={1} mt={1}>
-                        <Image borderRadius="full" src={project.logoCdnUrl} alt={project.projectName} />
+                      <AspectRatio
+                        borderColor={"grey.800"}
+                        borderWidth={1}
+                        w={{ base: "50px", md: "50px" }}
+                        rounded="full"
+                        ratio={1}
+                        mt={1}
+                      >
+                        <Image
+                          borderRadius="full"
+                          src={project.logoCdnUrl}
+                          alt={project.projectName}
+                        />
                       </AspectRatio>
-                      <VStack alignItems="flex-start" w="full" spacing={1.5} px={{ base: "4", md: "3" }}>
+                      <VStack
+                        alignItems="flex-start"
+                        w="full"
+                        spacing={1.5}
+                        px={{ base: "4", md: "3" }}
+                      >
                         <VStack alignItems="flex-start" w="full" spacing={0}>
-                          <Heading my={0.5} fontSize="lg" lineHeight="24px" fontWeight="700">
+                          <Heading
+                            my={0.5}
+                            fontSize="lg"
+                            lineHeight="24px"
+                            fontWeight="700"
+                            fontFamily={"Noto Sans KR"}
+                          >
                             {project.projectName}
                           </Heading>
                           {/* <Text color="gray.600" fontSize="sm" lineHeight="14px" fontWeight="400" overflow="clip">

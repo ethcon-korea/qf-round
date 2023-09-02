@@ -24,7 +24,7 @@ export const Layout = ({
         maxW={{ lg: "md" }}
         w="full"
         position={"relative"}
-        overflow={"hidden"}
+        // overflow={"hidden"}
       >
         <GuideDrawer isOpen={isGuideOpen} onClose={onGuideClose} />
       </Flex>
