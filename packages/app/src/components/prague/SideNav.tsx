@@ -185,7 +185,7 @@ export const Navbar = ({ onGuideOpen }: SideNavProps) => {
         </Button>
 
         {/* </Tooltip> */}
-        <Select
+        {/* <Select
           bg={backgroundColor}
           color={color}
           borderColor={color}
@@ -214,7 +214,7 @@ export const Navbar = ({ onGuideOpen }: SideNavProps) => {
           >
             PT
           </option>
-        </Select>
+        </Select> */}
       </HStack>
     </HStack>
   );
