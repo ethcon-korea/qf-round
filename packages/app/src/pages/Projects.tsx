@@ -107,13 +107,21 @@ export const Projects = ({ shuffledProjects }) => {
               <VStack pl={4} spacing={0} alignItems="flex-start" w="full">
                 <VStack spacing={6} w="full" alignItems="flex-start">
                   {useColorModeValue(heroLightmode, heroDarkmode)}
-                  <Heading fontWeight={"black"} fontSize={"4xl"}>
+                  <Heading
+                    fontFamily={"Noto Sans KR"}
+                    fontWeight={"black"}
+                    fontSize={"4xl"}
+                  >
                     {t("ORGANIZER")}
                   </Heading>
-                  <Heading fontWeight={"500"} fontSize={"2xl"}>
+                  <Heading
+                    fontFamily={"Noto Sans KR"}
+                    fontWeight={"500"}
+                    fontSize={"2xl"}
+                  >
                     이드콘 3일 일정 중에 가장 기대되는 일정에 투표를 해주세요!!!
                   </Heading>
-                  <Text fontSize={"sm"}>
+                  <Text fontFamily={"Noto Sans KR"} fontSize={"sm"}>
                     이드콘이 이번주 금요일에 열립니다!! 실감이 안 나는군요!
                   </Text>
                 </VStack>
