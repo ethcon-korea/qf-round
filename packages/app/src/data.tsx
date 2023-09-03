@@ -363,7 +363,7 @@ let projects = [
       "The problem Transaction Hero solves\n\nWhen PBS (Proposer-builder separation) settles down in the Ethereum ecosystem, block builders will further solidify their control over profit centralization through a mechanism known as Exclusive Order Flow (EOF). The emergence of builder profit centralization poses a significant challenge to Ethereum's fundamental principles, particularly in regard to issues such as censorship resistance and collusion.\nTransaction Hero offers a robust solution to address the issue of builder centralization that arises from EOF. This innovative platform introduces a strategic shift towards the open-marketization of Order Flow, effectively redistributing surplus profits generated from Order Flow to benefit the entire network.\nThrough Transaction Hero, users have the opportunity to earn a share of builder profits by directing their transactions to the platform. In return, builders can gain a competitive edge by acquiring Order Flow, which enables them to offer higher gas fees when submitting blocks. This symbiotic relationship fosters a more equitable and efficient Ethereum ecosystem while aligning with the network's core values.",
     ethereumAddress: "0x3254dd4C131edd9da829c5c151443BFE146609A4",
     website:
-      "http://af6b378eedcca4bf189fac81647d7d7f-e676695616b25293.elb.ap-northeast-2.amazonaws.com/",
+      "https://github.com/orgs/b52-unofficial/repositories, http://af6b378eedcca4bf189fac81647d7d7f-e676695616b25293.elb.ap-northeast-2.amazonaws.com/",
     thumbnailImageLink:
       "https://drive.google.com/open?id=164lvtrWx1m05ZE9NnmpoLYQC4ezIRze9",
     logoCdnUrl:
@@ -423,6 +423,59 @@ let projects = [
       "https://drive.google.com/open?id=1rVLzcymfZbTl08WboHcng8RityI32EUj",
     id: "25",
     recipientId: 25,
+  },
+  {
+    Timestamp: "9/3/2023 16:14:52",
+    projectName: "ETHcation ",
+    tagline: "This is dapp for learning blockchain theory for fully beginner",
+    description:
+      "Users can earn hearts (the in-game currency) by completing quizzes and missions. By implementing ERC-4337, we ensure that users are not burdened with gas fees when completing quests and obtaining NFT certificates.",
+    ethereumAddress: "0x97b54C834A814aaeEAa8C1DBeD2512a18138C8Ad",
+    website: "https://github.com/BPSEthcation",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1vR23l2PneZFJ0GJP8guXgDWB6ZD2TnsW",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1Xw-KzR15qky3IE3Np3pXQ5VzVl3GQ1zb",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1mHGB9xoed0bbW8jPXfZa-jx-e8fs8o3N",
+    id: "26",
+    recipientId: 26,
+  },
+  {
+    Timestamp: "9/3/2023 16:20:07",
+    projectName: "Web3 Trans Wiki",
+    tagline:
+      "Aggregator/playground of translated web3 contents to track the contributors and offer social/financial reward which will solve the Language Barrier which can help accelerate the web3 mass addoption.",
+    description:
+      "[Problem] Approximately 95% of the global population does not use English as their primary language. This means that 95% of the population faces a language barrier that hinders their ability to properly learn the web3 ecosystem. It presents a significant obstacle to the mass adoption of web3.\n[Current Efforts/Limitation]\nFoundation/Team Directly hire a community manager for translation tasks but it\u2019s too slow to translate all the contents and often gets deprioritiezed by team.\nIndividuals in Ecosystem Voluntarily Translate English content into their respective native languages and upload on their blog and medium but the contents are scattered. And their effort is the form of contribution to the ecosystem but not it has not been recorded and there is no way to do that in web2.\n[Our Solution]\nPeople can search the original link of the project whether there is the translated version in their native language or not.\nIf there is no translation version for the original text, you can register as the main translator for that original contents and upload your translation.\nIf there is an existing translation without any significant issues, you can contribute by providing a better translation through comments.\nAfter a two-month period with no specific issues,both the main translator of the translation and those who provided comments can mint NFT, with each in the form of ERC-721 and ERC-1155 tokens respectively.\n[Expected Outcome] Contributors - because of the record of the contribution it can be social reward and NFTs can be utilized on a resume as web3 career/interest. Foundations/Teams - Much faster translation without centralized team resources and NFT(onchain data) can be used as a reference for future rewards such as airdrops for the genuine ecosystem contributors. Over All - More contributors for translation than the past and people can donate directly through the address of the contributors and lead to web3 mass adoption.",
+    ethereumAddress: "0x2C8d1FD63aa75F1B8b5b2380dA75D7Ee333C6db0",
+    website: "https://github.com/sanakang0615/TransWeb3",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1njLnZipp-GU9drmttZDALRdhH8N1OC8B",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1SLjgFecX4uzJe4uq6AfLzG0knnGTVMEt",
+    bannerImageLink:
+      "https://drive.google.com/open?id=164bNajalipsBbLGaafsvOZ0BnIc-6vWA",
+    id: "27",
+    recipientId: 27,
+  },
+  {
+    Timestamp: "9/3/2023 16:28:46",
+    projectName: "Web3 Degen Challenge",
+    tagline:
+      "Habit-to-Earn platform that encourages the habit of trying out Web3 products. Users create challenges, stake their money, and if they succeed, they claim their collateral and that of others failed.",
+    description:
+      "-\tThe problem it solves\n\uf06e\tUsers have a desire to not only explore and contribute to the new ecosystem and product but also to receive airdrops in the process. However, generally, it's a hassle to go through this process alone. We are too lazy to do it. Also, crypto beginners face difficulties in understanding which products to use and how to utilize their features, even if they decide to use them. From the foundation/team's perspective, they hope for an increase in users voluntarily contributing to the ecosystem, ultimately aiming for penetration among the general public. However, this is not an easy task.\n\uf06e\tThere have been two existing efforts to address these issues. The first effort involves providing airdrops but it still have two issues. The first issue is that users are highly motivated before receiving the airdrop, but their motivation decreases once the airdrop ends. Another related issue is that the airdrop can lead to cherry-picking. From the viewpoint of the foundation/team, the motivation behind airdrops is contrary to the hope that the ecosystem becomes more active when launching the actual mainnet/product compared to the testnet. Secondly, similar services like Layer3 and node guardians exist to address these issues. But they also face two main challenges. They reward with their native points, but without clear utility for these points, it may not provide sufficient motivation. Because the team centrally creates quests, the quest creation speed is relatively slow, and products from teams that have not commissioned quests cannot be tried.\n\n-\tOur solution\n\uf06e\tIntroducing Habit-to-Earn, the Web3 Degen Challenge, a platform that encourages the habit of trying out various new products in the Web3 world. Users create their own challenges, stake their money, and if they succeed, they claim their collateral and that of others failed. \n\uf06e\tIn the South Korean Web2 industry, there already exists a service called 'Challengers.\u201d In this service, individuals stake their own money and complete various certification and mission tasks to cultivate good habits. The average success rate for these challenges is reported to be only 50%.\n\uf06e\tUser flow: Connect Wallet > Select the challenge you want to participate in > Place a deposit > After completing the mission, click 'Check Availability\u2019 > If succeed, receive your deposit back > Upon completion, receive your entire deposit and a portion of the deposits from mission failures ",
+    ethereumAddress: "0x92E80d9d9214F5fbe6Ea5B46fD0E86BDd24092eD",
+    website: "https://github.com/Violet-Bora-Lee/web3-degen-challenge",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=12pubwXOxX30CBsJrqVnmTgsAhtYnurIy",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1mzQxjYILFsd5PxC1Ag0NZ0rK4_fyea1V",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1_b7hfE8ZNSvYC6vYrwZdbkwXbiSD5YqG",
+    id: "28",
+    recipientId: 28,
   },
 ];
 
