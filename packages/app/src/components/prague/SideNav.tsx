@@ -154,7 +154,7 @@ export const Navbar = ({ onGuideOpen }: SideNavProps) => {
         {/* <Tooltip label="..." placement="right"> */}
         <Tooltip label="Guide" placement="right">
           <IconButton
-            href={`https://scribehow.com/shared/Fleek_Workflow__kd1qhZpFS1eYpO6pICWl8g`}
+            href={`https://scribehow.com/shared/How_to_Vote_Connect_Wallet_and_Add_Projects_to_Ballot__GpA6MT9iR7a_cRRik62sFQ`}
             as={Clink}
             rel="nore\ferrer"
             target="_blank"
