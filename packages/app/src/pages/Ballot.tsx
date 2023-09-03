@@ -663,15 +663,23 @@ export const Ballot = () => {
               <ModalBody textAlign={{ base: "center" }}>
                 <Text textAlign="justify">
                   {t(
-                    "The MACI (Minimum Anti-Collision Infrastructure) uses zero-knowledge proofs as a protection against censorship and collisions in blockchain voting (read more about MACI on this page)."
+                    "You can vote for your desired projects. The total number of voice credit you can cast is 99, and when you vote for a project more than once, it requires the number of credits to be squared."
                   )}{" "}
+                  <br />
                   {t(
-                    "Each voter gets a pseudo-random MACI key, which is used to encrypt and validate your votes. This is the only way to vote in the round, and it can be used to change your vote at any time while the round is active, so keep it safe and don't share it."
+                    "For example, if you want to vote for a project once, it will consume 1 credit. for the same project twice, it will consume 4 credits (2^2). If you want to vote for the same project three times, it will consume 9 credits (3^2), and so on."
                   )}{" "}
-                  {t("You should signup to MACI to participate in QF")}{" "}
-                  {t("You should signup to MACI to participate in QF")}{" "}
-                  {t("You should signup to MACI to participate in QF")}{" "}
-                  {t("You should signup to MACI to participate in QF")}{" "}
+                  <br />
+                  {t(
+                    "Please keep this in mind while distributing your votes among the projects."
+                  )}{" "}
+                  <br />
+                  <br />
+                  ❗️
+                  {t(
+                    "To participate in anonymous voting, you need to sign up. This process involves sending a transaction."
+                  )}{" "}
+                  ❗️
                 </Text>
                 <Button
                   style={{ marginTop: 30, textAlign: "center" }}
