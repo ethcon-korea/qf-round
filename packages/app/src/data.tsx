@@ -251,9 +251,9 @@ let projects = [
       "boost your onchain social reputation on Aleph Zero with upvote through discord and private rewards through shield transfer with aleph zero",
     ethereumAddress: "0xbd5eb58790C4C8FE959f8Ea9d736DB3619A59300",
     website: "github.com/pierregvx/dam",
-    thumbnailImageLink: "N/A",
-    logoCdnUrl: "N/A",
-    bannerImageLink: "N/A",
+    thumbnailImageLink: "https://cdn.discordapp.com/attachments/1026450797548011640/1110540166726156299/logo_thumb.png",
+    logoCdnUrl: "https://cdn.discordapp.com/attachments/1026450797548011640/1110540166726156299/logo_thumb.png",
+    bannerImageLink: "https://cdn.discordapp.com/attachments/1026450797548011640/1110540166726156299/logo_thumb.png",
     id: "17",
   },
   {
