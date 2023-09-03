@@ -191,6 +191,96 @@ let projects = [
     id: "11",
     recipientId: 11,
   },
+  {
+    Timestamp: "9/3/2023 12:48:18",
+    projectName: "Loanster",
+    tagline:
+      "Leverage or Hedge UniswapV3 based positions using Lending Protocols(Spark, AAVE, LineaBank) to maximize profits and mitigate Impermanent Loss and enjoy a super smooth UX in a single application.",
+    description:
+      "DeFi is one of the main pillars of the Ethereum Ecosystem. Uniswap V3, although being one of the most popular DeFi protocol, has major problems for lp providers. Loanster aims to solve the main problems these problems and give a better DeFi experience to LP providers. \n\nWhile Uniswap V3 addressed issues like wasted liquidity and price impacts through concentrated liquidity, it introduced a higher risk of impermanent loss for liquidity providers. In fact, over 50% of liquidity providers experience impermanent losses due to price fluctuations. \n\nFor example, in the case of investing in ETH+DAI position, if the ETH price goes up and the current price tick goes out of range, your position will change to 0% ETH and 100% DAI. In this case, you cannot gain any profit from the increase of the ETH price. Conversely, if ETH price drops, and your position changes to 100% ETH and 0% DAI, you will take all the losses directly. \n\nSo, Uniswap V3 can only profit in crab markets, when the price is stable and stays in a certain price range. In order to diversify our strategies, and be able to profit in bear or bull markets, we integrated the lending protocol in order to mitigate the impermanent losses. In a bullish market, we borrow DAI and deposit ETH as collateral. This way, we can take the benefits of the increase in the ETH price and still earn LP fees, maximizing our profits in the long strategy. In the bearish market, we do the exact opposite, by borrowing ETH and depositing DAI as collateral. Depending on the anticipated LP fees and anticipated price change, users could optimize profits by adjusting the borrowing rate.\n\nAlso, Uniswap V3 has a complex UX for preparing the exact amount of assets to add as liquidity for their position. Once they swap their assets in the pool, the ratio of their position will also change, so it is very difficult to put all of your desired assets into your position.\nLoanster solved this problem using the Loanster Contract, which calculates the exact amount to swap and add as liquidity for your position. \n\nAlso, defi infrastructures such as swaps and bridges are scattered, so you need to navigate through many different dApp pages. Loanster also aggregated these infrastructures and abstracted the complex process. It calculates the route for you, and all you need to do is press approve on a single page, and you\u2019re done investing! To summarize it all, people can enjoy a smooth UX and enjoy various investment strategies on a single page!",
+    ethereumAddress: "0xAA289325d1afc4AA040281b10dD9f10A8560D296",
+    website: "https://github.com/swimmiee/ethcon-korea-loanster/tree/main",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=19QofPp_GKy_JMKoRjDZOvFpwyyPKmzib",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1u1Tp3BvHKzLdMCLuopn1dy1K18afJuHW",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1p8UZKCyZmHYv53Wg-d6R-SKGhfNi37BW",
+    id: "12",
+    recipientId: 12,
+  },
+  {
+    Timestamp: "9/3/2023 12:51:33",
+    projectName: "Chain Concierge",
+    tagline:
+      "Your personal AI assistant summarizes governance proposal requests for each protocol",
+    description:
+      "Keep track of all the governance proposals that come up on DAOs with our Chain Reporter, which summarizes the key points of the proposals in an instant. You can publish this as a newsletter by linking it to your Gmail account, Slack, or Discord.",
+    ethereumAddress: "0xb89C33bE71c2aAd77d6712b1AD47274aD9fb7dcb",
+    website: "https://github.com/joyjsmun/chain-concierge",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1tOc2dlvaWB1MjGIXy1mf9DcuPJUkiCJI",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1CzO_IAof1o7SV-X4CD2zL2mPBEv-A8l_",
+    bannerImageLink:
+      "https://drive.google.com/open?id=18fNGhpA2JUgpBbr3Ytc3BPbq94RWiVV1",
+    id: "13",
+    recipientId: 13,
+  },
+  {
+    Timestamp: "9/3/2023 12:56:10",
+    projectName: "RIC Rolling",
+    tagline:
+      "The first rollup-as-a-service platform operated entirely via smart contract. Never gonna rug you up!",
+    description:
+      "Current rollup-as-a-service providers are fully centralised. If they misbehave (by censoring transactions, extracting MEV, or simply interrupting service), there is no recourse for users besides going to court.\nWith our smart contract approach, providers are paid for service provided, and owners (this could be a DAO) remain in control.\nIt's almost as if we could replace paper contracts with smart contracts!",
+    ethereumAddress: "0x2491DbD3C7B198bafbbc3520D048460dF9a61426",
+    website: "https://github.com/ricrolling",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1pmoWL-PGh6U1LIZ8_gavam3mjsmFb0wp",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1LiYEIX2gI7C1hTn6NJQYexgq2HOZFDLq",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1MPZMTo_6M90_sGIDs69WfAk9XX-1PB6W",
+    id: "14",
+    recipientId: 14,
+  },
+  {
+    Timestamp: "9/3/2023 12:57:45",
+    projectName: "Daskalos - \ub2e4\uc2a4\uce7c\ub85c\uc2a4 ",
+    tagline:
+      "Daskalos: An interactive playground for transaction validation, offering Web2 developers a no-code, concept-driven learning experience through incremental gameplay.",
+    description:
+      "With the increasing shift towards Web3, a growing number of Web2 developers are transitioning into the Web3 development ecosystem. Yet, many encounter difficulties in fully understanding Web3 concepts, often resulting in less optimal implementations.\n\nThere's a clear gap between purely theoretical resources that explain Web3 technology and hands-on coding exercises. Addressing this need, Daskalos - \ub2e4\uc2a4\uce7c\ub85c\uc2a4, inspired by the god of education, offers an interactive, game-based playground. This approach, focusing on a no-code learning experience, begins with basic concepts and gradually introduces more intricate systems. The platform's primary aim is to immerse Web2 developers in an experiential understanding of Web3 operations, moving beyond mere definitions or abstract explanations. By doing so, we hope to streamline their transition into Web3 development. Furthermore, as an open-source and free platform, Daskalos ensures accessibility, promoting inclusivity and reaching a diverse audience, regardless of financial barriers.",
+    ethereumAddress: "0x7fBCBd701E1c97aF4aac4248B9F13a661bCFb392",
+    website: "https://github.com/selimerunkut/ethkorea_jinjang_team_repo",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1R-Q8cIsk7bhEyLPM36qgU3oHFxnbNH3s",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1zeG5h9Orl5rLVZ9ZqrzR_pZkxqmDPDv3",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1A6ulgf77dx6T2hTrvsiQhpyq2AUgOv_w",
+    id: "15",
+    recipientId: 15,
+  },
+  {
+    Timestamp: "9/3/2023 13:08:01",
+    projectName: "IDEN",
+    tagline:
+      "IDEN is a mutual voting system designed to help you discover your identity. The goal of IDEN is to evolve into the Identity Layer of Ethereum and set a new standard for identities of web.",
+    description:
+      'IDEN solves the issue in traditional social media where people only show a curated version of themselves, without really knowing how others perceive them. On platforms like Instagram, people create the image they want to portray to others. However, they cannot know how they are actually perceived by others.\nIn IDEN, information about how others view you is continually conveyed through voting. In IDEN app, users are presented with questions about others, such as "Who among these people is the best listener?" along with a list of people they know as options. Users then vote for the person who they think best fits the criteria of the question. Each vote is recorded in individual SBTs (Subjective Blockchain Tokens), and the accumulated voting data is summarized by AI NLP model to dynamically update a single Identity SBT. In this Identity SBT, every user has a summary of their personality evaluted by other users. Through this, users can have fun recording how they actually feel about others, and also hear what other people think about them.',
+    ethereumAddress: "0xD29Df18c8bF98e2cf50376551da68507bf63fF1B",
+    website: "https://github.com/orgs/ethcon-iden/repositories",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1cIwmTMSu80NgJPvIuzd-W9YTOemZzEad",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1KkJBZBxJ6kApJDUVa3-O-_vBTi-9ebRn",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1PSWXr5940h64Ycwv38o9uMh60rLbBUwb",
+    id: "16",
+    recipientId: 16,
+  },
 ];
 
 export function getProjects() {
