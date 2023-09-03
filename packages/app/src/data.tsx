@@ -53,23 +53,6 @@ let projects = [
     recipientId: 3,
   },
   {
-    Timestamp: "9/3/2023 11:41:27",
-    projectName: "Trexx E-Sport Loyalties",
-    tagline: "Be friends with your E-sports idol",
-    description:
-      "We connect e-sports fans with their idols using engaging blockchain-powered loyalty and rewards programs to automatically measure and amplify each esports fan's passion, helping brands and teams build stronger, lasting connections. Our mission is to transform every fan's enthusiasm into a valuable asset, promoting customer loyalty and driving brand growth.",
-    ethereumAddress: "0x42A9b02Fb4E309DE5a54D850Caf2a8716c781f83",
-    website: "https://github.com/trexx-games/LoyaltyProgram",
-    thumbnailImageLink:
-      "https://drive.google.com/open?id=1R-uXVOdvHhw7grvknPAGeuI6LpkkQgbF",
-    logoCdnUrl:
-      "https://drive.google.com/open?id=1sgPXsk0HplJ1GhzWFTJv-0TPPajgZAI6",
-    bannerImageLink:
-      "https://drive.google.com/open?id=19iuiUEIoutuz3mLCoZCYqYpl32ywf7wM",
-    id: "4",
-    recipientId: 4,
-  },
-  {
     Timestamp: "9/3/2023 12:08:17",
     projectName: "Traffle",
     tagline: "Fair and Simple NFT Raffle Platform",
@@ -280,6 +263,78 @@ let projects = [
       "https://drive.google.com/open?id=1PSWXr5940h64Ycwv38o9uMh60rLbBUwb",
     id: "16",
     recipientId: 16,
+  },
+  {
+    Timestamp: "9/3/2023 11:50:25",
+    projectName: "Multichain Mutation Dino",
+    tagline:
+      "Mint chain specific generative art with a chain specific prompt addition that allows multi-chain unique generative NFT mints with one tx! ",
+    description:
+      "NFT minting is single chain, NFT bridges are boring and constrained by their multisig designs, wrapped versions, and just an overall dull experience for the multi-chain explorer.\n\nWe create a new consumer experience that allows NFT minters to mint interesting generative NFT pieces on multi chains that respects the chain\u2019s unique designs and branding! ",
+    ethereumAddress: "0xdb4a057C4054E030e6F04619777c17CafA33cf65",
+    website: "https://github.com/jeff0723/multi-chain-mutation-nft",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1GeNNQtFNny07bu086YQj22eErwRk4VFq",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1h8MiiKHiFGaGaRzwCmbJnmnuaqv15DdC",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1K5rso-x9PqXVPsFsM1db_3MQOGCldNyc",
+    id: "17",
+    recipientId: 17,
+  },
+  {
+    Timestamp: "9/3/2023 13:05:35",
+    projectName: "MooyAAho",
+    tagline:
+      "MuyAAho, voice ZK & Account Abstraction applied wallet which is secured by your voice.",
+    description:
+      "We focused on privacy problem.\nWhy does every transaction require the same security process even though the amount of money differ?\nMuyAAho suggests the Two-factor authentication based on the amount of money one tries to send.\nIt allows users to increase their own security.\n\nOne can set the threshold for when to add voice authentication when sending money.",
+    ethereumAddress: "0x9f4f81832A8D552B51001D5cD97F195573deDE26",
+    website:
+      "https://github.com/half-gallon/aa , https://github.com/half-gallon/model , https://github.com/half-gallon/interface",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1nIPQk4XHn5LnNSGTMxHRiVltTrN09_ct",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1kHKh0Rs1Ubzmkkb6uu6_1e-0o89_rp28",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1dPifzvlKDfLcTcpIuCb5YuZIr3GEsQ0G",
+    id: "18",
+    recipientId: 18,
+  },
+  {
+    Timestamp: "9/3/2023 13:50:47",
+    projectName: "Mandala : Ultimate Web3 Gaming Inventory",
+    tagline:
+      " game dev who is unfamiliar with web3 can easily create web3 games using the Mandala inventory. It provides the best advertising experience that will satisfy gamers, game devs and advertisers alike.",
+    description:
+      "The problem Mandala : Ultimate Web3 Gaming Inventory solves\nProblem\nAs depicted in the movie Ready Player One, we are looking forward to the activation of Web3 Gaming. However, there are two obstacles hindering its progress.\n\nPlayer Experience: Blockchain-based games may sometimes offer a less optimized user experience compared to traditional games. For example, additional steps may be required for transaction approvals or gas fees.\nTechnical Complexity: Blockchain and related technologies are complex and pose different challenges compared to the traditional game development process. Integrating these technologies requires new knowledge and expertise.\nWe solve this problem with an inventory created using ERC4337 and ERC6551.\n\nGame developers have a lot of things to consider. Additionally, learning and using Web3 technologies is a very difficult task.\nGame developers can easily convert their games into Web3 games by using the Mandala Inventory.\nGame developers have always wanted to use a well-made and customizable inventory system. If they can access Web3 by using the inventory without modifying the game logic, they will welcome it.\n\nBenefits\nThere are several benefits for game developers using the Mandala Inventory.\n\nMandala Inventories can interact with each other through trading, renting, auctioning, etc. There is no need to implement a trading system.\nProvides a new advertising experience that satisfies gamers, game developers, and advertisers alike.\nAdvertising Scenario\nCoca-Cola runs an advertisement. Coca-Cola sends Coca-Cola NFTs to the gamers' Mandala Inventory. The Coca-Cola NFT functions as an item in each game. Gamers have a good experience by receiving items that help them, rather than annoying advertisements. Game developers can easily insert advertisements without disrupting the game experience. Advertisers expose the advertisement every time a user opens their inventory, and the user does not feel annoyed.",
+    ethereumAddress: "0xfa6Cc5134a2e81a2F19113992Ef61F9BE81cafdE",
+    website: "https://github.com/EthconKorea2023/mandala",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1RlQ5kcJEOWC44WUz6rfBNCzRJiVFBTdX",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=18lAU43Wk-8ar488N2EbmYzy5oiyIRd29",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1E42zh9UxxD0wKMbDYeSV9u1-ZCGvU9VA",
+    id: "19",
+    recipientId: 19,
+  },
+  {
+    Timestamp: "9/3/2023 12:15:29",
+    projectName: "Handlit",
+    tagline: "Telegram-Extended Trust-less Networking App",
+    description:
+      "Handlit elevates Web3 networking by simplifying the management of connections. It transforms fleeting encounters at events and conferences, often limited to Telegram exchanges, into meaningful and lasting connections",
+    ethereumAddress: "0x512cEb57C6BCf86757C2693e729cBEE0AEa7Ffde",
+    website: "https://github.com/orgs/handlit/repositories",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1GTYzNhJEopQBgneAt0xGQ9cKKFw-I0iJ",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1XXYp6XRzKj6xPPLpHqPIGa7GIo0Pfz0C",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1D_2_C98c6PlSeV0ZKW-3i4ojQUOQB3z4",
+    id: "20",
+    recipientId: 20,
   },
 ];
 
