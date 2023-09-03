@@ -52,6 +52,145 @@ let projects = [
     id: "3",
     recipientId: 3,
   },
+  {
+    Timestamp: "9/3/2023 11:41:27",
+    projectName: "Trexx E-Sport Loyalties",
+    tagline: "Be friends with your E-sports idol",
+    description:
+      "We connect e-sports fans with their idols using engaging blockchain-powered loyalty and rewards programs to automatically measure and amplify each esports fan's passion, helping brands and teams build stronger, lasting connections. Our mission is to transform every fan's enthusiasm into a valuable asset, promoting customer loyalty and driving brand growth.",
+    ethereumAddress: "0x42A9b02Fb4E309DE5a54D850Caf2a8716c781f83",
+    website: "https://github.com/trexx-games/LoyaltyProgram",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1R-uXVOdvHhw7grvknPAGeuI6LpkkQgbF",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1sgPXsk0HplJ1GhzWFTJv-0TPPajgZAI6",
+    bannerImageLink:
+      "https://drive.google.com/open?id=19iuiUEIoutuz3mLCoZCYqYpl32ywf7wM",
+    id: "4",
+    recipientId: 4,
+  },
+  {
+    Timestamp: "9/3/2023 12:08:17",
+    projectName: "Traffle",
+    tagline: "Fair and Simple NFT Raffle Platform",
+    description:
+      "Start a raffle with your NFT. The winner is fairly picked by Chainlink VRF.\nBest way to liquidate NFT under a day, and also giving chance of winning NFTs at <1% of price!",
+    ethereumAddress: "0x0A642B39595782FbeC9C75202eE6248E51008933",
+    website: "https://traffle.tracerofficial.com/",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1QejOVV_AHHz-rEbrYRtwEvnN9EmLhqUx",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1qghHQ9F4wd_92sElLRt5QneHPOXkQl8e",
+    bannerImageLink:
+      "https://drive.google.com/open?id=126zqlEC05VzieORg5n2x4Qpr5o6Iy4kf",
+    id: "5",
+    recipientId: 5,
+  },
+  {
+    Timestamp: "9/3/2023 12:24:06",
+    projectName: "Hookbreaker",
+    tagline: "Accurate Phishing/Scam Website Detection",
+    description:
+      "Hookbreaker is a Chrome extension that analyzes a site of your choosing for signs of phishing. It uses Indicators of Attack (IoAs), known patterns of phishing websites, to check if the site you are viewing is likely a scam.\n\nHookbreaker does more than existing anti-phishing extensions, as it analyzes HTML content and external script links, not just the website\u2019s domain (which it does too). The extension only checks the current tab\u2019s site if you click the extension\u2019s icon, preserving privacy for websites that you are comfortable with.",
+    ethereumAddress: "0xd1fFdA9C225DDEE34f0837BF4D4a441bDd54C473",
+    website: "https://github.com/d0wnlore/hookbreaker",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1oZVSzEw9jH2A7uELCNT8H_KQiGNUVFVt",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1I1InJ0kXgEibUtzhgVOZnU9qcFNrszrg",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1t-HUn0WCmrCXl_bREyHOYbn6G1DnjLKp",
+    id: "6",
+    recipientId: 6,
+  },
+  {
+    Timestamp: "9/3/2023 12:24:21",
+    projectName: "ZK-mask",
+    tagline:
+      "Our project is getting personal facial scores by third parties using zk technology. Users could upload their picture for rating, wait for a certain epoch, and the score is finalized and written in ID.",
+    description:
+      "Our project is getting personal facial scores by third parties with zk-encrypted. Scoring method is held by decentralized and zk-secured way using UniRep built upon pse-Semaphore. When users upload their picture for rating, they should wait for certain epoch and gets finalized facial score. For use case, this could be used in dating chat application. In this situation, people could only enter the chatting room only if they meet specific scoring criteria which is guaranteed by ZK-proof.",
+    ethereumAddress: "0x035c628c9b835B22Da9a2Dd09d6f81691F4DC946",
+    website: "https://github.com/2023-Ethcon-jellybelly-zkMask",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1FZN91Xwng9huDuCWY8uFN_0nVqUaj9nd",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1aoy-Db00tN7ORiOndAy39x-L-tG1pXqz",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1cmHneE1WTQzXm96ZREcerRKXEmdcN4at",
+    id: "7",
+    recipientId: 7,
+  },
+  {
+    Timestamp: "9/3/2023 12:34:26",
+    projectName: "NFT Saka",
+    tagline:
+      "You can customize the image and mint your NFT on the OP network, then bridge the minted NFT between the OP and ETH networks.",
+    description:
+      "While there are services available for bridging ERC-20 tokens, there is currently a lack of solutions for bridging ERC-721 tokens between the OP and ETH networks. Saka NFT offers a solution to bridge your ERC-721 tokens seamlessly between the OP and ETH networks.",
+    ethereumAddress: "0x6eF61b3715c3Fa3483340C6d0f44a4CECD96A540",
+    website: "https://github.com/TralaTomJeong/Ethcon2023",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1OW3YZUBRHbdCHkYOf6iM0BYODoSbd66h",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1VlDTLoirV5yH4Mq7dpeH7-v0f9ychF0O",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1RnvNC4ABq3KCjTo0t0AQ6V3CjgdXPr60",
+    id: "8",
+    recipientId: 8,
+  },
+  {
+    Timestamp: "9/3/2023 12:34:26",
+    projectName: "torch2circom",
+    tagline: "Translating pytorch model to circom circuits",
+    description:
+      "Our project is to make bridge between ML and ZK, by giving efficient tools for ML developers to bring ZK features. We present torch2circom, which automatically translate pytorch model to circom circuits.",
+    ethereumAddress: "0x4036Ac48099e9B4685ecAdbD2A43874d5608aBE9",
+    website: "https://github.com/torch2circom",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1IGp4T6TUJDWgfrh-BNqVoknmysmtgZHu",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1fXusNE9OR7VKF8tBP6e-FrLvOO5ZCEhH",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1cuh3Pgue83mz7ae1orzmK3RyF07VvCOf",
+    id: "9",
+    recipientId: 9,
+  },
+  {
+    Timestamp: "9/3/2023 13:06:00",
+    projectName: "Paylink",
+    tagline:
+      "Paylink allows you to send a crypto payment to anyone with just a link.",
+    description:
+      "Paylink is a revolutionary tool that simplifies Web3 payments across multiple blockchains, not just Ethereum. Utilizing a multichain approach, we enable users to send and receive payments effortlessly through a simple link. What sets Paylink apart is our innovative use of account abstraction, making it exceptionally easy for recipients to claim their funds. This user-friendly interface lowers barriers to entry, making Web3 and decentralized finance (DeFi) accessible to a wider audience. Paylink contributes to the growth of blockchain ecosystems by driving user adoption, expanding use cases, fostering community engagement, and enhancing the overall experience",
+    ethereumAddress: "0xE27FBA2d264b8a12315b447d17d69a06FbaB3F90",
+    website: "https://github.com/EthCon2023",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1KUocqDvwCWvycdG0GJfIQskj3udEbMLk",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1OFt_CGMqOfw7pPkR_cnLLXXgD4ylkD1K",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1O476o4jd4DazV9D-oW8awbWCCTLCo-II",
+    id: "10",
+    recipientId: 10,
+  },
+  {
+    Timestamp: "9/3/2023 13:07:35",
+    projectName: "Careerzen",
+    tagline: "Business networking platform based on Career NFT",
+    description:
+      "Careerzen is a business networking service based on NFT profile representing user's career such as education, skills and awards etc by owning each career NFTs.",
+    ethereumAddress: "0x68BEeB607B96A7C5D177F58C74d593d654f71705",
+    website: "https://github.com/orgs/Careerzenn/repositories",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1EYJPAhUhF2gy2jjOJ8ysCBk5_f5UkU6m",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1IG-pMDFfjHzo0-Su6GZZdofFHKi-VT18",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1pq8yfzIxgsvYosympgRQ_dSpSzWLsCU7",
+    id: "11",
+    recipientId: 11,
+  },
 ];
 
 export function getProjects() {
