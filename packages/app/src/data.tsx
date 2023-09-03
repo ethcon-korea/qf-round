@@ -336,6 +336,77 @@ let projects = [
     id: "20",
     recipientId: 20,
   },
+  {
+    Timestamp: "9/3/2023 13:43:21",
+    projectName: "Vireo",
+    tagline:
+      "Vireo is a blockchain environmental project that wants to be the web3 greenpeace, collecting a sustainable investable treasury through delegate staking and proposing and voting on the use of funds through DAO membership, which is certified by VireoX (dynamic-NFT). ",
+    description:
+      'Overview\n"Vireo" is Latin for "green". Vireo is simply Web3.0 "GreenPeace". Vireo is a project that started with the belief that blockchain technology can help the environment.\n\nWe thought that the web3.0 POS validator activity would be a clue to sustainability. We set up a treasury with the yield from the validator and completed the structure by letting the DAO decide how to use the treasury for environmental activities.\n\nIn addition, DAO users can check their environmental impact in a visualized form and enjoy more environmental activities by obtaining VireoX creatures (Dynamic NFTs) that evolve in proportion to the amount of staking and the period of time.\n\nBackground\nIn 2023, the world was hit by an unprecedented climate crisis. As we were in the blockchain industry, we were inspired to start using blockchain to heal environmental problems.\n\nHow It Works\n1. Delegated Staking\nsmart contracts transparently direct generated interest into an environmental treasury.\nA real-time dashboard allows users to track how much is staked and accrued in the treasury.\n\n2. Decentralized Autonomous Organization (DAO)\nStakers are granted DAO memberships that allow them voting rights on how the treasury is utilized.\nDAO members can propose and vote on environmental initiatives.\n\n3. Dynamic NFTs (D-NFT)\nStakers receive D-NFTs as proof of membership.\nThese D-NFTs evolve based on the amount and duration of the stake, and they can grant additional voting power.',
+    ethereumAddress: "0xB4fa1208E1f7dadA8a952B1EdeAdA26122024092",
+    website: "https://github.com/CoredotLab/Vireo",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1qIY_z_KTLET_aA4WN28MhrK5_B9Pt9HT",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1iyPw9OK0fccWceKwVooj2qV9gEeUChA-",
+    bannerImageLink:
+      "https://drive.google.com/open?id=10u3nV8y-kglCKdh6PL3ION8acnEaY8vf",
+    id: "21",
+    recipientId: 21,
+  },
+  {
+    Timestamp: "9/3/2023 12:45:46",
+    projectName: "Transaction Hero",
+    tagline:
+      "Transaction Hero refunds gas fees to users by auctionizing the order flow market of block builders, solving the EOF problem through sharing the block builders' revenue.",
+    description:
+      "The problem Transaction Hero solves\n\nWhen PBS (Proposer-builder separation) settles down in the Ethereum ecosystem, block builders will further solidify their control over profit centralization through a mechanism known as Exclusive Order Flow (EOF). The emergence of builder profit centralization poses a significant challenge to Ethereum's fundamental principles, particularly in regard to issues such as censorship resistance and collusion.\nTransaction Hero offers a robust solution to address the issue of builder centralization that arises from EOF. This innovative platform introduces a strategic shift towards the open-marketization of Order Flow, effectively redistributing surplus profits generated from Order Flow to benefit the entire network.\nThrough Transaction Hero, users have the opportunity to earn a share of builder profits by directing their transactions to the platform. In return, builders can gain a competitive edge by acquiring Order Flow, which enables them to offer higher gas fees when submitting blocks. This symbiotic relationship fosters a more equitable and efficient Ethereum ecosystem while aligning with the network's core values.",
+    ethereumAddress: "0x3254dd4C131edd9da829c5c151443BFE146609A4",
+    website:
+      "https://github.com/orgs/b52-unofficial/repositories, http://af6b378eedcca4bf189fac81647d7d7f-e676695616b25293.elb.ap-northeast-2.amazonaws.com/",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=164lvtrWx1m05ZE9NnmpoLYQC4ezIRze9",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1jZ-LeVa3_GCoLqtSyVeHlp7BHP4ZIXRI",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1EL37Qi_zxadhV0GpFhxkNIt4UgxbjGn_",
+    id: "22",
+    recipientId: 22,
+  },
+  {
+    Timestamp: "9/3/2023 12:43:38",
+    projectName: "zkDraw",
+    tagline: "A halo2 circuit verifies a linear congruential generator",
+    description: "We made roulette-like game that you can trust using halo2.",
+    ethereumAddress: "0xAEc69985145a65C5a749eE0F29A5Bc59B5cC3086",
+    website: "https://github.com/jae-cuz/zk-draw",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1JYEdFIv8U6eomz5qoI7MnKBSbHxkg9o-",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1Rpm6wBR_r5yFDG7dm4Y-yFJ1Kj2ZIwxO",
+    bannerImageLink:
+      "https://drive.google.com/open?id=10jizi9r5evFE4j3VvQY95ztLrSJ0-S57",
+    id: "23",
+    recipientId: 23,
+  },
+  {
+    Timestamp: "9/3/2023 14:38:22",
+    projectName: "BUIDLersberg (Simperby)",
+    tagline:
+      "Decentralized Governance & Asset Clearance Chain that manages Across Blockchains",
+    description:
+      "A chain-agnostic yet decentralized governance infrastructure to manage assets across plethora of contracts dedicated to LP funds & DAOs",
+    ethereumAddress: "0x856A1e9914ed608eE14626aC24aB61F1AB7f7A82",
+    website: "https://github.com/Simperby-Ethcon/BUIDLersberg-Fund",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1xdONorGtmEixdzix-z7ypQQtwmuIRXxY",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1xQk-R3oj5oWfGdTXCNt7vH2nty9MR7x0",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1rGCrEP9kGgTYsAJ81aO7ehvx5qGmhGT7",
+    id: "24",
+    recipientId: 24,
+  },
 ];
 
 export function getProjects() {
