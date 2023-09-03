@@ -342,107 +342,100 @@ export const WalletProvider: React.FC<{
     const signer = ethersProvider.getSigner();
     const signerAddress = await signer.getAddress();
 
-    try {
-      const response = await fetch(
-        "https://ethcon-worker.boss195.workers.dev",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            request_type: "alchemy_queryTokenId",
-            eoa: signerAddress,
-          }),
-        }
+    const response = await fetch("https://ethcon-worker.boss195.workers.dev", {
+      method: "POST",
+      body: JSON.stringify({
+        request_type: "alchemy_queryTokenId",
+        eoa: signerAddress,
+      }),
+    });
+    const data = await response.text();
+    console.log("=======NFT Id======", data);
+    if (response.status == 200) {
+      let JubjubTemplateFactory: Jubjub__factory;
+      JubjubTemplateFactory = new Jubjub__factory(Libs, signer);
+      const jubjubFactory = new ethers.Contract(
+        JubjubFactoryAddress,
+        JubjubFactory__factory.abi,
+        signer
       );
-      const data = await response.text();
-      console.log("=======NFT Id======", data);
-      if (response.status == 200) {
-        let JubjubTemplateFactory: Jubjub__factory;
-        JubjubTemplateFactory = new Jubjub__factory(Libs, signer);
-        const jubjubFactory = new ethers.Contract(
-          JubjubFactoryAddress,
-          JubjubFactory__factory.abi,
-          signer
-        );
-        const jubjubInstance = JubjubTemplateFactory.attach(
-          await jubjubFactory.currentJubjub()
-        );
-        console.log(await jubjubFactory.currentJubjub());
-        console.log(await jubjubInstance.signUpsOpen());
-        var wallet;
-        while (true) {
-          try {
-            wallet = new Keypair();
-            break;
-          } catch (e) {
-            console.error("Error:", e);
-          }
+      const jubjubInstance = JubjubTemplateFactory.attach(
+        await jubjubFactory.currentJubjub()
+      );
+      console.log(await jubjubFactory.currentJubjub());
+      console.log(await jubjubInstance.signUpsOpen());
+      var wallet;
+      while (true) {
+        try {
+          wallet = new Keypair();
+          break;
+        } catch (e) {
+          console.error("Error:", e);
         }
-        const tokenId = data;
-        const privateKey = wallet.privKey.serialize();
-        const publicKey = wallet.pubKey.serialize();
-        const _maciPK = PubKey.unserialize(publicKey).asContractParam();
-        console.log(privateKey, publicKey, _maciPK);
-        const _signUpGatekeeperData = utils.defaultAbiCoder.encode(
-          ["uint256"],
-          [tokenId]
+      }
+      const tokenId = data;
+      const privateKey = wallet.privKey.serialize();
+      const publicKey = wallet.pubKey.serialize();
+      const _maciPK = PubKey.unserialize(publicKey).asContractParam();
+      console.log(privateKey, publicKey, _maciPK);
+      const _signUpGatekeeperData = utils.defaultAbiCoder.encode(
+        ["uint256"],
+        [tokenId]
+      );
+      const _initialVoiceCreditProxyData = utils.defaultAbiCoder.encode(
+        ["uint256"],
+        [0]
+      );
+      try {
+        isMaciPrivKey(privateKey);
+        const tx = await jubjubInstance.signUp(
+          _maciPK,
+          _signUpGatekeeperData,
+          _initialVoiceCreditProxyData,
+          {
+            gasLimit: utils.hexlify(10000000),
+          }
         );
-        const _initialVoiceCreditProxyData = utils.defaultAbiCoder.encode(
-          ["uint256"],
-          [0]
+        await tx.wait();
+        console.log(tx);
+        console.log(
+          "=========db========",
+          signerAddress,
+          privateKey,
+          publicKey
         );
         try {
-          isMaciPrivKey(privateKey);
-          const tx = await jubjubInstance.signUp(
-            _maciPK,
-            _signUpGatekeeperData,
-            _initialVoiceCreditProxyData,
+          const response = await fetch(
+            "https://ethcon-worker.boss195.workers.dev",
             {
-              gasLimit: utils.hexlify(10000000),
+              method: "POST",
+              body: JSON.stringify({
+                request_type: "register",
+                eoa: signerAddress,
+                maci_private_key: privateKey,
+                maci_public_key: publicKey,
+              }),
             }
           );
-          await tx.wait();
-          console.log(tx);
-          console.log(
-            "=========db========",
-            signerAddress,
-            privateKey,
-            publicKey
-          );
-          try {
-            const response = await fetch(
-              "https://ethcon-worker.boss195.workers.dev",
-              {
-                method: "POST",
-                body: JSON.stringify({
-                  request_type: "register",
-                  eoa: signerAddress,
-                  maci_private_key: privateKey,
-                  maci_public_key: publicKey,
-                }),
-              }
-            );
-            // console.log("response: ", response);
-            const data = await response.text();
-            if (response.status != 200) {
-              console.log("failed to insert whitelist: ", data);
-              setSignUp(false);
-            } else {
-              console.log("whitelist inserted: ", data);
-              setSignUp(true);
-            }
-          } catch (error) {
-            console.log("failed to insert whitelist: ", error);
+          // console.log("response: ", response);
+          const data = await response.text();
+          if (response.status != 200) {
+            console.log("failed to insert whitelist: ", data);
             setSignUp(false);
+          } else {
+            console.log("whitelist inserted: ", data);
+            setSignUp(true);
           }
-        } catch (e) {
-          console.log("Error: ", e);
+        } catch (error) {
+          console.log("failed to insert whitelist: ", error);
           setSignUp(false);
         }
-      } else {
+      } catch (e) {
+        console.log("Error: ", e);
         setSignUp(false);
       }
-    } catch (error) {
-      console.log("failed to fetch alchemy token Id: ", error);
+    } else {
+      console.log("failed to fetch alchemy token Id");
       setSignUp(false);
     }
   };
