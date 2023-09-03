@@ -363,7 +363,7 @@ let projects = [
       "The problem Transaction Hero solves\n\nWhen PBS (Proposer-builder separation) settles down in the Ethereum ecosystem, block builders will further solidify their control over profit centralization through a mechanism known as Exclusive Order Flow (EOF). The emergence of builder profit centralization poses a significant challenge to Ethereum's fundamental principles, particularly in regard to issues such as censorship resistance and collusion.\nTransaction Hero offers a robust solution to address the issue of builder centralization that arises from EOF. This innovative platform introduces a strategic shift towards the open-marketization of Order Flow, effectively redistributing surplus profits generated from Order Flow to benefit the entire network.\nThrough Transaction Hero, users have the opportunity to earn a share of builder profits by directing their transactions to the platform. In return, builders can gain a competitive edge by acquiring Order Flow, which enables them to offer higher gas fees when submitting blocks. This symbiotic relationship fosters a more equitable and efficient Ethereum ecosystem while aligning with the network's core values.",
     ethereumAddress: "0x3254dd4C131edd9da829c5c151443BFE146609A4",
     website:
-      "https://github.com/orgs/b52-unofficial/repositories, http://af6b378eedcca4bf189fac81647d7d7f-e676695616b25293.elb.ap-northeast-2.amazonaws.com/",
+      "http://af6b378eedcca4bf189fac81647d7d7f-e676695616b25293.elb.ap-northeast-2.amazonaws.com/",
     thumbnailImageLink:
       "https://drive.google.com/open?id=164lvtrWx1m05ZE9NnmpoLYQC4ezIRze9",
     logoCdnUrl:
