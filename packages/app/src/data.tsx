@@ -407,6 +407,23 @@ let projects = [
     id: "24",
     recipientId: 24,
   },
+  {
+    Timestamp: "9/3/2023 15:52:00",
+    projectName: "DEXperience",
+    tagline: "A customized ERC4337 for derivatives dexs",
+    description:
+      " The simless account framework for cross-chain derivatives DEX based on ERC-4337",
+    ethereumAddress: "0x5fe78311A41e83A1259AAB84B663bea7B56ea575",
+    website: "https://github.com/orgs/ethcon-2023-liq/repositories",
+    thumbnailImageLink:
+      "https://drive.google.com/open?id=1bebs-ctgmJGMxJaRqcPuhs5BaYPm3--l",
+    logoCdnUrl:
+      "https://drive.google.com/open?id=1G9wvQaHxusNwVqc8yiMivbiFMvyQSrsB",
+    bannerImageLink:
+      "https://drive.google.com/open?id=1rVLzcymfZbTl08WboHcng8RityI32EUj",
+    id: "25",
+    recipientId: 25,
+  },
 ];
 
 export function getProjects() {
