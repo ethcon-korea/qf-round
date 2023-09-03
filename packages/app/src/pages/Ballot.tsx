@@ -59,7 +59,10 @@ import { Libs, TicketAddress, JubjubFactoryAddress } from "./Address";
 import { MdBorderColor } from "react-icons/md";
 
 const isMaciPrivKey = (key: string): boolean => {
-  if ((key.length === 71 || key.length === 70) && key.startsWith("macisk.")) {
+  if (
+    (key.length === 71 || key.length === 70 || key.length === 69) &&
+    key.startsWith("macisk.")
+  ) {
     console.log("key is valid maci key");
     const pubKey = new Keypair(PrivKey.unserialize(key)).pubKey.serialize();
     return true;
