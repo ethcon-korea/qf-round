@@ -642,7 +642,7 @@ export const Ballot = () => {
             >
               <Text textAlign={{ base: "center" }}>
                 Your wallet is not elligible to vote, please connect the wallet
-                with Ethcon NFT ticket
+                with Ethcon NFT ticket on Optimism
               </Text>
             </div>
           )}
@@ -709,6 +709,11 @@ export const Ballot = () => {
           >
             Voting Ballot
           </Heading>
+          <Text 
+            fontSize={"22"}
+            >
+             이곳에서 여러개의 프로젝트에 투표할 수 있습니다
+          </Text>
           <BallotExplainer />
           <Heading
             fontFamily={"Noto Sans KR"}
@@ -717,7 +722,19 @@ export const Ballot = () => {
           >
             {t("VOICE CREDIT BALANCE")}: {voiceCreditBalance}
           </Heading>
-          <Text px={"1px"}>
+          <Text 
+            fontSize={"18"}
+            >
+             투표 트랜잭션을 보내셨다면 투표가 정상적으로 완료된 것입니다
+          </Text>
+          <Text 
+            fontSize={"16"}
+            >
+             If you sent a voting transaction, the vote completed successfully
+          </Text>
+          <Text px={"1px"}
+            style={{ marginTop: 56 }}
+          >
             {t("Voice Credits spent")}: {ballotOption1Votes ** 2} +{" "}
             {ballotOption2Votes ** 2} + {ballotOption3Votes ** 2} +
             {ballotOption4Votes ** 2} + {ballotOption5Votes ** 2} +{" "}
