@@ -164,25 +164,6 @@ export const Navbar = ({ onGuideOpen }: SideNavProps) => {
             aria-label="Guide"
           />
         </Tooltip>
-        <Button
-          to={`/ballot?${searchParams.toString()}`}
-          as={Link}
-          height="50px"
-          boxSizing="border-box"
-          backgroundColor={"#FFFFFF"}
-          fontSize={{ base: "lg", xl: "xl" }}
-          color="black"
-          fontFamily={"Noto Sans KR"}
-          borderRadius="40"
-          paddingLeft={"8"}
-          paddingRight={"8"}
-          _hover={{
-            transform: "scale(1.03)",
-          }}
-          fontWeight="bold"
-        >
-          Vote
-        </Button>
 
         {/* </Tooltip> */}
         {/* <Select
