@@ -107,6 +107,13 @@ export const Projects = ({ shuffledProjects }) => {
               <VStack pl={4} spacing={0} alignItems="flex-start" w="full">
                 <VStack spacing={6} w="full" alignItems="flex-start">
                   {useColorModeValue(heroLightmode, heroDarkmode)}
+                  <Text
+                    fontFamily={"Noto Sans KR"}
+                    fontWeight={"900"}
+                    fontSize={"3xl"}
+                  >
+                    Voting has ended. The results will be announced later.
+                  </Text>
                   <Heading
                     fontFamily={"Noto Sans KR"}
                     fontWeight={"black"}
